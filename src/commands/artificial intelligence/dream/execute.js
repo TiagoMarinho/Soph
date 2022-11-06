@@ -34,11 +34,9 @@ const handleButtons = message => {
 	})
 }
 
-const getResolutionCost = (width, height) => {
-	const sanitizedWidth = width || 512
-	const sanitizedHeight = height || 512
+const getResolutionCost = (width = 512, height = 512) => {
 	const defaultResolutionCost = 512 * 512
-	const resolutionCost = (sanitizedWidth * sanitizedHeight) / defaultResolutionCost
+	const resolutionCost = (width * height) / defaultResolutionCost
 	
 	return resolutionCost
 }
@@ -73,7 +71,8 @@ const dream = async interaction => {
 	}
 
 	const resolutionCostThreshold = 6
-	if (getResolutionCost() > resolutionCostThreshold)
+	const resolutionCost = getResolutionCost(parameters.width, parameters.height)
+	if (resolutionCost > resolutionCostThreshold)
 		return interaction.editReply(`Requested image resolution is too high`)
 
 	// novelAI prefixing
