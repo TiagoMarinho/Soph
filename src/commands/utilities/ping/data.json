@@ -1,0 +1,8 @@
+{
+	"name": "ping",
+	"description": "Measure the bot's latency",
+	"type": 1,
+	"options": [
+		
+	]
+}

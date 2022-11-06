@@ -1,0 +1,199 @@
+{
+	"name": "dream",
+	"description": "Generate images using artificial intelligence",
+	"name_localizations": {
+		"pt-BR": "sonhar"
+	},
+	"description_localizations": {
+		"pt-BR": "Gerar imagens usando inteligência artificial"
+	},
+	"type": 1,
+	"options": [
+		{
+			"type": 3,
+			"name": "prompt",
+			"description": "Description of the desired image content",
+			"description_localizations": {
+				"pt-BR": "Descrição do resultado desejado"
+			},
+			"required": true
+		},
+		{
+			"type": 3,
+			"name": "negative",
+			"description": "Things not to include in the image",
+			"description_localizations": {
+				"pt-BR": "Coisas que não devem ser incluídas na imagem"
+			},
+			"required": false
+		},
+		{
+			"type": 3,
+			"name": "sampler",
+			"description": "What sampler to use when generating the image",
+			"description_localizations": {
+				"pt-BR": "Qual algoritmo deve ser usado refinando a imagem"
+			},
+			"choices": [
+				{ "name": "Euler", "value": "Euler" },
+				{ "name": "Euler Ancestral", "value": "Euler a" },
+				{ "name": "Heun", "value": "Heun" },
+				{ "name": "DPM fast", "value": "DPM fast" },
+				{ "name": "DPM adaptive", "value": "DPM adaptive" },
+				{ "name": "DPM2", "value": "DPM2" },
+				{ "name": "DPM2 Ancestral", "value": "DPM2 a" },
+				{ "name": "DPM2 Karras", "value": "DPM2 Karras" },
+				{ "name": "DPM2 Ancestral Karras", "value": "DPM2 a Karras" },
+				{ "name": "DPM++ 2S a", "value": "DPM++ 2S a" },
+				{ "name": "DPM++ 2S a Karras", "value": "DPM++ 2S a Karras" },
+				{ "name": "DPM++ 2M", "value": "DPM++ 2M" },
+				{ "name": "DPM++ 2M Karras", "value": "DPM++ 2M Karras" },
+				{ "name": "LMS", "value": "LMS" },
+				{ "name": "LMS Karras", "value": "LMS Karras" },
+				{ "name": "PLMS", "value": "PLMS" },
+				{ "name": "DDIM", "value": "DDIM" }
+			],
+			"required": false
+		},
+		{
+			"type": 4,
+			"name": "steps",
+			"description": "How many steps to refine the image for",
+			"description_localizations": {
+				"pt-BR": "Por quantos passos o sampler deve refinar a imagem"
+			},
+			"required": false,
+			"min_value": 10,
+			"max_value": 100
+		},
+		{
+			"type": 10,
+			"name": "cfg",
+			"description": "How closely the output should follow the prompt",
+			"description_localizations": {
+				"pt-BR": "O quão rigorosa a IA deve ser desenhando o que foi pedido"
+			},
+			"required": false,
+			"min_value": 1,
+			"max_value": 30
+		},
+		{
+			"type": 4,
+			"name": "batch",
+			"description": "How many images to generate",
+			"description_localizations": {
+				"pt-BR": "Quantas imagens gerar"
+			},
+			"required": false,
+			"min_value": 1,
+			"max_value": 8
+		},
+		{
+			"type": 4,
+			"name": "width",
+			"description": "Width of the resulting image",
+			"name_localizations": {
+				"pt-BR": "largura"
+			},
+			"description_localizations": {
+				"pt-BR": "Largura da imagem resultante"
+			},
+			"required": false,
+			"min_value": 64,
+			"max_value": 2048
+		},
+		{
+			"type": 4,
+			"name": "height",
+			"description": "Height of the resulting image",
+			"name_localizations": {
+				"pt-BR": "altura"
+			},
+			"description_localizations": {
+				"pt-BR": "Altura da imagem resultante"
+			},
+			"required": false,
+			"min_value": 64,
+			"max_value": 2048
+		},
+		{
+			"type": 4,
+			"name": "seed",
+			"description": "Seed to use for the initial noise",
+			"description_localizations": {
+				"pt-BR": "Número usado para gerar o ruído inicial"
+			},
+			"required": false
+		},
+		{
+			"type": 5,
+			"name": "prefix",
+			"description": "Append the base NovelAI prefixes to prompt and negative prompt",
+			"name_localizations": {
+				"pt-BR": "prefixo"
+			},
+			"description_localizations": {
+				"pt-BR": "Adicionar tags predefinidas no início do pedido"
+			},
+			"required": false
+		},
+		{
+			"type": 10,
+			"name": "variation-strength",
+			"description": "How much noise to add over the original seed",
+			"name_localizations": {
+				"pt-BR": "intensidade-variação"
+			},
+			"description_localizations": {
+				"pt-BR": "Proporção da mistura entre ruído primário e secundário"
+			},
+			"required": false,
+			"min_value": 0,
+			"max_value": 1
+		},
+		{
+			"type": 4,
+			"name": "variation-seed",
+			"description": "Seed to mix into the generation",
+			"name_localizations": {
+				"pt-BR": "seed-variação"
+			},
+			"description_localizations": {
+				"pt-BR": "Número usado pra gerar o ruído secundário"
+			},
+			"required": false
+		},
+		{
+			"type": 11,
+			"name": "image",
+			"description": "Image to use as input",
+			"name_localizations": {
+				"pt-BR": "imagem"
+			},
+			"description_localizations": {
+				"pt-BR": "Usar uma imagem para guiar o resultado"
+			},
+			"required": false
+		},
+		{
+			"type": 10,
+			"name": "denoising",
+			"description": "How much noise to add over the input image",
+			"description_localizations": {
+				"pt-BR": "Quanto ruído deve ser sobreposto na imagem providenciada"
+			},
+			"required": false,
+			"min_value": 0,
+			"max_value": 1
+		},
+		{
+			"type": 5,
+			"name": "ephemeral",
+			"description": "Send response in a message only you can see",
+			"description_localizations": {
+				"pt-BR": "Responder com uma mensagem que só você poderá ver"
+			},
+			"required": false
+		}
+	]
+}
