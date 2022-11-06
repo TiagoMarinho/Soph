@@ -6,9 +6,6 @@ import {
 	ComponentType, ButtonStyle,
 	ApplicationCommandOptionType
 } from 'discord.js'
-import extract from 'png-chunks-extract'
-import encode from 'png-chunks-encode'
-import text from 'png-chunk-text'
 import fetch from 'node-fetch'
 
 const handleButtons = message => {
@@ -121,10 +118,6 @@ const dream = async interaction => {
 		const buffers = data.images.map(i => Buffer.from(i, "base64"))
 		const filename = `${data.parameters.seed}.png`
 		const attachments = buffers.map(buffer => {
-			// write parameters to png chunks
-			//const chunks = extract(buffer)
-			//chunks.splice(-1, 0, text.encode('parameters', data.info))
-			//const result = Buffer.from(encode(chunks))
 			return new AttachmentBuilder(buffer, { name: filename })
 		})
 
