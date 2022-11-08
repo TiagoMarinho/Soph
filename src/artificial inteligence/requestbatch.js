@@ -1,4 +1,4 @@
-import { getRandomInt } from '../utils/math.js';
+import { getRandomInt, wrap } from '../utils/math.js';
 import requestImage from './requestimage.js';
 
 const requestBatch = async (
@@ -18,12 +18,23 @@ const requestBatch = async (
 ) => {
 
 	const randomizedSeed = getRandomInt(1_000_000_000, 9_999_999_999)
+	
+	const groups = prompt.match(/\{.+?\}/g)?.map(str => str.slice(1,-1).split(`|`))
 
 	const requests = []
 	for (let i = batchCount - 1; i >= 0; --i) {
-		const finalSeed = (seed === -1 ? randomizedSeed : seed) + (subseedStrength > 0 ? 0 : i)
+		const finalSeed = seed === -1 ? randomizedSeed + i : seed
+
+		let matchPos = 0
+		const finalPrompt = groups ? prompt.replace(/\{.+?\}/g, _ => {
+			const variationGroup = groups[matchPos]
+			const variation = variationGroup[wrap(i, variationGroup.length)]
+			++matchPos
+			return variation
+		}) : prompt
+
 		const request = requestImage(
-			prompt,
+			finalPrompt,
 			negativePrompt,
 			finalSeed,
 			initImage,
