@@ -188,8 +188,11 @@
 		},
 		{
 			"type": 5,
-			"name": "ephemeral",
+			"name": "private",
 			"description": "Send response in a message only you can see",
+			"name_localizations": {
+				"pt-BR": "privado"
+			},
 			"description_localizations": {
 				"pt-BR": "Responder com uma mensagem que só você poderá ver"
 			},

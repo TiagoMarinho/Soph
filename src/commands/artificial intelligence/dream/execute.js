@@ -58,7 +58,8 @@ const dream = async interaction => {
 	}
 
 	console.log(`Heartbeat ping: ${interaction.client.ws.ping}ms`)
-	const reply = await interaction.deferReply({ fetchReply: true })
+	const isEphemeral = parameters.private ?? false
+	const reply = await interaction.deferReply({ fetchReply: true, ephemeral: isEphemeral })
 	console.log(`Roundtrip latency: ${reply.createdTimestamp - interaction.createdTimestamp}ms`)
 
 	// img2img
