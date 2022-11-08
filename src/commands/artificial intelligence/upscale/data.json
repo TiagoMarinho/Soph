@@ -1,0 +1,67 @@
+{
+	"name": "upscale",
+	"description": "Increase image resolution using artificial intelligence",
+	"description_localizations": {
+		"pt-BR": "Aumentar resolução de imagem usando inteligência artificial"
+	},
+	"type": 1,
+	"options": [
+		{
+			"type": 11,
+			"name": "image",
+			"description": "Image to upscale",
+			"name_localizations": {
+				"pt-BR": "imagem"
+			},
+			"description_localizations": {
+				"pt-BR": "Imagem a ser aumentada"
+			},
+			"required": true
+		},
+		{
+			"type": 10,
+			"name": "resize",
+			"description": "How many times to increase image resolution by",
+			"description_localizations": {
+				"pt-BR": "Multiplicador de tamanho"
+			},
+			"required": false,
+			"min_value": 1,
+			"max_value": 4
+		},
+		{
+			"type": 3,
+			"name": "model",
+			"description": "Upscaling model to resize the image with",
+			"name_localizations": {
+				"pt-BR": "modelo"
+			},
+			"description_localizations": {
+				"pt-BR": "Qual modelo deve ser usado para aumentar o tamanho da imagem"
+			},
+			"choices": [
+				{ "name": "Nearest", "value": "Nearest" },
+				{ "name": "Lanczos", "value": "Lanczos" },
+				{ "name": "R-ESRGAN General 4xV3", "value": "R-ESRGAN General 4xV3" },
+				{ "name": "R-ESRGAN General WDN 4xV3", "value": "R-ESRGAN General WDN 4xV3" },
+				{ "name": "R-ESRGAN AnimeVideo", "value": "R-ESRGAN AnimeVideo" },
+				{ "name": "R-ESRGAN 4x+ Anime6B", "value": "R-ESRGAN 4x+ Anime6B" },
+				{ "name": "R-ESRGAN 4x+", "value": "R-ESRGAN 4x+" },
+				{ "name": "R-ESRGAN 2x+", "value": "R-ESRGAN 2x+" }
+			],
+			"required": false
+		},
+		{
+			"type": 5,
+			"name": "private",
+			"description": "Send response in a message only you can see",
+			"name_localizations": {
+				"pt-BR": "privado"
+			},
+			"description_localizations": {
+				"pt-BR": "Responder com uma mensagem que só você poderá ver"
+			},
+			"required": false
+		}
+	]
+}
