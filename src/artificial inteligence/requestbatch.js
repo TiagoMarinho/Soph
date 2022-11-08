@@ -2,7 +2,7 @@ import { getRandomInt } from '../utils/math.js';
 import requestImage from './requestimage.js';
 
 const requestBatch = async (
-	batchCount = 1, 
+	batchCount = 4, 
 	prompt = "",
 	negativePrompt = "", 
 	seed = -1, 
