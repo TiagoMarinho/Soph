@@ -52,6 +52,39 @@
 			"required": false
 		},
 		{
+			"type": 3,
+			"name": "secondary-model",
+			"description": "Second upscaling model to resize the image with and mix with the first model's result",
+			"name_localizations": {
+				"pt-BR": "modelo-secundário"
+			},
+			"description_localizations": {
+				"pt-BR": "Modelo secundário para aumentar a imagem e misturar com o resultado do modelo primário"
+			},
+			"choices": [
+				{ "name": "Nearest", "value": "Nearest" },
+				{ "name": "Lanczos", "value": "Lanczos" },
+				{ "name": "R-ESRGAN General 4xV3", "value": "R-ESRGAN General 4xV3" },
+				{ "name": "R-ESRGAN General WDN 4xV3", "value": "R-ESRGAN General WDN 4xV3" },
+				{ "name": "R-ESRGAN AnimeVideo", "value": "R-ESRGAN AnimeVideo" },
+				{ "name": "R-ESRGAN 4x+ Anime6B", "value": "R-ESRGAN 4x+ Anime6B" },
+				{ "name": "R-ESRGAN 4x+", "value": "R-ESRGAN 4x+" },
+				{ "name": "R-ESRGAN 2x+", "value": "R-ESRGAN 2x+" }
+			],
+			"required": false
+		},
+		{
+			"type": 10,
+			"name": "mix",
+			"description": "Mix factor between primary and secondary upscaling models",
+			"description_localizations": {
+				"pt-BR": "Fator de mistura entre modelo primário e secundário"
+			},
+			"required": false,
+			"min_value": 0,
+			"max_value": 1
+		},
+		{
 			"type": 5,
 			"name": "private",
 			"description": "Send response in a message only you can see",

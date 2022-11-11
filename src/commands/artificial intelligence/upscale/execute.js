@@ -24,7 +24,13 @@ const execute = async interaction => {
 	const inputImageUrlData = await fetch(parameters.image.url)
 	const inputImageBuffer = await inputImageUrlData.arrayBuffer()
 
-	const resultBuffer = await upscale(inputImageBuffer, parameters.resize, parameters.model)
+	const resultBuffer = await upscale(
+		inputImageBuffer, 
+		parameters.resize, 
+		parameters.model, 
+		parameters["secondary-model"], 
+		parameters.mix
+	)
 
 	const attachment = new AttachmentBuilder(resultBuffer, { name: "upscaling_result.png" })
 	
@@ -39,7 +45,16 @@ const execute = async interaction => {
 		.setColor(`#2E8B21`)
 		.setDescription(`Click on the image(s) to enlarge`)
 		.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
-		.addFields({ name: `Model`, value: `${parameters.model ?? `R-ESRGAN 4x+ Anime6B`}`, inline: false })
+		.addFields({ name: `Model`, value: `${parameters.model ?? `R-ESRGAN 4x+ Anime6B`}`, inline: true })
+
+	if (parameters["secondary-model"]) {
+		const mixPercent = (parameters.mix ?? 0.5) * 100
+		embed
+			.addFields({ name: `Secondary model`, value: `${parameters["secondary-model"]}`, inline: true })
+			.addFields({ name: `Mix factor`, value: `${mixPercent}%`, inline: true })
+	}
+
+	embed
 		.addFields({ name: `Resize factor`, value: `${parameters.resize ?? 2}x`, inline: false })
 		.addFields({ name: `Width`, value: `${cachedAttachment.width}`, inline: true })
 		.addFields({ name: `Height`, value: `${cachedAttachment.height}`, inline: true })
