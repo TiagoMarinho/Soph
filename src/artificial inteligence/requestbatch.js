@@ -10,11 +10,14 @@ const requestBatch = async (
 	denoising = 0.75, 
 	subseed = -1, 
 	subseedStrength = 0.0, 
-	steps = 35, 
+	steps = 30, 
 	cfg = 11,
 	width = 512,
 	height = 512,
-	sampler = `Euler`
+	sampler = `DPM++ 2M`,
+	highresFix = false,
+	firstphaseWidth = 512,
+	firstphaseHeight = 512
 ) => {
 
 	const randomizedSeed = getRandomInt(1_000_000_000, 9_999_999_999)
@@ -45,7 +48,10 @@ const requestBatch = async (
 			cfg,
 			width,
 			height,
-			sampler
+			sampler,
+			highresFix,
+			firstphaseWidth,
+			firstphaseHeight
 		)
 		requests.push(request)
 	}

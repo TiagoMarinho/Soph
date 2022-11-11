@@ -10,11 +10,14 @@ const requestImage = async (
 	denoising = 0.75, 
 	subseed = -1, 
 	subseedStrength = 0.0, 
-	steps = 25, 
+	steps = 30, 
 	cfg = 11,
 	width = 512,
 	height = 512,
-	sampler = `DPM++ 2M`
+	sampler = `DPM++ 2M`,
+	highresFix = false,
+	firstphaseWidth = 512,
+	firstphaseHeight = 512
 ) => {
 	const isImageToImage = initImage !== null
 
@@ -26,10 +29,10 @@ const requestImage = async (
 		"init_images": [
 			initImage
 		],
-		"enable_hr": false,
+		"enable_hr": highresFix,
 		"denoising_strength": denoising,
-		"firstphase_width": 0,
-		"firstphase_height": 0,
+		"firstphase_width": firstphaseWidth,
+		"firstphase_height": firstphaseHeight,
 		"prompt": prompt,
 		"seed": seed,
 		"subseed": subseed,

@@ -188,6 +188,43 @@
 		},
 		{
 			"type": 5,
+			"name": "highres-fix",
+			"description": "Render image at smaller resolution, then upscale and improve details without changing composition",
+			"description_localizations": {
+				"pt-BR": "Gerar imagem em baixa resolução primeiro, aumentar e refinar detalhes sem mudar a composição"
+			},
+			"required": false
+		},
+		{
+			"type": 4,
+			"name": "firstphase-width",
+			"description": "Width of the image from the first phase of the highres-fix process",
+			"name_localizations": {
+				"pt-BR": "largura-primeira-fase"
+			},
+			"description_localizations": {
+				"pt-BR": "Largura da imagem que será gerada durante a primeira fase do highres-fix"
+			},
+			"required": false,
+			"min_value": 64,
+			"max_value": 1024
+		},
+		{
+			"type": 4,
+			"name": "firstphase-height",
+			"description": "Height of the image from the first phase of the highres-fix process",
+			"name_localizations": {
+				"pt-BR": "altura-primeira-fase"
+			},
+			"description_localizations": {
+				"pt-BR": "Altura da imagem que será gerada durante a primeira fase do highres-fix"
+			},
+			"required": false,
+			"min_value": 64,
+			"max_value": 1024
+		},
+		{
+			"type": 5,
 			"name": "private",
 			"description": "Send response in a message only you can see",
 			"name_localizations": {

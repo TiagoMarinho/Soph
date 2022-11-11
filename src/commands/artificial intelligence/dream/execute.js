@@ -91,19 +91,22 @@ const dream = async interaction => {
 	// request images
 	const requests = 
 		await requestBatch(
-			parameters?.batch, 
+			parameters.batch, 
 			finalPrompt, 
 			finalNegativePrompt,
-			parameters?.seed,
+			parameters.seed,
 			base64InputImage,
-			parameters?.denoising,
-			parameters?.["variation-seed"],
-			parameters?.["variation-strength"],
-			parameters?.steps,
-			parameters?.cfg,
-			parameters?.width,
-			parameters?.height,
-			parameters?.sampler
+			parameters.denoising,
+			parameters["variation-seed"],
+			parameters["variation-strength"],
+			parameters.steps,
+			parameters.cfg,
+			parameters.width,
+			parameters.height,
+			parameters.sampler,
+			parameters["highres-fix"],
+			parameters["firstphase-width"],
+			parameters["firstphase-height"]
 		)
 
 	// handle responses
