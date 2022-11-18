@@ -31,7 +31,7 @@ const requestBatch = async (
 		let matchPos = 0
 		const finalPrompt = groups ? prompt.replace(/\{.+?\}/g, _ => {
 			const variationGroup = groups[matchPos]
-			const variation = variationGroup[wrap(i, variationGroup.length)]
+			const variation = variationGroup[wrap(i, variationGroup.length)].trim()
 			++matchPos
 			return variation
 		}) : prompt
