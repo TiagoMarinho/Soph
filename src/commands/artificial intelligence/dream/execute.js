@@ -57,6 +57,11 @@ const dream = async interaction => {
 				option.attachment : option.value
 	}
 
+	const resolutionCostThreshold = 6
+	const resolutionCost = getResolutionCost(parameters.width, parameters.height)
+	if (resolutionCost > resolutionCostThreshold)
+		return interaction.reply({ content: `Requested image resolution is too high`, ephemeral: true })
+
 	console.log(`Heartbeat ping: ${interaction.client.ws.ping}ms`)
 	const isEphemeral = parameters.private ?? false
 	const reply = await interaction.deferReply({ fetchReply: true, ephemeral: isEphemeral })
@@ -70,11 +75,6 @@ const dream = async interaction => {
 		const inputImageBuffer = await inputImageUrlData.arrayBuffer()
 		base64InputImage = `data:image/png;base64,${Buffer.from(inputImageBuffer).toString('base64')}`
 	}
-
-	const resolutionCostThreshold = 6
-	const resolutionCost = getResolutionCost(parameters.width, parameters.height)
-	if (resolutionCost > resolutionCostThreshold)
-		return interaction.editReply(`Requested image resolution is too high`)
 
 	// novelAI prefixing
 	const promptParts = [parameters.prompt]
