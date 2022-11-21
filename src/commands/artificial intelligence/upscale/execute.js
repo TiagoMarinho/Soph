@@ -1,4 +1,4 @@
-import upscale from '../../../artificial inteligence/upscale.js'
+import upscale from '../../../artificial intelligence/upscale.js'
 import { 
 	AttachmentBuilder, EmbedBuilder, 
 	ActionRowBuilder, ButtonBuilder, 
