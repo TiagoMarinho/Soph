@@ -1,8 +1,27 @@
-import { Events } from 'discord.js'
+import { Events, EmbedBuilder } from 'discord.js'
 
 export default {
 	name: Events.InteractionCreate,
 	async execute(interaction) {
+
+		if (interaction.isButton()) { // TODO: move this somewhere else
+			await interaction.deferUpdate()
+	
+			const message = await interaction.fetchReply()
+			const embeds = message.embeds.map(embed => EmbedBuilder.from(embed))
+	
+			switch (interaction.customId) {
+				case `next`:
+					embeds.push(embeds.shift())
+					break
+				case `previous`:
+					embeds.unshift(embeds.pop())
+					break
+			}
+	
+			await interaction.editReply({ embeds: embeds })
+		}
+
 		if (!interaction.isCommand()) 
 			return
 

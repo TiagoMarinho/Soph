@@ -1,5 +1,5 @@
-import requestBatch from '../../../artificial inteligence/requestbatch.js'
-import novelAIPrefix from '../../../artificial inteligence/novelaiprefix.json' assert { type: 'json' }
+import requestBatch from '../../../artificial intelligence/requestbatch.js'
+import novelAIPrefix from '../../../artificial intelligence/novelaiprefix.json' assert { type: 'json' }
 import { 
 	AttachmentBuilder, EmbedBuilder, 
 	ActionRowBuilder, ButtonBuilder, 
@@ -7,32 +7,6 @@ import {
 	ApplicationCommandOptionType
 } from 'discord.js'
 import fetch from 'node-fetch'
-
-const handleButtons = message => {
-	const minutesToMilliseconds = min => 1000 * 60 * min
-	const collectorDuration = minutesToMilliseconds(10)
-	const collector = message.createMessageComponentCollector({ 
-		componentType: ComponentType.Button, 
-		time: collectorDuration 
-	})
-	collector.on(`collect`, async i => {
-		await i.deferUpdate()
-
-		const message = await i.fetchReply()
-		const embeds = message.embeds.map(embed => EmbedBuilder.from(embed))
-
-		switch (i.customId) {
-			case `next`:
-				embeds.push(embeds.shift())
-				break
-			case `previous`:
-				embeds.unshift(embeds.pop())
-				break
-		}
-
-		await i.editReply({ embeds: embeds })
-	})
-}
 
 const getResolutionCost = (width = 512, height = 512) => {
 	const defaultResolutionCost = 512 * 512
@@ -106,17 +80,16 @@ const dream = async interaction => {
 			parameters.sampler,
 			parameters["highres-fix"],
 			parameters["firstphase-width"],
-			parameters["firstphase-height"]
+			parameters["firstphase-height"],
 		)
 
 	// handle responses
 	const cacheChannelId = `1006069287003373598`
 	const cacheChannel = await interaction.client.channels.cache.get(cacheChannelId)
 
-	handleButtons(reply)
-
 	for (const [index, request] of requests.entries()) {
-		const response = await request
+		console.log(requests)
+		const response = await request.catch(console.error)
 		const data = await response.json()
 		const buffers = data.images.map(i => Buffer.from(i, "base64"))
 		const filename = `${data.parameters.seed}.png`
@@ -141,16 +114,16 @@ const dream = async interaction => {
 			.setDescription(`Click on the image(s) to enlarge`)
 			.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
 			.addFields({ name: `Seed`, value: `${data.parameters.seed}`, inline: true })
-			.addFields({ name: `Prompt`, value: `${data.parameters.prompt}`, inline: false })
+			//.addFields({ name: `Prompt`, value: `${data.parameters.prompt}`, inline: false })
 			.setFooter({ text: `${numberOfImages - index}/${numberOfImages}` })
 
 		if (isImg2Img)
 			embed
 				.setThumbnail(parameters.image.url)
 
-		if (data.parameters.negative_prompt)
-			embed
-				.addFields({ name: `Negative prompt`, value: `${data.parameters.negative_prompt}`, inline: false })
+		//if (data.parameters.negative_prompt)
+		//	embed
+		//		.addFields({ name: `Negative prompt`, value: `${data.parameters.negative_prompt}`, inline: false })
 
 		embeds.unshift(embed)
 
