@@ -1,3 +1,5 @@
+import servers from './serverlist.json' assert { type: 'json' }
+
 const upscale = async (
 	imageBuffer,
 	resizeFactor = 2,
@@ -22,7 +24,7 @@ const upscale = async (
 		"upscale_first": false,
 		"image": base64InputImage
 	}
-	const apiEndpoint = `http://127.0.0.1:7860/sdapi/v1/extra-single-image`
+	const apiEndpoint = `${servers[0].address}/sdapi/v1/extra-single-image`
 	const response = await fetch(apiEndpoint, {
 		method: 'post',
 		body: JSON.stringify(payload),
