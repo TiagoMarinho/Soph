@@ -25,6 +25,8 @@ const requestImage = async (
 	// width and height must be multiples of 64
 	const sanitizedWidth = roundToClosestMultipleOf(width, 64)
 	const sanitizedHeight = roundToClosestMultipleOf(height, 64)
+	const sanitizedFirstphaseWidth = roundToClosestMultipleOf(firstphaseWidth, 64)
+	const sanitizedFirstphaseHeight = roundToClosestMultipleOf(firstphaseHeight, 64)
 
 	const payload = {
 		"init_images": [
@@ -32,8 +34,8 @@ const requestImage = async (
 		],
 		"enable_hr": highresFix,
 		"denoising_strength": denoising,
-		"firstphase_width": firstphaseWidth,
-		"firstphase_height": firstphaseHeight,
+		"firstphase_width": sanitizedFirstphaseWidth,
+		"firstphase_height": sanitizedFirstphaseHeight,
 		"prompt": prompt,
 		"seed": seed,
 		"subseed": subseed,
