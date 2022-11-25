@@ -1,0 +1,38 @@
+{
+	"name": "interrogate",
+	"description": "Describe image using artifical inteligence",
+	"description_localizations": {
+		"pt-BR": "Descreva uma imagem usando inteligência artifical"
+	},
+	"type": 1,
+	"options": [
+		{
+			"type": 11,
+			"name": "image",
+			"description": "Image to describe",
+			"name_localizations": {
+				"pt-BR": "imagem"
+			},
+			"description_localizations": {
+				"pt-BR": "Imagem para ser descrevida"
+			},
+			"required": true
+		},
+		{
+			"type": 3,
+			"name": "model",
+			"description": "Interrogator model to describe image",
+			"name_localizations": {
+				"pt-BR": "modelo"
+			},
+			"description_localizations": {
+				"pt-BR": "Qual modelo usar para descrever a imagem"
+			},
+			"choices": [
+				{ "name": "Deepdanbooru", "value": "deepdanbooru" },
+				{ "name": "CLIP", "value": "clip" }
+			],
+			"required": false
+		}
+	]
+}
