@@ -1,5 +1,6 @@
 import requestBatch from '../../../artificial intelligence/requestbatch.js'
 import novelAIPrefix from '../../../artificial intelligence/novelaiprefix.json' assert { type: 'json' }
+import languages from '../../../locale/languages.js'
 import colors from '../../../colors.json' assert { type: 'json' }
 import { 
 	AttachmentBuilder, EmbedBuilder, 
@@ -89,7 +90,6 @@ const dream = async interaction => {
 	const cacheChannel = await interaction.client.channels.cache.get(cacheChannelId)
 
 	for (const [index, request] of requests.entries()) {
-		console.log(requests)
 		const response = await request.catch(console.error)
 		const data = await response.json()
 		const buffers = data.images.map(i => Buffer.from(i, "base64"))
@@ -103,16 +103,18 @@ const dream = async interaction => {
 
 		const numberOfImages = requests.length
 		const isLastImage = index === requests.length - 1
-		const color = `#A50A39`
+		const color = colors.incomplete
 
 		const message = await interaction.fetchReply()
 		const embeds = message.embeds.map(embed => EmbedBuilder.from(embed))
+
+		const descLocale = languages[interaction.locale]?.["dream response description"] ?? `Click on the image(s) to enlarge`
 
 		const embed = new EmbedBuilder()
 			.setURL(`https://www.youtube.com/watch?v=dQw4w9WgXcQ`)
 			.setImage(url)
 			.setColor(color)
-			.setDescription(`Click on the image(s) to enlarge`)
+			.setDescription(descLocale)
 			.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
 			.addFields({ name: `Seed`, value: `${data.parameters.seed}`, inline: true })
 			//.addFields({ name: `Prompt`, value: `${data.parameters.prompt}`, inline: false })
@@ -136,8 +138,8 @@ const dream = async interaction => {
 
 		if (numberOfImages > 1)
 			rowData.push([
-				{ label: `←`, id: `previous`, style: ButtonStyle.Primary, disabled: !isLastImage },
-				{ label: `→`, id: `next`, style: ButtonStyle.Primary, disabled: !isLastImage },
+				{ emoji: `1045215673690886224`, id: `previous`, style: ButtonStyle.Primary, disabled: !isLastImage },
+				{ emoji: `1045215671438540821`, id: `next`, style: ButtonStyle.Primary, disabled: !isLastImage },
 			])
 
 		const rows = rowData.map(buttonData => {
@@ -146,7 +148,7 @@ const dream = async interaction => {
 			const buttons = buttonData.map(button =>
 				new ButtonBuilder()
 					.setCustomId(button.id)
-					.setLabel(button.label)
+					.setEmoji(button.emoji)
 					.setStyle(button.style)
 					.setDisabled(button.disabled === true)
 			)
