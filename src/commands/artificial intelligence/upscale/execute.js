@@ -1,5 +1,6 @@
 import upscale from '../../../artificial intelligence/upscale.js'
 import colors from '../../../colors.json' assert { type: 'json' }
+import config from '../../../../config.json' assert { type: 'json' }
 import { 
 	AttachmentBuilder, EmbedBuilder, 
 	ActionRowBuilder, ButtonBuilder, 
@@ -35,7 +36,7 @@ const execute = async interaction => {
 
 	const attachment = new AttachmentBuilder(resultBuffer, { name: "upscaling_result.png" })
 	
-	const cacheChannelId = `1006069287003373598`
+	const cacheChannelId = config.cacheChannelId
 	const cacheChannel = await interaction.client.channels.cache.get(cacheChannelId)
 	const cacheMessage = await cacheChannel.send({ files: [attachment] })
 	const cachedAttachment = [...cacheMessage.attachments.values()][0]
