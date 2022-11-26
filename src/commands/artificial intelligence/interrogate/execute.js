@@ -5,6 +5,7 @@ import {
 	ComponentType, ButtonStyle,
 	ApplicationCommandOptionType
 } from 'discord.js'
+import colors from '../../../colors.json' assert { type: 'json' }
 import fetch from 'node-fetch'
 
 const execute = async interaction => {
@@ -30,17 +31,17 @@ const execute = async interaction => {
 	)
 
 	let caption = result.caption;
-	if (!parameters.model || parameters.model == 'deepdanbooru') {
+	if (!parameters.model || parameters.model === 'deepdanbooru') {
 		// if the model is deepdanbooru. replace underscores by space.
 		caption = caption.replace(/_/g, ' ');
 	}
 
 	const embed = new EmbedBuilder()
 		.setThumbnail(parameters.image.url)
-		.setColor(`#2E8B21`)
-		.setDescription(`Interrogator result:\n\`\`\`${caption}\`\`\``)
-		.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
+		.setColor(colors.complete)
 		.addFields({ name: `Model`, value: `${parameters.model || `deepdanbooru`}`, inline: true })
+		.addFields({ name: `Interrogator result`, value: `\`\`\`${caption}\`\`\`` })
+		.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
 
 	await interaction.editReply({ embeds: [embed] })
 }

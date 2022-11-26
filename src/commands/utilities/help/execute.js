@@ -1,4 +1,5 @@
 import getCommandsByCategory from "../../../getcommands.js"
+import colors from '../../../colors.json' assert { type: 'json' }
 import { EmbedBuilder } from 'discord.js'
 
 const help = async interaction => {
@@ -19,7 +20,7 @@ const help = async interaction => {
 	}
 
 	const embed = new EmbedBuilder()
-		.setColor('#A50A39')
+		.setColor(colors.complete)
 		.setTitle('Commands list')
 		.setDescription('List of commands for this bot')
 		.addFields(...fields)

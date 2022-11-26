@@ -1,4 +1,5 @@
 import upscale from '../../../artificial intelligence/upscale.js'
+import colors from '../../../colors.json' assert { type: 'json' }
 import { 
 	AttachmentBuilder, EmbedBuilder, 
 	ActionRowBuilder, ButtonBuilder, 
@@ -42,7 +43,7 @@ const execute = async interaction => {
 
 	const embed = new EmbedBuilder()
 		.setImage(url)
-		.setColor(`#2E8B21`)
+		.setColor(colors.complete)
 		.setDescription(`Click on the image(s) to enlarge`)
 		.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
 		.addFields({ name: `Model`, value: `${parameters.model ?? `R-ESRGAN 4x+ Anime6B`}`, inline: true })

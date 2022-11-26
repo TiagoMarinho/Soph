@@ -1,5 +1,6 @@
 import getCommandsByCategory from "../../../getcommands.js"
 import { EmbedBuilder, ApplicationCommandOptionType } from 'discord.js'
+import colors from '../../../colors.json' assert { type: 'json' }
 import extract from 'png-chunks-extract'
 import encode from 'png-chunks-encode'
 import text from 'png-chunk-text'
@@ -26,11 +27,11 @@ const metadata = async interaction => {
 
 	const fields = textChunks.map(textChunk => ({
 		name: textChunk.keyword,
-		value: textChunk.text
+		value: `\`\`\`${textChunk.text}\`\`\``
 	}))
 
 	const embed = new EmbedBuilder()
-		.setColor(`#2E8B21`)
+		.setColor(colors.complete)
 		.setThumbnail(parameters.image.url)
 		.setTitle('Metadata')
 		.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })

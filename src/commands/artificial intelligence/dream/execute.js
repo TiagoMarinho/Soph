@@ -1,5 +1,6 @@
 import requestBatch from '../../../artificial intelligence/requestbatch.js'
 import novelAIPrefix from '../../../artificial intelligence/novelaiprefix.json' assert { type: 'json' }
+import colors from '../../../colors.json' assert { type: 'json' }
 import { 
 	AttachmentBuilder, EmbedBuilder, 
 	ActionRowBuilder, ButtonBuilder, 
@@ -16,7 +17,7 @@ const getResolutionCost = (width = 512, height = 512) => {
 }
 
 const setJobDone = (...embeds) => {
-	const color = `#2E8B21`
+	const color = colors.complete
 	for (const embed of embeds)
 		embed
 			.setColor(color)
