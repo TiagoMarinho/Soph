@@ -1,5 +1,6 @@
 import requestBatch from '../../../artificial intelligence/requestbatch.js'
 import novelAIPrefix from '../../../artificial intelligence/novelaiprefix.json' assert { type: 'json' }
+import config from '../../../../config.json' assert { type: 'json' }
 import { 
 	AttachmentBuilder, EmbedBuilder, 
 	ActionRowBuilder, ButtonBuilder, 
@@ -84,7 +85,7 @@ const dream = async interaction => {
 		)
 
 	// handle responses
-	const cacheChannelId = `1006069287003373598`
+	const cacheChannelId = config.cacheChannelId
 	const cacheChannel = await interaction.client.channels.cache.get(cacheChannelId)
 
 	for (const [index, request] of requests.entries()) {
