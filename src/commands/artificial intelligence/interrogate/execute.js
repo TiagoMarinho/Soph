@@ -43,6 +43,11 @@ const execute = async interaction => {
 		.addFields({ name: `Interrogator result`, value: `\`\`\`${caption}\`\`\`` })
 		.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
 
+	const message = await interaction.fetchReply().catch(err => {
+		console.log('unknown message.')
+	})
+	if (!message) return
+	
 	await interaction.editReply({ embeds: [embed] })
 }
 export default execute

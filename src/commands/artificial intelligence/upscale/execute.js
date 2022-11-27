@@ -61,6 +61,11 @@ const execute = async interaction => {
 		.addFields({ name: `Width`, value: `${cachedAttachment.width}`, inline: true })
 		.addFields({ name: `Height`, value: `${cachedAttachment.height}`, inline: true })
 
+	const message = await interaction.fetchReply().catch(err => {
+		console.log('unknown message.')
+	})
+	if (!message) return
+
 	await interaction.editReply({ embeds: [embed] })
 }
 export default execute
