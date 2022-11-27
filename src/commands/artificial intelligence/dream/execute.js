@@ -106,7 +106,11 @@ const dream = async interaction => {
 		const isLastImage = index === requests.length - 1
 		const color = colors.incomplete
 
-		const message = await interaction.fetchReply()
+		const message = await interaction.fetchReply().catch(err => {
+			console.log('unknown message.')
+		})
+		if (!message) return
+
 		const embeds = message.embeds.map(embed => EmbedBuilder.from(embed))
 
 		const descLocale = languages[interaction.locale]?.["dream response description"] ?? `Click on the image(s) to enlarge`
