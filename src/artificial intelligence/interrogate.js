@@ -10,10 +10,15 @@ const interrogate = async (
 		"model": model
 	}
 	const apiEndpoint = `${servers[0].address}/sdapi/v1/interrogate`
+	const buff = Buffer.from(servers[0].credentials, 'utf-8')
+	const base64Credentials = buff.toString('base64')
 	const response = await fetch(apiEndpoint, {
 		method: 'post',
 		body: JSON.stringify(payload),
-		headers: {'Content-Type': 'application/json'}
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Basic ${base64Credentials}`
+		}
 	})
 	const data = await response.json()
 
