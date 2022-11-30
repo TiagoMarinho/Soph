@@ -1,16 +1,13 @@
 # Soph #
-## A discord bot for generating art with artificial intelligence ##
-
-Soph can generate art from a text prompt - and from another image if the user so desires - by using Stable Diffusion AI.
+A discord bot for generating art with artificial intelligence
 
 ## How to use: ##
 
 `/dream prompt: 1girl, solo, blonde hair, twintails, blue eyes, blue dress`
 
-Will generate images* such as:
+Will yield images such as:
 
-![](https://i.imgur.com/gqu5jHc.png)
-<sup>* Provided WebUI is running the correct model</sup>
+![Four AI-generated anime drawings of a blonde girl with blue eyes wearing a blue dress](https://i.imgur.com/gqu5jHc.png)
 
 ## Features ##
 
@@ -32,7 +29,7 @@ Will generate images* such as:
 - Retrieves image generation parameters from generated images with `/metadata` command
 - Can guess which tags best describe an image through the `/interrogate` command
 
-## About ##
+## More about Soph ##
 
 Soph prioritizes UX and being a first-class Discord citizen, and as such uses slash commands and rich embeds with proper multiple image support rather than baking all results into a single image grid, sending each result as a separate image attachment or only displaying one image at a time.
 
