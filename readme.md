@@ -60,9 +60,10 @@ Soph works by requesting images to AUTOMATIC1111's webui API for Stable Diffusio
 ## Installation ##
 
 1. Install https://github.com/AUTOMATIC1111/stable-diffusion-webui and its dependencies
-2. Run `git clone https://github.com/TiagoMarinho/Soph` to clone Soph's repo
-3. Create a new Discord application in the [Discord Developer Portal](https://discord.com/developers/applications)
-4. Copy the token and client id of your new discord application and put it in `Soph/config.json`, like this:
+2. Install NodeJS
+3. Run `git clone https://github.com/TiagoMarinho/Soph` to clone Soph's repo
+4. Create a new Discord application in the [Discord Developer Portal](https://discord.com/developers/applications)
+5. Copy the token and client id of your new discord application and put it in `Soph/config.json`, like this:
 
 	```
 	{
@@ -70,15 +71,15 @@ Soph works by requesting images to AUTOMATIC1111's webui API for Stable Diffusio
 		"clientId": "CLIENT ID HERE"
 	}
 	```
-5. Execute the WebUI and wait for it to finish loading
-6. Create a file `Soph/src/artificial intelligence/serverlist.json` and add the address of your WebUI to it (usually `127.0.0.1:7860`), like this:
+6. Execute the WebUI and wait for it to finish loading
+7. Create a file `Soph/src/artificial intelligence/serverlist.json` and add the address of your WebUI to it (usually `127.0.0.1:7860`), like this:
 	```
 	[{
 		"address": "http://127.0.0.1:7860",
 		"credentials": "login:password"
 	}]
 	```
-7. Run `node .` inside the main `Soph` folder to launch Soph
+8. Run `node .` inside the main `Soph` folder to launch Soph
 
 ## Contributing ##
 
