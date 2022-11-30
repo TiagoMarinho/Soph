@@ -48,6 +48,8 @@
 				{ "name": "DPM++ 2S a Karras", "value": "DPM++ 2S a Karras" },
 				{ "name": "DPM++ 2M", "value": "DPM++ 2M" },
 				{ "name": "DPM++ 2M Karras", "value": "DPM++ 2M Karras" },
+				{ "name": "DPM++ SDE", "value": "DPM++ SDE" },
+				{ "name": "DPM++ SDE Karras", "value": "DPM++ SDE Karras" },
 				{ "name": "LMS", "value": "LMS" },
 				{ "name": "LMS Karras", "value": "LMS Karras" },
 				{ "name": "PLMS", "value": "PLMS" },
