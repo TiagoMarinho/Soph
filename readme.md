@@ -81,7 +81,7 @@ Soph works by requesting images to AUTOMATIC1111's webui API for Stable Diffusio
 		"credentials": "login:password"
 	}]
 	```
-9. Run `node .` inside `Soph` root folder to launch Soph
+9. Run `node .` inside Soph's root folder to launch Soph
 
 ## Contributing ##
 
