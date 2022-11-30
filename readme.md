@@ -39,12 +39,46 @@ Individual images are sent as soon as they're ready rather than only sending the
 
 Soph works by requesting images to AUTOMATIC1111's webui API for Stable Diffusion.
 
+## Commands ##
+
+* `/dream <prompt>`
+	* Also accepts the following optional arguments: `<negative> <batch> <sampler> <steps> <width> <height> <cfg> <highres-fix> <firstphase-width> <firstphase-height> <image> <denoising>`
+* `/metadata <image>`
+* `/interrogate <image> <model>`
+* `/upscale <image>` 
+	* Also accepts the following optional arguments: `<model> <resize> <secondary-model> <mix>`
+* `/help`
+* `/ping`
+
 ## Planned ##
 
 - Support for multiple servers to contribute compute power generating images
 - Button for interrupting current batch
 - Button for generating more images using the same parameters
 - Better support for localization
+
+## Installation ##
+
+1. Install https://github.com/AUTOMATIC1111/stable-diffusion-webui and its dependencies
+2. Run `git clone https://github.com/TiagoMarinho/Soph` to clone Soph's repo
+3. Create a new Discord application in the [Discord Developer Portal](https://discord.com/developers/applications)
+4. Copy the token and client id of your new discord application and put it in `Soph/config.json`, like this:
+
+	```
+	{
+		"token:" "TOKEN HERE",
+		"clientId": "CLIENT ID HERE"
+	}
+	```
+5. Execute the WebUI and wait for it to finish loading
+6. Create a file `Soph/src/artificial intelligence/serverlist.json` and add the address of your WebUI to it (usually `127.0.0.1:7860`), like this:
+	```
+	[{
+		"address": "http://127.0.0.1:7860",
+		"credentials": "login:password"
+	}]
+	```
+7. Run `node .` inside the main `Soph` folder to launch Soph
 
 ## Contributing ##
 
