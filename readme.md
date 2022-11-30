@@ -68,18 +68,20 @@ Soph works by requesting images to AUTOMATIC1111's webui API for Stable Diffusio
 	```
 	{
 		"token:" "TOKEN HERE",
-		"clientId": "CLIENT ID HERE"
+		"clientId": "CLIENT ID HERE",
+		"cacheChannelId": "SEE STEP 6"
 	}
 	```
-6. Execute the WebUI and wait for it to finish loading
-7. Create a file `Soph/src/artificial intelligence/serverlist.json` and add the address of your WebUI to it (usually `127.0.0.1:7860`), like this:
+6. Add a channel ID in the above `config.json` file for a chat your application has access to, so that it can use as a cache for the images. Every image generated with the bot will be sent in this chat first.
+7. Execute the WebUI and wait for it to finish loading
+8. Create a file `Soph/src/artificial intelligence/serverlist.json` and add the address of your WebUI to it (usually `127.0.0.1:7860`), like this:
 	```
 	[{
 		"address": "http://127.0.0.1:7860",
 		"credentials": "login:password"
 	}]
 	```
-8. Run `node .` inside the main `Soph` folder to launch Soph
+9. Run `node .` inside `Soph` root folder to launch Soph
 
 ## Contributing ##
 
