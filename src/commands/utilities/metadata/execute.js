@@ -1,4 +1,4 @@
-import getCommandsByCategory from "../../../getcommands.js"
+import { parseParameters } from "../../../artificial intelligence/pnginfo.js"
 import { EmbedBuilder, ApplicationCommandOptionType } from 'discord.js'
 import colors from '../../../colors.json' assert { type: 'json' }
 import extract from 'png-chunks-extract'
@@ -25,9 +25,19 @@ const metadata = async interaction => {
 		.filter(chunk => chunk.name === 'tEXt')
 		.map(chunk => text.decode(chunk.data))
 
-	const fields = textChunks.map(textChunk => ({
-		name: textChunk.keyword,
-		value: `\`\`\`${textChunk.text}\`\`\``
+	const fields = textChunks.map(textChunk => {
+		try {
+			return parseParameters(textChunk.text)
+		} catch {
+			return {
+				name: textChunk.keyword,
+				value: textChunk.text
+			}
+		}
+	}).flat().map(field => ({
+		name: field.name,
+		value: `\`\`\`${field.value}\`\`\``,
+		inline: field.value?.length <= 16
 	}))
 
 	const embed = new EmbedBuilder()
