@@ -8,7 +8,7 @@ export default {
 	async execute(interaction) {
 
 		if (interaction.isButton()) { // TODO: move this somewhere else
-			await interaction.deferUpdate()
+			await interaction.deferUpdate().catch(console.error)
 	
 			const message = await interaction.fetchReply()
 			const embeds = message.embeds.map(embed => EmbedBuilder.from(embed))
