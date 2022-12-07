@@ -44,7 +44,13 @@ const execute = async interaction => {
 		.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
 
 	const message = await interaction.fetchReply().catch(err => {
-		console.log('unknown message.')
+		switch (err.code) {
+			case 10008:
+				console.log('Interaction reply deleted by user')
+				break
+			default:
+				console.error(err)
+		}
 	})
 	if (!message) return
 	

@@ -107,7 +107,13 @@ const dream = async interaction => {
 		const color = colors.incomplete
 
 		const message = await interaction.fetchReply().catch(err => {
-			console.log('unknown message.')
+			switch (err.code) {
+				case 10008:
+					console.log('Interaction reply deleted by user')
+					break
+				default:
+					console.error(err)
+			}
 		})
 		if (!message) return
 
