@@ -1,7 +1,10 @@
+import enUS from './en-US.json' assert { type: 'json' }
 import ptBR from './pt-BR.json' assert { type: 'json' }
 
-export default {
+export const locales = { // TODO: gather available locales automatically
+	"en-US": enUS,
 	"pt-BR": ptBR
 }
 
-// TODO: function for getting a string from locale. if not available return the english version of it
+export const getLocalizedText = (textName, locale) => 
+	locales[locale]?.[textName] ?? locales[`en-US`]?.[textName]

@@ -1,6 +1,6 @@
 import requestBatch from '../../../artificial intelligence/requestbatch.js'
 import novelAIPrefix from '../../../artificial intelligence/novelaiprefix.json' assert { type: 'json' }
-import languages from '../../../locale/languages.js'
+import { getLocalizedText } from '../../../locale/languages.js'
 import colors from '../../../colors.json' assert { type: 'json' }
 import config from '../../../../config.json' assert { type: 'json' }
 import { 
@@ -28,8 +28,10 @@ const setJobDone = (...embeds) => {
 export const generate = async (interaction, parameters, buttonReply = null) => {
 	const resolutionCostThreshold = 6
 	const resolutionCost = getResolutionCost(parameters.width, parameters.height)
-	if (resolutionCost > resolutionCostThreshold) 
-		return interaction.reply({ content: `Requested image resolution is too high`, ephemeral: true })
+	if (resolutionCost > resolutionCostThreshold) {
+		const resTooHighText = getLocalizedText("dream fail resolution too high", interaction.locale)
+		return interaction.reply({ content: resTooHighText, ephemeral: true })
+	}
 
 	const isEphemeral = parameters.private ?? false
 	if (!buttonReply) {
@@ -107,7 +109,7 @@ export const generate = async (interaction, parameters, buttonReply = null) => {
 		const isLastImage = index === requests.length - 1
 		const color = colors.incomplete
 
-		const descLocale = languages[interaction.locale]?.["dream response description"] ?? `Click on the image(s) to enlarge`
+		const descLocale = getLocalizedText("dream response description", interaction.locale)
 
 		const embed = new EmbedBuilder()
 			.setURL(paramCacheMessage.url)

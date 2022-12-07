@@ -1,6 +1,6 @@
 import { Events, EmbedBuilder } from 'discord.js'
 import { generate } from '../commands/artificial intelligence/dream/execute.js'
-import languages from '../locale/languages.js'
+import { getLocalizedText } from '../locale/languages.js'
 import config from '../../config.json' assert { type: 'json' }
 
 export default {
@@ -30,8 +30,9 @@ export default {
 
 			const parameters = JSON.parse(cacheMessage.content.match(/^```json\n(.+)```$/)[1])
 
+			const thinkingText = getLocalizedText("generating images", interaction.locale)
 			const reply = await interaction.followUp({
-				content: languages[interaction.locale]?.["generating images"] ?? `Generating...`
+				content: thinkingText
 			})
 
 			generate(interaction, parameters, reply)

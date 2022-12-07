@@ -1,6 +1,6 @@
 import { Events, EmbedBuilder } from 'discord.js'
 import { generate } from '../commands/artificial intelligence/dream/execute.js'
-import languages from '../locale/languages.js'
+import { getLocalizedText } from '../locale/languages.js'
 import config from '../../config.json' assert { type: 'json' }
 
 export default {
