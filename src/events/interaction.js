@@ -12,14 +12,14 @@ export default {
 				await interaction.deferUpdate()
 			} catch (error) {
 				console.error(error)
-				
+
 				return
 			}
 	
 			const message = await interaction.fetchReply()
 			const embeds = message.embeds.map(embed => EmbedBuilder.from(embed))
 
-			if (interaction.customId == 'repeat') {
+			if (interaction.customId === 'repeat') {
 				const cacheChannelId = config.cacheChannelId
 				const cacheChannel = await interaction.client.channels.cache.get(cacheChannelId)
 
