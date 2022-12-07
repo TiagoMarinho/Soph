@@ -25,24 +25,18 @@ const setJobDone = (...embeds) => {
 			.setColor(color)
 }
 
-const dream = async interaction => {
-
-	const parameters = {}
-	for (const option of interaction.options.data) {
-		parameters[option.name] = 
-			option.type === ApplicationCommandOptionType.Attachment ? 
-				option.attachment : option.value
-	}
-
+export const generate = async (interaction, parameters, buttonReply = null) => {
 	const resolutionCostThreshold = 6
 	const resolutionCost = getResolutionCost(parameters.width, parameters.height)
-	if (resolutionCost > resolutionCostThreshold)
+	if (resolutionCost > resolutionCostThreshold) 
 		return interaction.reply({ content: `Requested image resolution is too high`, ephemeral: true })
 
-	console.log(`Heartbeat ping: ${interaction.client.ws.ping}ms`)
 	const isEphemeral = parameters.private ?? false
-	const reply = await interaction.deferReply({ fetchReply: true, ephemeral: isEphemeral })
-	console.log(`Roundtrip latency: ${reply.createdTimestamp - interaction.createdTimestamp}ms`)
+	if (!buttonReply) {
+		console.log(`Heartbeat ping: ${interaction.client.ws.ping}ms`)
+		const reply = await interaction.deferReply({ fetchReply: true, ephemeral: isEphemeral })
+		console.log(`Roundtrip latency: ${reply.createdTimestamp - interaction.createdTimestamp}ms`)
+	}
 
 	// img2img
 	const isImg2Img = typeof parameters.image !== `undefined`
@@ -91,6 +85,12 @@ const dream = async interaction => {
 	const cacheChannelId = config.cacheChannelId
 	const cacheChannel = await interaction.client.channels.cache.get(cacheChannelId)
 
+	// cache the parameters to use on the 'repeat' button
+	const paramCacheMessage = await cacheChannel.send({ content: '```json\n' + JSON.stringify(parameters) + '```' }).catch(err => {
+		console.log('could not cache parameters\n', err)
+	})
+
+	let embeds = []
 	for (const [index, request] of requests.entries()) {
 		const response = await request.catch(console.error)
 		const data = await response.json()
@@ -107,23 +107,10 @@ const dream = async interaction => {
 		const isLastImage = index === requests.length - 1
 		const color = colors.incomplete
 
-		const message = await interaction.fetchReply().catch(err => {
-			switch (err.code) {
-				case 10008:
-					console.log('Interaction reply deleted by user')
-					break
-				default:
-					console.error(err)
-			}
-		})
-		if (!message) return
-
-		const embeds = message.embeds.map(embed => EmbedBuilder.from(embed))
-
 		const descLocale = languages[interaction.locale]?.["dream response description"] ?? `Click on the image(s) to enlarge`
 
 		const embed = new EmbedBuilder()
-			.setURL(`https://www.youtube.com/watch?v=dQw4w9WgXcQ`)
+			.setURL(paramCacheMessage.url)
 			.setImage(url)
 			.setColor(color)
 			.setDescription(descLocale)
@@ -153,6 +140,14 @@ const dream = async interaction => {
 				{ emoji: `1045215673690886224`, id: `previous`, style: ButtonStyle.Primary, disabled: !isLastImage },
 				{ emoji: `1045215671438540821`, id: `next`, style: ButtonStyle.Primary, disabled: !isLastImage },
 			])
+		
+		if (!isEphemeral && paramCacheMessage) {
+			const repeatButton = { emoji: `🔁`, id: `repeat`, style: ButtonStyle.Primary }
+			if (rowData.length > 0) 
+				rowData[0].push(repeatButton) // pushing to first row if exist
+			else 
+				rowData.push([repeatButton])
+		}
 
 		const rows = rowData.map(buttonData => {
 			const row = new ActionRowBuilder()
@@ -170,7 +165,24 @@ const dream = async interaction => {
 			return row
 		})
 
-		await interaction.editReply({ embeds: embeds, components: rows })
+		if (buttonReply) {
+			await buttonReply.edit({ embeds: embeds, components: rows, content: ''})
+		} else {
+			await interaction.editReply({ embeds: embeds, components: rows })
+		}
 	}
 }
+
+const dream = async interaction => {
+
+	const parameters = {}
+	for (const option of interaction.options.data) {
+		parameters[option.name] = 
+			option.type === ApplicationCommandOptionType.Attachment ? 
+				option.attachment : option.value
+	}
+
+	generate(interaction, parameters)
+}
+
 export default dream
