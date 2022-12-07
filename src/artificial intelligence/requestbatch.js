@@ -19,7 +19,8 @@ const requestBatch = async (
 	sampler = `DPM++ 2M`,
 	highresFix = false,
 	firstphaseWidth = 512,
-	firstphaseHeight = 512
+	firstphaseHeight = 512,
+	clipSkip = 2,
 ) => {
 
 	// get server with least overhead to generate
@@ -107,7 +108,8 @@ const requestBatch = async (
 			sampler,
 			highresFix,
 			firstphaseWidth,
-			firstphaseHeight
+			firstphaseHeight,
+			clipSkip
 		)
 		requests.push(request)
 	}

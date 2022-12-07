@@ -18,7 +18,8 @@ const requestImage = async (
 	sampler = `DPM++ 2M`,
 	highresFix = false,
 	firstphaseWidth = 512,
-	firstphaseHeight = 512
+	firstphaseHeight = 512,
+	clipSkip = 2
 ) => {
 	const isImageToImage = initImage !== null
 
@@ -58,7 +59,8 @@ const requestImage = async (
 		"s_noise": 1,
 		"sampler_index": sampler,
 		"override_settings": {
-			"enable_pnginfo": true
+			"enable_pnginfo": true,
+			"CLIP_stop_at_last_layers": clipSkip
 		}
 	}
 

@@ -84,6 +84,7 @@ const dream = async interaction => {
 			parameters["highres-fix"],
 			parameters["firstphase-width"],
 			parameters["firstphase-height"],
+			parameters["clip-skip"]
 		)
 
 	// handle responses

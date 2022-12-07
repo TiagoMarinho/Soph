@@ -226,6 +226,17 @@
 			"max_value": 1024
 		},
 		{
+			"type": 4,
+			"name": "clip-skip",
+			"description": "Which last layer of the CLIP model to stop at",
+			"description_localizations": {
+				"pt-BR": "Em qual das últimas camadas do modelo CLIP parar"
+			},
+			"required": false,
+			"min_value": 1,
+			"max_value": 12
+		},
+		{
 			"type": 5,
 			"name": "private",
 			"description": "Send response in a message only you can see",
