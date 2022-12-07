@@ -142,7 +142,7 @@ export const generate = async (interaction, parameters, buttonReply = null) => {
 			])
 		
 		if (!isEphemeral && paramCacheMessage) {
-			const repeatButton = { emoji: `🔁`, id: `repeat`, style: ButtonStyle.Primary }
+			const repeatButton = { emoji: `1050058817360101498`, id: `repeat`, style: ButtonStyle.Primary }
 			if (rowData.length > 0) 
 				rowData[0].push(repeatButton) // pushing to first row if exist
 			else 
