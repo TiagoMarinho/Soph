@@ -25,7 +25,7 @@ const setJobDone = (...embeds) => {
 			.setColor(color)
 }
 
-export const generate = async (interaction, parameters, buttonReply = null) => {
+export const generate = async (interaction, parameters) => {
 	const resolutionCostThreshold = 6
 	const resolutionCost = getResolutionCost(parameters.width, parameters.height)
 	if (resolutionCost > resolutionCostThreshold) {
@@ -34,11 +34,18 @@ export const generate = async (interaction, parameters, buttonReply = null) => {
 	}
 
 	const isEphemeral = parameters.private ?? false
-	if (!buttonReply) {
-		console.log(`Heartbeat ping: ${interaction.client.ws.ping}ms`)
-		const reply = await interaction.deferReply({ fetchReply: true, ephemeral: isEphemeral })
-		console.log(`Roundtrip latency: ${reply.createdTimestamp - interaction.createdTimestamp}ms`)
-	}
+
+	console.log(`Heartbeat ping: ${interaction.client.ws.ping}ms`)
+
+	const thinkingText = getLocalizedText("generating images", interaction.locale)
+	const method = interaction.isButton() ? `followUp` : `deferReply`
+	const reply = await interaction[method]({ 
+		content: interaction.isButton ? thinkingText : ``, 
+		fetchReply: true, 
+		ephemeral: isEphemeral 
+	})
+
+	console.log(`Roundtrip latency: ${reply.createdTimestamp - interaction.createdTimestamp}ms`)
 
 	// img2img
 	const isImg2Img = typeof parameters.image !== `undefined`
@@ -88,11 +95,14 @@ export const generate = async (interaction, parameters, buttonReply = null) => {
 	const cacheChannel = await interaction.client.channels.cache.get(cacheChannelId)
 
 	// cache the parameters to use on the 'repeat' button
-	const paramCacheMessage = await cacheChannel.send({ content: '```json\n' + JSON.stringify(parameters) + '```' }).catch(err => {
-		console.log('could not cache parameters\n', err)
-	})
+	const paramCacheMessage = 
+		await cacheChannel
+			.send({ content: '```json\n' + JSON.stringify(parameters) + '```' })
+			.catch(err => {
+				console.log('could not cache parameters\n', err)
+			})
 
-	let embeds = []
+	const embeds = []
 	for (const [index, request] of requests.entries()) {
 		const response = await request.catch(console.error)
 		const data = await response.json()
@@ -144,11 +154,14 @@ export const generate = async (interaction, parameters, buttonReply = null) => {
 			])
 		
 		if (!isEphemeral && paramCacheMessage) {
-			const repeatButton = { emoji: `1050058817360101498`, id: `repeat`, style: ButtonStyle.Success, disabled: !isLastImage }
+			const generationButtons = [
+				{ emoji: `1050058817360101498`, id: `repeat`, style: ButtonStyle.Success, disabled: !isLastImage },
+				//{ emoji: `1050092899083227166`, id: `highres`, style: ButtonStyle.Success, disabled: !isLastImage }
+			]
 			if (rowData.length > 0) 
-				rowData[0].push(repeatButton) // pushing to first row if exist
+				rowData[0].push(...generationButtons)
 			else 
-				rowData.push([repeatButton])
+				rowData.push(generationButtons)
 		}
 
 		const rows = rowData.map(buttonData => {
@@ -167,11 +180,10 @@ export const generate = async (interaction, parameters, buttonReply = null) => {
 			return row
 		})
 
-		if (buttonReply) {
-			await buttonReply.edit({ embeds: embeds, components: rows, content: ''})
-		} else {
+		if (interaction.isButton())
+			await reply.edit({ embeds: embeds, components: rows, content: ''})
+		else
 			await interaction.editReply({ embeds: embeds, components: rows })
-		}
 	}
 }
 

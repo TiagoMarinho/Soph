@@ -30,13 +30,7 @@ export default {
 
 			const parameters = JSON.parse(cacheMessage.content.match(/^```json\n(.+)```$/)[1])
 
-			const thinkingText = getLocalizedText("generating images", interaction.locale)
-			const reply = await interaction.followUp({
-				content: thinkingText
-			})
-
-			generate(interaction, parameters, reply)
-			return
+			return generate(interaction, parameters)
 		}
 
 		switch (interaction.customId) {
