@@ -26,6 +26,7 @@ const setJobDone = (...embeds) => {
 }
 
 export const generate = async (interaction, parameters) => {
+
 	const resolutionCostThreshold = 6
 	const resolutionCost = getResolutionCost(parameters.width, parameters.height)
 	if (resolutionCost > resolutionCostThreshold) {
@@ -196,7 +197,7 @@ const dream = async interaction => {
 				option.attachment : option.value
 	}
 
-	generate(interaction, parameters)
+	await generate(interaction, parameters)
 }
 
 export default dream
