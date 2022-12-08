@@ -39,9 +39,9 @@ export const generate = async (interaction, parameters) => {
 	console.log(`Heartbeat ping: ${interaction.client.ws.ping}ms`)
 
 	const thinkingText = getLocalizedText("generating images", interaction.locale)
-	const method = interaction.isButton() ? `followUp` : `deferReply`
+	const method = interaction.isButton() ? `followUp` : `reply`
 	const reply = await interaction[method]({ 
-		content: interaction.isButton ? thinkingText : ``, 
+		content: `<a:loading:1050454241266909249> ${thinkingText}`, 
 		fetchReply: true, 
 		ephemeral: isEphemeral 
 	})
@@ -181,10 +181,7 @@ export const generate = async (interaction, parameters) => {
 			return row
 		})
 
-		if (interaction.isButton())
-			await reply.edit({ embeds: embeds, components: rows, content: ''})
-		else
-			await interaction.editReply({ embeds: embeds, components: rows })
+		await reply.edit({ embeds: embeds, components: rows, content: ''})
 	}
 }
 
