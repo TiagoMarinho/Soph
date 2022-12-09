@@ -181,7 +181,10 @@ export const generate = async (interaction, parameters) => {
 			return row
 		})
 
-		await reply.edit({ embeds: embeds, components: rows, content: ''})
+		if (isEphemeral)
+			await interaction.editReply({ embeds: embeds, components: rows, content: '' })
+		else
+			await reply.edit({ embeds: embeds, components: rows, content: '' })
 	}
 }
 
