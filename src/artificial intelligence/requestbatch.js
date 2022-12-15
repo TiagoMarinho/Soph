@@ -20,6 +20,7 @@ const requestBatch = async (
 	highresFix = false,
 	firstphaseWidth = 512,
 	firstphaseHeight = 512,
+	latentSpace = false,
 	clipSkip = 2,
 ) => {
 
@@ -109,6 +110,7 @@ const requestBatch = async (
 			highresFix,
 			firstphaseWidth,
 			firstphaseHeight,
+			latentSpace,
 			clipSkip
 		)
 		requests.push(request)

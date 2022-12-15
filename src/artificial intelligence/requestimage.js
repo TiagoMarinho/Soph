@@ -19,6 +19,7 @@ const requestImage = async (
 	highresFix = false,
 	firstphaseWidth = 512,
 	firstphaseHeight = 512,
+	latentSpace = false,
 	clipSkip = 2
 ) => {
 	const isImageToImage = initImage !== null
@@ -33,6 +34,7 @@ const requestImage = async (
 		"init_images": [
 			initImage
 		],
+		"resize_mode": 1,
 		"enable_hr": highresFix,
 		"denoising_strength": denoising,
 		"firstphase_width": sanitizedFirstphaseWidth,
@@ -60,6 +62,7 @@ const requestImage = async (
 		"sampler_index": sampler,
 		"override_settings": {
 			"enable_pnginfo": true,
+			"use_scale_latent_for_hires_fix": latentSpace,
 			"CLIP_stop_at_last_layers": clipSkip
 		}
 	}

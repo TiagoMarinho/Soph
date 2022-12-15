@@ -226,6 +226,15 @@
 			"max_value": 1024
 		},
 		{
+			"type": 5,
+			"name": "scale-latent",
+			"description": "Upscale latent space image when doing highres-fix",
+			"description_localizations": {
+				"pt-BR": "Performar upscaling da imagem em latent space durante highres-fix"
+			},
+			"required": false
+		},
+		{
 			"type": 4,
 			"name": "clip-skip",
 			"description": "Which last layer of the CLIP model to stop at",

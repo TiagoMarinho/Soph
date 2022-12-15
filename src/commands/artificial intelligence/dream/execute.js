@@ -88,6 +88,7 @@ export const generate = async (interaction, parameters) => {
 			parameters["highres-fix"],
 			parameters["firstphase-width"],
 			parameters["firstphase-height"],
+			parameters["scale-latent"],
 			parameters["clip-skip"]
 		)
 
@@ -128,7 +129,7 @@ export const generate = async (interaction, parameters) => {
 			.setColor(color)
 			.setDescription(descLocale)
 			.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
-			.addFields({ name: `Seed`, value: `${data.parameters.seed}`, inline: true })
+			.addFields({ name: `Seed`, value: `\`\`\`${data.parameters.seed}\`\`\``, inline: true })
 			//.addFields({ name: `Prompt`, value: `${data.parameters.prompt}`, inline: false })
 			.setFooter({ text: `${numberOfImages - index}/${numberOfImages}` })
 
