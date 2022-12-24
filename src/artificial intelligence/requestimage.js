@@ -2,8 +2,9 @@ import fetch from 'node-fetch'
 
 import { roundToClosestMultipleOf } from '../utils/math.js';
 
+import servers from './serverlist.json' assert { type: 'json' }
+
 const requestImage = async (
-	server,
 	prompt = "",
 	negativePrompt = "", 
 	seed = -1, 
@@ -67,14 +68,17 @@ const requestImage = async (
 		}
 	}
 
+	const buff = Buffer.from(servers[0].credentials, 'utf-8')
+	const base64Credentials = buff.toString('base64')
+
 	const mode = `${isImageToImage ? `img` : `txt`}2img`
-	const apiEndpoint = `${server.address}/sdapi/v1/${mode}`
+	const apiEndpoint = `${servers[0].address}/sdapi/v1/${mode}`
 	const request = fetch(apiEndpoint, {
 		method: 'post',
 		body: JSON.stringify(payload),
 		headers: {
 			'Content-Type': 'application/json',
-			'Authorization': `Basic ${server.credentials}`
+			'Authorization': `Basic ${base64Credentials}`
 		}
 	})
 	return request

@@ -89,7 +89,7 @@ export const generate = async (interaction, parameters) => {
 			parameters["firstphase-width"],
 			parameters["firstphase-height"],
 			parameters["scale-latent"],
-			parameters["clip-skip"]
+			parameters["clip-skip"],
 		)
 
 	// handle responses
@@ -131,7 +131,7 @@ export const generate = async (interaction, parameters) => {
 			.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
 			.addFields({ name: `Seed`, value: `\`\`\`${data.parameters.seed}\`\`\``, inline: true })
 			//.addFields({ name: `Prompt`, value: `${data.parameters.prompt}`, inline: false })
-			.setFooter({ text: `${numberOfImages - index}/${numberOfImages}` })
+			.setFooter({ text: `${index + 1}/${numberOfImages}` })
 
 		if (isImg2Img)
 			embed
