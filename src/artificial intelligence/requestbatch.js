@@ -1,4 +1,5 @@
 import { getRandomInt } from '../utils/math.js';
+import Queue from '../utils/queue.js';
 import requestImage from './requestimage.js';
 
 const getPromptVariation = (prompt, position) => {
@@ -18,6 +19,8 @@ const getPromptVariation = (prompt, position) => {
 
 	return promptVariation
 }
+
+const batchQueue = new Queue()
 
 const requestBatch = async (
 	batchCount = 4, 
@@ -51,7 +54,7 @@ const requestBatch = async (
 
 	const requests = dynamicParameters
 		.map(dynamicData => 
-			requestImage(
+			batchQueue.add(_ => requestImage(
 				dynamicData.prompt,
 				dynamicData.negativePrompt,
 				dynamicData.seed,
@@ -69,7 +72,7 @@ const requestBatch = async (
 				firstphaseHeight,
 				latentSpace,
 				clipSkip,
-			)
+			))
 		)
 
 	return requests
