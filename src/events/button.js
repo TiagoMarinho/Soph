@@ -46,9 +46,9 @@ export default {
 		if (interaction.customId === 'edit') {
 			const [title, promptLabel, negativePromptLabel] = 
 				[
-					getLocalizedText(`negative prompt text field label`, interaction.locale),
 					getLocalizedText(`edit prompt modal title`, interaction.locale),
 					getLocalizedText(`prompt text field label`, interaction.locale),
+					getLocalizedText(`negative prompt text field label`, interaction.locale),
 				]
 
 			const modal = new ModalBuilder()
