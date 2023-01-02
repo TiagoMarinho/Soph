@@ -39,7 +39,7 @@ export const generate = async (interaction, parameters) => {
 	console.log(`Heartbeat ping: ${interaction.client.ws.ping}ms`)
 
 	const thinkingText = getLocalizedText("generating images", interaction.locale)
-	const method = interaction.isButton() ? `followUp` : `reply`
+	const method = interaction.isButton() || interaction.isModalSubmit() ? `followUp` : `reply`
 	const reply = await interaction[method]({ 
 		content: `<a:loading:1050454241266909249> ${thinkingText}`, 
 		fetchReply: true, 
@@ -158,7 +158,8 @@ export const generate = async (interaction, parameters) => {
 		if (!isEphemeral && paramCacheMessage) {
 			const generationButtons = [
 				{ emoji: `1050058817360101498`, id: `repeat`, style: ButtonStyle.Success, disabled: !isLastImage },
-				//{ emoji: `1050092899083227166`, id: `highres`, style: ButtonStyle.Success, disabled: !isLastImage }
+				//{ emoji: `1050092899083227166`, id: `highres`, style: ButtonStyle.Success, disabled: !isLastImage },
+				{ emoji: `1058978647043735582`, id: `edit`, style: ButtonStyle.Success, disabled: !isLastImage },
 			]
 			if (rowData.length > 0) 
 				rowData[0].push(...generationButtons)
@@ -182,10 +183,13 @@ export const generate = async (interaction, parameters) => {
 			return row
 		})
 
-		if (isEphemeral)
-			await interaction.editReply({ embeds: embeds, components: rows, content: '' })
-		else
-			await reply.edit({ embeds: embeds, components: rows, content: '' })
+		const replyInstance = isEphemeral ? interaction : reply
+		const editReplyMethod = isEphemeral ? `editReply` : `edit`
+
+		await replyInstance[editReplyMethod]({ embeds: embeds, components: rows, content: '' })
+			.catch(err => {
+				console.error(err)
+			})
 	}
 }
 

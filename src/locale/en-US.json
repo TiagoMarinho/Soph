@@ -1,5 +1,8 @@
 {
 	"dream fail resolution too high": "Requested image resolution is too high",
 	"dream response description": "Click on the image(s) to enlarge",
-	"generating images": "Dreaming..."
+	"generating images": "Dreaming...",
+	"edit prompt modal title": "Edit prompt",
+	"prompt text field label": "Prompt",
+	"negative prompt text field label": "Negative prompt"
 }

@@ -22,6 +22,9 @@
 			"type": 3,
 			"name": "negative",
 			"description": "Things not to include in the image",
+			"name_localizations": {
+				"pt-BR": "negativa"
+			},
 			"description_localizations": {
 				"pt-BR": "Coisas que não devem ser incluídas na imagem"
 			},
