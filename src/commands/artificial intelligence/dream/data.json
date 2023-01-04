@@ -16,7 +16,8 @@
 			"description_localizations": {
 				"pt-BR": "Descrição do resultado desejado"
 			},
-			"required": true
+			"required": true,
+			"autocomplete": true
 		},
 		{
 			"type": 3,
@@ -28,7 +29,8 @@
 			"description_localizations": {
 				"pt-BR": "Coisas que não devem ser incluídas na imagem"
 			},
-			"required": false
+			"required": false,
+			"autocomplete": true
 		},
 		{
 			"type": 3,

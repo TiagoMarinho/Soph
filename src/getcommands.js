@@ -49,7 +49,11 @@ const buildCommand = async commandFolderPath => {
 	const executePath = path.join(commandFolderPath, `execute.js`)
 	const { default: execute } = await import(`file://${executePath}`)
 
-	return {data, execute}
+	const autocompletePath = path.join(commandFolderPath, `autocomplete.js`)
+	const { default: autocomplete } = await import(`file://${autocompletePath}`)
+		.catch(_ => ({ default: undefined}))
+
+	return { data, execute, autocomplete }
 }
 
 export default getCommandsByCategory
