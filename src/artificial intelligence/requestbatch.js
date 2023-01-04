@@ -37,8 +37,7 @@ const requestBatch = async (
 	height,
 	sampler,
 	highresFix,
-	firstphaseWidth,
-	firstphaseHeight,
+	hrScale,
 	latentSpace,
 	clipSkip,
 ) => {
@@ -68,8 +67,7 @@ const requestBatch = async (
 				height,
 				sampler,
 				highresFix,
-				firstphaseWidth,
-				firstphaseHeight,
+				hrScale,
 				latentSpace,
 				clipSkip,
 			))

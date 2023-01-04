@@ -201,32 +201,18 @@
 			"required": false
 		},
 		{
-			"type": 4,
-			"name": "firstphase-width",
-			"description": "Width of the image from the first phase of the highres-fix process",
+			"type": 10,
+			"name": "hr-scale",
+			"description": "Scale of highres-fix output relative to original",
 			"name_localizations": {
-				"pt-BR": "largura-primeira-fase"
+				"pt-BR": "escala-highres-fix"
 			},
 			"description_localizations": {
-				"pt-BR": "Largura da imagem que será gerada durante a primeira fase do highres-fix"
+				"pt-BR": "Escala do highres-fix relativo ao tamanho da imagem original"
 			},
 			"required": false,
-			"min_value": 64,
-			"max_value": 1024
-		},
-		{
-			"type": 4,
-			"name": "firstphase-height",
-			"description": "Height of the image from the first phase of the highres-fix process",
-			"name_localizations": {
-				"pt-BR": "altura-primeira-fase"
-			},
-			"description_localizations": {
-				"pt-BR": "Altura da imagem que será gerada durante a primeira fase do highres-fix"
-			},
-			"required": false,
-			"min_value": 64,
-			"max_value": 1024
+			"min_value": 0,
+			"max_value": 10
 		},
 		{
 			"type": 5,

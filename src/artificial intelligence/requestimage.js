@@ -18,8 +18,7 @@ const requestImage = async (
 	height = 512,
 	sampler = `DPM++ 2M`,
 	highresFix = false,
-	firstphaseWidth = 512,
-	firstphaseHeight = 512,
+	hrScale = 2,
 	latentSpace = false,
 	clipSkip = 2
 ) => {
@@ -28,8 +27,6 @@ const requestImage = async (
 	// width and height must be multiples of 64
 	const sanitizedWidth = roundToClosestMultipleOf(width, 64)
 	const sanitizedHeight = roundToClosestMultipleOf(height, 64)
-	const sanitizedFirstphaseWidth = roundToClosestMultipleOf(firstphaseWidth, 64)
-	const sanitizedFirstphaseHeight = roundToClosestMultipleOf(firstphaseHeight, 64)
 
 	const payload = {
 		"init_images": [
@@ -38,8 +35,7 @@ const requestImage = async (
 		"resize_mode": 1,
 		"enable_hr": highresFix,
 		"denoising_strength": denoising,
-		"firstphase_width": sanitizedFirstphaseWidth,
-		"firstphase_height": sanitizedFirstphaseHeight,
+		"hr_scale": hrScale,
 		"prompt": prompt,
 		"seed": seed,
 		"subseed": subseed,

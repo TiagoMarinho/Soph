@@ -11,9 +11,9 @@ import {
 } from 'discord.js'
 import fetch from 'node-fetch'
 
-const getResolutionCost = (width = 512, height = 512) => {
+const getResolutionCost = (width = 512, height = 512, scale = 1) => {
 	const defaultResolutionCost = 512 * 512
-	const resolutionCost = (width * height) / defaultResolutionCost
+	const resolutionCost = ((width * scale) * (height * scale)) / defaultResolutionCost
 	
 	return resolutionCost
 }
@@ -28,7 +28,11 @@ const setJobDone = (...embeds) => {
 export const generate = async (interaction, parameters) => {
 
 	const resolutionCostThreshold = 6
-	const resolutionCost = getResolutionCost(parameters.width, parameters.height)
+	const resolutionCost = getResolutionCost(
+		parameters.width, 
+		parameters.height,
+		parameters[`hr-scale`],
+	)
 	if (resolutionCost > resolutionCostThreshold) {
 		const resTooHighText = getLocalizedText("dream fail resolution too high", interaction.locale)
 		return interaction.reply({ content: resTooHighText, ephemeral: true })
@@ -86,8 +90,7 @@ export const generate = async (interaction, parameters) => {
 			parameters.height,
 			parameters.sampler,
 			parameters["highres-fix"],
-			parameters["firstphase-width"],
-			parameters["firstphase-height"],
+			parameters["hr-scale"],
 			parameters["scale-latent"],
 			parameters["clip-skip"],
 		)
