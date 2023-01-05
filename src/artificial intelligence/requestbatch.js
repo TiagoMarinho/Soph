@@ -52,8 +52,8 @@ const requestBatch = async (
 		}))
 
 	const requests = dynamicParameters
-		.map(dynamicData => 
-			batchQueue.add(_ => requestImage(
+		.map(async dynamicData => 
+			await batchQueue.add(_ => requestImage(
 				dynamicData.prompt,
 				dynamicData.negativePrompt,
 				dynamicData.seed,

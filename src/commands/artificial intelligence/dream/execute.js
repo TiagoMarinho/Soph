@@ -108,14 +108,15 @@ export const generate = async (interaction, parameters) => {
 			})
 
 	const embeds = []
-	for (const [index, request] of requests.entries()) {
+	for (const [index, job] of requests.entries()) {
+		const { request } = job
 		const response = await request.catch(console.error)
 		const data = await response.json()
 		const buffers = data.images.map(i => Buffer.from(i, "base64"))
 		const filename = `${data.parameters.seed}.png`
-		const attachments = buffers.map(buffer => {
-			return new AttachmentBuilder(buffer, { name: filename })
-		})
+		const attachments = buffers.map(buffer => 
+			new AttachmentBuilder(buffer, { name: filename })
+		)
 
 		const cacheMessage = await cacheChannel.send({ files: attachments })
 		const url = [...cacheMessage.attachments.values()][0].url
