@@ -25,6 +25,9 @@ export default {
 			if (error.code === 10062) // bot took too long to respond/defer, trying to reply would crash it
 				return
 
+			if (interaction.replied)
+				return
+			
 			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true })
 		}
 	},
