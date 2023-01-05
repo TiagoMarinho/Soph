@@ -1,7 +1,17 @@
-# Soph #
+# Soph
 A discord bot for generating art with artificial intelligence
 
-## How to use: ##
+## Table of Contents
+
+1. [How to use](#how-to-use)
+2. [Features](#features)
+3. [About](#more-about-soph)
+3. [Commands](#commands)
+3. [Installation](#installation)
+4. [Running](#running)
+5. [Contributing](#contributing)
+
+## How to use
 
 `/dream prompt: 1girl, solo, blonde hair, twintails, blue eyes, blue dress`
 
@@ -10,7 +20,7 @@ Will yield images such as:
 ![Four AI-generated anime drawings of a blonde girl with blue eyes wearing a blue dress](https://i.imgur.com/gqu5jHc.png)
 <sup>results will vary depending on the stable diffusion model being used</sup>
 
-## Features ##
+## Features
 
 - Slash commands and rich embeds
 - Immediate previews for completed images
@@ -31,7 +41,7 @@ Will yield images such as:
 - Retrieves image generation parameters from generated images with `/metadata` command
 - Can guess which tags best describe an image through the `/interrogate` command
 
-## More about Soph ##
+## More about Soph
 
 Soph prioritizes UX and being a first-class Discord citizen, and as such uses slash commands and rich embeds with proper multiple image support rather than baking all results into a single image grid, sending each result as a separate image attachment or only displaying one image at a time.
 
@@ -39,9 +49,7 @@ Individual images are sent as soon as they're ready rather than only sending the
 
 ![animated GIF of Soph's response to a command](https://i.imgur.com/cc5NohO.gif)
 
-Soph works by requesting images to AUTOMATIC1111's webui API for Stable Diffusion.
-
-## Commands ##
+## Commands
 
 * `/dream <prompt>`
 	* Also accepts the following optional arguments: `<negative> <batch> <sampler> <steps> <width> <height> <cfg> <highres-fix> <hr-scale> <image> <denoising> <scale-latent>`
@@ -52,7 +60,7 @@ Soph works by requesting images to AUTOMATIC1111's webui API for Stable Diffusio
 * `/help`
 * `/ping`
 
-## Installation ##
+## Installation
 
 1. Install https://github.com/AUTOMATIC1111/stable-diffusion-webui and its dependencies
 2. Install NodeJS
@@ -76,12 +84,12 @@ Soph works by requesting images to AUTOMATIC1111's webui API for Stable Diffusio
 	}]
 	```
 
-## Running ##
+## Running
 
 1. Launch WebUI and wait for it to finish loading
 2. Run `node .` inside Soph's root folder to launch Soph
 
-## Contributing ##
+# Contributing
 
 Contributions, even in the form of creating new issues, are more than welcome! 
 
