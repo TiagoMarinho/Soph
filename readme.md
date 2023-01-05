@@ -8,17 +8,19 @@ A discord bot for generating art with artificial intelligence
 Will yield images such as:
 
 ![Four AI-generated anime drawings of a blonde girl with blue eyes wearing a blue dress](https://i.imgur.com/gqu5jHc.png)
+<sup>results will vary depending on the stable diffusion model being used</sup>
 
 ## Features ##
 
 - Slash commands and rich embeds
 - Immediate previews for completed images
 - Navigation buttons for mobile devices
+- Buttons for generating more images and modifying prompts from previous generations
 - Allows user to change most parameters available in WebUI
 	- Negative prompt
 	- Sampler
 	- Number of steps
-	- Classifier Free Guidance Scale
+	- Classifier-free guidance scale
 	- Seed
 	- Width and height
 	- Variation seed and strength
@@ -42,20 +44,13 @@ Soph works by requesting images to AUTOMATIC1111's webui API for Stable Diffusio
 ## Commands ##
 
 * `/dream <prompt>`
-	* Also accepts the following optional arguments: `<negative> <batch> <sampler> <steps> <width> <height> <cfg> <highres-fix> <firstphase-width> <firstphase-height> <image> <denoising>`
+	* Also accepts the following optional arguments: `<negative> <batch> <sampler> <steps> <width> <height> <cfg> <highres-fix> <hr-scale> <image> <denoising> <scale-latent>`
 * `/metadata <image>`
 * `/interrogate <image> <model>`
 * `/upscale <image>` 
 	* Also accepts the following optional arguments: `<model> <resize> <secondary-model> <mix>`
 * `/help`
 * `/ping`
-
-## Planned ##
-
-- Support for multiple servers to contribute compute power generating images
-- Button for interrupting current batch
-- Button for generating more images using the same parameters
-- Better support for localization
 
 ## Installation ##
 
@@ -65,32 +60,34 @@ Soph works by requesting images to AUTOMATIC1111's webui API for Stable Diffusio
 4. Create a new Discord application in the [Discord Developer Portal](https://discord.com/developers/applications)
 5. Copy the token and client id of your new discord application and put it in `Soph/config.json`, like this:
 
-	```
+	```json
 	{
-		"token:" "TOKEN HERE",
+		"token": "TOKEN HERE",
 		"clientId": "CLIENT ID HERE",
-		"cacheChannelId": "SEE STEP 6"
+		"cacheChannelId": "SEE NEXT STEP"
 	}
 	```
 6. Add a channel ID in the above `config.json` file for a chat your application has access to, so that it can use as a cache for the images. Every image generated with the bot will be sent in this chat first.
-7. Execute the WebUI and wait for it to finish loading
-8. Create a file `Soph/src/artificial intelligence/serverlist.json` and add the address of your WebUI to it (usually `127.0.0.1:7860`), like this:
-	```
+7. Create a file `Soph/src/artificial intelligence/serverlist.json` and add the address of your WebUI to it (usually `127.0.0.1:7860`), like this:
+	```json
 	[{
 		"address": "http://127.0.0.1:7860",
 		"credentials": "login:password"
 	}]
 	```
-9. Run `node .` inside Soph's root folder to launch Soph
+
+## Running ##
+
+1. Launch WebUI and wait for it to finish loading
+2. Run `node .` inside Soph's root folder to launch Soph
 
 ## Contributing ##
 
-We're actively looking for contributions! Here's a basic overview of the project structure:
+Contributions, even in the form of creating new issues, are more than welcome! 
 
-> `src/main.js` is the entry point
+Here's a basic overview of the project structure for new contributors to get used to the code base:
 
-> Commands are folders in `src/commands/<category>/`
-
-> `src/commands/<category>/<command name>/data.json` stores the command name, description and arguments
-
-> `src/commands/<category>/<command name>/execute.js` contains the code that runs when the user executes said command
+* `src/main.js` is the entry point
+* Commands are folders in `src/commands/<category>/`
+* `src/commands/<category>/<command name>/data.json` stores the command name, description and arguments
+* `src/commands/<category>/<command name>/execute.js` contains the code that runs when the user executes said command
