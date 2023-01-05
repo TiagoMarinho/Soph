@@ -24,10 +24,6 @@ const requestImage = async (
 ) => {
 	const isImageToImage = initImage !== null
 
-	// width and height must be multiples of 64
-	const sanitizedWidth = roundToClosestMultipleOf(width, 64)
-	const sanitizedHeight = roundToClosestMultipleOf(height, 64)
-
 	const payload = {
 		"init_images": [
 			initImage
@@ -46,8 +42,8 @@ const requestImage = async (
 		"n_iter": 1,
 		"steps": steps,
 		"cfg_scale": cfg,
-		"width": sanitizedWidth,
-		"height": sanitizedHeight,
+		"width": width,
+		"height": height,
 		"restore_faces": false,
 		"tiling": false,
 		"negative_prompt": negativePrompt,
