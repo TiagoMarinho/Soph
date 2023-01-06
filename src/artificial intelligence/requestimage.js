@@ -24,11 +24,21 @@ const requestImage = async (
 ) => {
 	const isImageToImage = initImage !== null
 
+	const resizeModeTypes = {
+		JUST_RESIZE: 0,
+		CROP_AND_RESIZE: 1,
+		RESIZE_AND_FILL: 2,
+		JUST_RESIZE_LATENT_UPSCALE: 3,
+	}
+	const resizeMode = isImageToImage && latentSpace ? 
+		resizeModeTypes.JUST_RESIZE_LATENT_UPSCALE : 
+		resizeModeTypes.CROP_AND_RESIZE
+
 	const payload = {
 		"init_images": [
 			initImage
 		],
-		"resize_mode": 1,
+		"resize_mode": resizeMode,
 		"enable_hr": highresFix,
 		"denoising_strength": denoising,
 		"hr_scale": hrScale,
