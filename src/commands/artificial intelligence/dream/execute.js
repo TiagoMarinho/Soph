@@ -171,6 +171,11 @@ export const generate = async (interaction, parameters) => {
 				rowData.push(generationButtons)
 		}
 
+		if (!isLastImage)
+			rowData.push([
+				{ emoji: `1060751752875479183`, id: `cancel`, style: ButtonStyle.Danger },
+			])
+
 		const rows = rowData.map(buttonData => {
 			const row = new ActionRowBuilder()
 
