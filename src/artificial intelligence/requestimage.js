@@ -34,6 +34,10 @@ const requestImage = async (
 		resizeModeTypes.JUST_RESIZE_LATENT_UPSCALE : 
 		resizeModeTypes.CROP_AND_RESIZE
 
+	const highresFixUpscaler = latentSpace ?
+		`Latent (bicubic antialiased)` : 
+		`R-ESRGAN 4x+ Anime6B` // workaround for webui defaulting to lanczos
+
 	const payload = {
 		"init_images": [
 			initImage
@@ -42,6 +46,7 @@ const requestImage = async (
 		"enable_hr": highresFix,
 		"denoising_strength": denoising,
 		"hr_scale": hrScale,
+		"hr_upscaler": highresFixUpscaler,
 		"prompt": prompt,
 		"seed": seed,
 		"subseed": subseed,
@@ -65,7 +70,6 @@ const requestImage = async (
 		"sampler_index": sampler,
 		"override_settings": {
 			"enable_pnginfo": true,
-			"use_scale_latent_for_hires_fix": latentSpace,
 			"CLIP_stop_at_last_layers": clipSkip
 		}
 	}
