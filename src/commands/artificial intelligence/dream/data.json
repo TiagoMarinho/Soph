@@ -217,9 +217,9 @@
 		{
 			"type": 5,
 			"name": "scale-latent",
-			"description": "Upscale latent space image when doing highres-fix",
+			"description": "Upscale image in latent space",
 			"description_localizations": {
-				"pt-BR": "Performar upscaling da imagem em latent space durante highres-fix"
+				"pt-BR": "Aumentar tamanho da imagem em espaço latente"
 			},
 			"required": false
 		},
