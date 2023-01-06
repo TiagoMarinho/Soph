@@ -3,7 +3,7 @@ export default class Queue {
 	#isBusy = false
 	#lastId = 0
 
-	async add (task) {
+	add (task) {
 		if (typeof task !== `function`)
 			throw new TypeError(`Provided task is not a function`)
 
