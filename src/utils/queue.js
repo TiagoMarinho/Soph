@@ -38,6 +38,8 @@ export default class Queue {
 	}
 	async cancel (id) {
 		const index = this.#tasks.findIndex(item => item.id === id)
+		if (index === -1)
+			return null
 		return this.#tasks.splice(index, 1)
 	}
 	async clear () {
