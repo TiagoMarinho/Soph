@@ -63,10 +63,11 @@ Individual images are sent as soon as they're ready rather than only sending the
 ## Installation
 
 1. Install https://github.com/AUTOMATIC1111/stable-diffusion-webui and its dependencies
-2. Install NodeJS
-3. Run `git clone https://github.com/TiagoMarinho/Soph` to clone Soph's repo
-4. Create a new Discord application in the [Discord Developer Portal](https://discord.com/developers/applications)
-5. Copy the token and client id of your new discord application and put it in `Soph/config.json`, like this:
+2. Add `--api` to WebUI's [commandline arguments](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Command-Line-Arguments-and-Settings)
+3. Install NodeJS
+4. Run `git clone https://github.com/TiagoMarinho/Soph` to clone Soph's repo
+5. Create a new Discord application in the [Discord Developer Portal](https://discord.com/developers/applications)
+6. Copy the token and client id of your new discord application and put it in `Soph/config.json`, like this:
 
 	```json
 	{
@@ -75,14 +76,15 @@ Individual images are sent as soon as they're ready rather than only sending the
 		"cacheChannelId": "SEE NEXT STEP"
 	}
 	```
-6. Add a channel ID in the above `config.json` file for a chat your application has access to, so that it can use as a cache for the images. Every image generated with the bot will be sent in this chat first.
-7. Create a file `Soph/src/artificial intelligence/serverlist.json` and add the address of your WebUI to it (usually `127.0.0.1:7860`), like this:
+7. Add a channel ID in the above `config.json` file for a chat your application has access to, so that it can use as a cache for the images. Every image generated with the bot will be sent in this chat first.
+8. Create a file `Soph/src/artificial intelligence/serverlist.json` and add the address of your WebUI to it (usually `127.0.0.1:7860`), like this:
 	```json
 	[{
 		"address": "http://127.0.0.1:7860",
 		"credentials": "login:password"
 	}]
 	```
+9. Run `node src/deploy-commands.js` inside Soph's root folder to register the slash commands for the bot.
 
 ## Running
 
