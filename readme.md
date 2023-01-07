@@ -1,5 +1,5 @@
-# Soph
-A discord bot for generating art with artificial intelligence
+<h1 align="center"><img src="https://i.imgur.com/Rty8HhE.png" width="128"><br/>Soph</h1>
+<p align="center">A discord bot for generating art with artificial intelligence</p>
 
 ## Table of Contents
 
