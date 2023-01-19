@@ -1,6 +1,7 @@
 import { getRandomInt } from '../utils/math.js';
 import Queue from '../utils/queue.js';
 import requestImage from './requestimage.js';
+import loadBalancingManager from "../distributed computing/loadbalancingmanager.js"
 
 const getPromptVariation = (prompt, position) => {
 	const insideCurlyBracesRegex = /\{.+?\}/g
@@ -19,8 +20,6 @@ const getPromptVariation = (prompt, position) => {
 
 	return promptVariation
 }
-
-const batchQueue = new Queue()
 
 const requestBatch = async (
 	batchCount = 4, 
@@ -51,9 +50,11 @@ const requestBatch = async (
 			seed: seed ?? randomSeed + i,
 		}))
 
+	const server = loadBalancingManager.getLeastLoadedServer()
+
 	const requests = dynamicParameters
 		.map(dynamicData => 
-			batchQueue.add(_ => requestImage(
+			server.queue.add(_ => requestImage(
 				dynamicData.prompt,
 				dynamicData.negativePrompt,
 				dynamicData.seed,
@@ -70,6 +71,7 @@ const requestBatch = async (
 				hrScale,
 				latentSpace,
 				clipSkip,
+				server
 			))
 		)
 

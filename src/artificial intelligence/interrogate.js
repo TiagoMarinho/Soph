@@ -1,4 +1,4 @@
-import servers from './serverlist.json' assert { type: 'json' }
+import servers from '../distributed computing/serverlist.json' assert { type: 'json' }
 
 const interrogate = async (
 	imageBuffer,
