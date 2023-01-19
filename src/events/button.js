@@ -52,20 +52,20 @@ export default {
 				]
 
 			const modal = new ModalBuilder()
-			.setCustomId('modal-edit')
-			.setTitle(title)
+				.setCustomId('modal-edit')
+				.setTitle(title)
 
 			const promptInput = new TextInputBuilder()
 				.setCustomId('promptInput')
 				.setLabel(promptLabel)
 				.setStyle(TextInputStyle.Paragraph)
-				.setValue(parameters.prompt ?? ``)
+				.setValue(parameters.prompt ?? ` `) // space is workaround for previous modal value being filled in
 
 			const negativePromptInput = new TextInputBuilder()
 				.setCustomId('negativePromptInput')
 				.setLabel(negativePromptLabel)
 				.setStyle(TextInputStyle.Paragraph)
-				.setValue(parameters.negative ?? ``)
+				.setValue(parameters.negative ?? ` `) // space is workaround for previous modal value being filled in
 				.setRequired(false)
 
 			const firstActionRow = new ActionRowBuilder().addComponents(promptInput)
