@@ -192,15 +192,6 @@
 			"max_value": 1
 		},
 		{
-			"type": 5,
-			"name": "highres-fix",
-			"description": "Render image at smaller resolution, then upscale and improve details without changing composition",
-			"description_localizations": {
-				"pt-BR": "Gerar imagem em baixa resolução primeiro, aumentar e refinar detalhes sem mudar a composição"
-			},
-			"required": false
-		},
-		{
 			"type": 10,
 			"name": "hr-scale",
 			"description": "Scale of highres-fix output relative to original",

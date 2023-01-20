@@ -17,8 +17,7 @@ const requestImage = async (
 	width = 512,
 	height = 512,
 	sampler = `DPM++ 2M`,
-	highresFix = false,
-	hrScale = 2,
+	hrScale = 1,
 	latentSpace = false,
 	clipSkip = 2
 ) => {
@@ -43,7 +42,7 @@ const requestImage = async (
 			initImage
 		],
 		"resize_mode": resizeMode,
-		"enable_hr": highresFix,
+		"enable_hr": hrScale > 1,
 		"denoising_strength": denoising,
 		"hr_scale": hrScale,
 		"hr_upscaler": highresFixUpscaler,

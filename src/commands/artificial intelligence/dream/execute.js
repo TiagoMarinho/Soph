@@ -76,7 +76,6 @@ export const generate = async (interaction, parameters) => {
 	// request images
 	const requests = 
 		await requestBatch(
-			parameters.batch, 
 			finalPrompt, 
 			finalNegativePrompt,
 			parameters.seed,
@@ -89,10 +88,10 @@ export const generate = async (interaction, parameters) => {
 			parameters.width,
 			parameters.height,
 			parameters.sampler,
-			parameters["highres-fix"],
 			parameters["hr-scale"],
 			parameters["scale-latent"],
 			parameters["clip-skip"],
+			parameters.batch, 
 		)
 
 	// handle responses
