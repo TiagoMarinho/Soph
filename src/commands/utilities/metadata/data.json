@@ -5,7 +5,7 @@
 		"pt-BR": "metadados"
 	},
 	"description_localizations": {
-		"pt-BR": "Extrair metadados de um arquivo PNG"
+		"pt-BR": "Extraia metadados de um arquivo PNG"
 	},
 	"type": 1,
 	"options": [
