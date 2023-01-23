@@ -65,7 +65,7 @@
 			"name": "steps",
 			"description": "How many steps to refine the image for",
 			"description_localizations": {
-				"pt-BR": "Por quantos passos o sampler deve refinar a imagem"
+				"pt-BR": "Quantas etapas o sampler deve refinar a imagem"
 			},
 			"required": false,
 			"min_value": 10,
@@ -87,7 +87,7 @@
 			"name": "batch",
 			"description": "How many images to generate",
 			"description_localizations": {
-				"pt-BR": "Quantas imagens gerar"
+				"pt-BR": "Quantas imagens devem ser geradas"
 			},
 			"required": false,
 			"min_value": 1,
@@ -124,9 +124,9 @@
 		{
 			"type": 4,
 			"name": "seed",
-			"description": "Seed to use for the initial noise",
+			"description": "If you create an image with same parameters and seed as another image, you'll get the same result",
 			"description_localizations": {
-				"pt-BR": "Número usado para gerar o ruído inicial"
+				"pt-BR": "Se criar uma imagem com os mesmos parâmetros e seed que outra imagem, obterá o mesmo resultado"
 			},
 			"required": false
 		},
@@ -138,19 +138,19 @@
 				"pt-BR": "prefixo"
 			},
 			"description_localizations": {
-				"pt-BR": "Adicionar tags predefinidas no início do pedido"
+				"pt-BR": "Adicionar tags do NovelAI predefinidas no início do pedido"
 			},
 			"required": false
 		},
 		{
 			"type": 10,
 			"name": "variation-strength",
-			"description": "How much noise to add over the original seed",
+			"description": "How much noise to add over the original seed. At 1, a completely different picture",
 			"name_localizations": {
 				"pt-BR": "intensidade-variação"
 			},
 			"description_localizations": {
-				"pt-BR": "Proporção da mistura entre ruído primário e secundário"
+				"pt-BR": "Quanto ruído acrescentar sobre a seed original. Em 1, uma imagem completamente diferente"
 			},
 			"required": false,
 			"min_value": 0,
@@ -194,12 +194,12 @@
 		{
 			"type": 10,
 			"name": "hr-scale",
-			"description": "Scale of highres-fix output relative to original",
+			"description": "Scale of highres-fix output relative to original. At 2, double the image original size",
 			"name_localizations": {
 				"pt-BR": "escala-highres-fix"
 			},
 			"description_localizations": {
-				"pt-BR": "Escala do highres-fix relativo ao tamanho da imagem original"
+				"pt-BR": "Tamanho do highres-fix relativo a imagem. Em 2, o dobro do tamanho da imagem original"
 			},
 			"required": false,
 			"min_value": 0,
