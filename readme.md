@@ -77,14 +77,7 @@ Individual images are sent as soon as they're ready rather than only sending the
 	}
 	```
 7. Add a channel ID in the above `config.json` file for a chat your application has access to, so that it can use as a cache for the images. Every image generated with the bot will be sent in this chat first.
-8. Create a file `Soph/src/artificial intelligence/serverlist.json` and add the address of your WebUI to it (usually `127.0.0.1:7860`), like this:
-	```json
-	[{
-		"address": "http://127.0.0.1:7860",
-		"credentials": "login:password"
-	}]
-	```
-9. Run `node src/deploy-commands.js` inside Soph's root folder to register the slash commands for the bot.
+8. Run `node src/deploy-commands.js` inside Soph's root folder to register the slash commands for the bot.
 
 ## Running
 
