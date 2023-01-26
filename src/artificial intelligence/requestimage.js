@@ -34,7 +34,7 @@ const requestImage = async (
 		resizeModeTypes.CROP_AND_RESIZE
 
 	const highresFixUpscaler = latentSpace ?
-		`Latent (bicubic antialiased)` : 
+		`Latent (nearest-exact)` : 
 		`R-ESRGAN 4x+ Anime6B` // workaround for webui defaulting to lanczos
 
 	const payload = {
