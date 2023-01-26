@@ -202,7 +202,7 @@
 				"pt-BR": "Tamanho do highres-fix relativo a imagem. Em 2, o dobro do tamanho da imagem original"
 			},
 			"required": false,
-			"min_value": 0,
+			"min_value": 1,
 			"max_value": 10
 		},
 		{
