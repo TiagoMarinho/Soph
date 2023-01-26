@@ -12,9 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^14.7.1",
-    "node-fetch": "^3.2.10",
-    "png-chunk-text": "^1.0.0",
-    "png-chunks-encode": "^1.0.0",
-    "png-chunks-extract": "^1.0.0"
+    "node-fetch": "^3.2.10"
   }
 }
