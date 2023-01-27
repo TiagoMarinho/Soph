@@ -1,10 +1,8 @@
 import { parseParameters } from "../../../artificial intelligence/pnginfo.js"
 import { EmbedBuilder, ApplicationCommandOptionType } from 'discord.js'
 import colors from '../../../colors.json' assert { type: 'json' }
-import extract from 'png-chunks-extract'
-import encode from 'png-chunks-encode'
-import text from 'png-chunk-text'
 import fetch from 'node-fetch'
+import { getLocalizedText } from "../../../locale/languages.js"
 
 const metadata = async interaction => {
 
@@ -16,29 +14,24 @@ const metadata = async interaction => {
 			option.type === ApplicationCommandOptionType.Attachment ? 
 				option.attachment : option.value
 	}
+
+	if (!parameters.image.name.endsWith(`.png`))
+		return interaction.reply({
+			content: getLocalizedText("png info unknown file type", interaction.locale),
+			ephemeral: true
+		})
 	
 	const inputImageUrlData = await fetch(parameters.image.url)
 	const inputImageBuffer = await inputImageUrlData.arrayBuffer()
-	const chunks = extract(Buffer.from(inputImageBuffer))
-
-	const textChunks = chunks
-		.filter(chunk => chunk.name === 'tEXt')
-		.map(chunk => text.decode(chunk.data))
-
-	const fields = textChunks.map(textChunk => {
-		try {
-			return parseParameters(textChunk.text)
-		} catch {
-			return {
-				name: textChunk.keyword,
-				value: textChunk.text
-			}
-		}
-	}).flat().map(field => ({
-		name: field.name,
-		value: `\`\`\`${field.value}\`\`\``,
-		inline: field.value?.length <= 16
-	}))
+	const buffer = Buffer.from(inputImageBuffer)
+	const parsedParams = await parseParameters(buffer)
+	const fields = parsedParams
+		.filter(field => field.name.length > 0)
+		.map(field => ({
+			name: field.name,
+			value: `\`\`\`${field.value}\`\`\``,
+			inline: field.value?.length <= 16
+		}))
 
 	const embed = new EmbedBuilder()
 		.setColor(colors.complete)

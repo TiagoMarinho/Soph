@@ -22,7 +22,6 @@ const getPromptVariation = (prompt, position) => {
 }
 
 const requestBatch = async (
-	batchCount = 4, 
 	prompt,
 	negativePrompt, 
 	seed,
@@ -35,10 +34,10 @@ const requestBatch = async (
 	width,
 	height,
 	sampler,
-	highresFix,
 	hrScale,
 	latentSpace,
 	clipSkip,
+	batchCount = hrScale > 1 ? 1 : 4,
 ) => {
 
 	const randomSeed = getRandomInt(1_000_000_000, 9_999_999_999) // 10 digits
@@ -67,7 +66,6 @@ const requestBatch = async (
 				width,
 				height,
 				sampler,
-				highresFix,
 				hrScale,
 				latentSpace,
 				clipSkip,
