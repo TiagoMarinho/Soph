@@ -1,4 +1,4 @@
-import servers from '../distributed computing/serverlist.json' assert { type: 'json' }
+import loadBalancingManager from "../distributed computing/loadbalancingmanager.js"
 
 const upscale = async (
 	imageBuffer,
@@ -24,8 +24,9 @@ const upscale = async (
 		"upscale_first": false,
 		"image": base64InputImage
 	}
-	const apiEndpoint = `${servers[0].address}/sdapi/v1/extra-single-image`
-	const buff = Buffer.from(servers[0].credentials, 'utf-8')
+	const server = loadBalancingManager.getLeastLoadedServer()
+	const apiEndpoint = `${server.address}/sdapi/v1/extra-single-image`
+	const buff = Buffer.from(server.credentials, 'utf-8')
 	const base64Credentials = buff.toString('base64')
 	const response = await fetch(apiEndpoint, {
 		method: 'post',
