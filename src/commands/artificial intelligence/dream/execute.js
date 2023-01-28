@@ -126,7 +126,7 @@ export const generate = async (interaction, parameters) => {
 		const descLocale = getLocalizedText("dream response description", interaction.locale)
 
 		const embed = new EmbedBuilder()
-			.setURL(paramCacheMessage.url)
+			.setURL(paramCacheMessage?.url ?? `https://github.com/TiagoMarinho/Soph`)
 			.setImage(url)
 			.setColor(color)
 			.setDescription(descLocale)
