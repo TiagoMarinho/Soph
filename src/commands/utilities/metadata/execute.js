@@ -4,6 +4,16 @@ import colors from '../../../colors.json' assert { type: 'json' }
 import fetch from 'node-fetch'
 import { getLocalizedText } from "../../../locale/languages.js"
 
+const trimOverflowWithEllipsis = (str, maxLength) => {
+	if (str.length <= 1024)
+		return str
+	
+	const ellipsis = "..."
+	const ellipsedStr = str.slice(0, maxLength - ellipsis.length) + ellipsis
+
+	return ellipsedStr
+}
+
 const metadata = async interaction => {
 
 	await interaction.deferReply()
@@ -20,6 +30,8 @@ const metadata = async interaction => {
 			content: getLocalizedText("png info unknown file type", interaction.locale),
 			ephemeral: true
 		})
+
+	const MAX_FIELD_LENGTH = 1024
 	
 	const inputImageUrlData = await fetch(parameters.image.url)
 	const inputImageBuffer = await inputImageUrlData.arrayBuffer()
@@ -29,7 +41,7 @@ const metadata = async interaction => {
 		.filter(field => field.name.length > 0)
 		.map(field => ({
 			name: field.name,
-			value: `\`\`\`${field.value}\`\`\``,
+			value: "```" + trimOverflowWithEllipsis(field.value, MAX_FIELD_LENGTH - 6) + "```",
 			inline: field.value?.length <= 16
 		}))
 
