@@ -16,8 +16,6 @@ const trimOverflowWithEllipsis = (str, maxLength) => {
 
 const metadata = async interaction => {
 
-	await interaction.deferReply()
-
 	const parameters = {}
 	for (const option of interaction.options.data) {
 		parameters[option.name] = 
@@ -30,6 +28,8 @@ const metadata = async interaction => {
 			content: getLocalizedText("png info unknown file type", interaction.locale),
 			ephemeral: true
 		})
+
+	await interaction.deferReply()
 
 	const MAX_FIELD_LENGTH = 1024
 	
