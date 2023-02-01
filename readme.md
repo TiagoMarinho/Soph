@@ -43,6 +43,8 @@ Will yield images such as:
 
 ## More about Soph
 
+Soph works by communicating with [Stable Diffusion WebUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) API to generate images using artificial intelligence. This can be achieved by running WebUI locally on the same machine, on the same network or over the internet.
+
 Soph prioritizes UX and being a first-class Discord citizen, and as such uses slash commands and rich embeds with proper multiple image support rather than baking all results into a single image grid, sending each result as a separate image attachment or only displaying one image at a time.
 
 Individual images are sent as soon as they're ready rather than only sending the entire batch at once or showing multiple unfinished images at the same time, that way we can ensure the user gets useful and immediate feedback of their generation request.
@@ -77,7 +79,8 @@ Individual images are sent as soon as they're ready rather than only sending the
 	}
 	```
 7. Add a channel ID in the above `config.json` file for a chat your application has access to, so that it can use as a cache for the images. Every image generated with the bot will be sent in this chat first.
-8. Run `node src/deploy-commands.js` inside Soph's root folder to register the slash commands for the bot.
+8. Install dependencies by running `npm install` inside Soph's root folder
+9. Run `node src/deploy-commands.js` inside Soph's root folder to register slash commands for the bot.
 
 ## Running
 
