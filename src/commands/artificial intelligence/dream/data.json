@@ -236,6 +236,104 @@
 				"pt-BR": "Responder com uma mensagem que só você poderá ver"
 			},
 			"required": false
+		},
+		{
+			"type": 11,
+			"name": "controlnet-image",
+			"description": "Input image for the control net",
+			"name_localizations": {
+				"pt-BR": "controlnet-imagem"
+			},
+			"description_localizations": {
+				"pt-BR": "Imagem base para o control net"
+			},
+			"required": false
+		},
+		{
+			"type": 3,
+			"name": "controlnet-model",
+			"description": "Model to use on control net",
+			"name_localizations": {
+				"pt-BR": "controlnet-modelo"
+			},
+			"description_localizations": {
+				"pt-BR": "Modelo para ser usado no control net"
+			},
+			"required": false,
+			"autocomplete": true
+		},
+		{
+			"type": 3,
+			"name": "controlnet-module",
+			"description": "Module to use on control net",
+			"name_localizations": {
+				"pt-BR": "controlnet-modulo"
+			},
+			"description_localizations": {
+				"pt-BR": "Módulo para ser usado no control net"
+			},
+			"required": false,
+			"autocomplete": true
+		},
+		{
+			"type": 10,
+			"name": "controlnet-weight",
+			"description": "How much weight for the control net",
+			"name_localizations": {
+				"pt-BR": "controlnet-peso"
+			},
+			"description_localizations": {
+				"pt-BR": "Quanto de peso para o control net"
+			},
+			"required": false,
+			"min_value": 0,
+			"max_value": 2
+		},
+		{
+			"type": 10,
+			"name": "controlnet-guidance-start",
+			"description": "Ratio of generation where control net starts to have an effect",
+			"description_localizations": {
+				"pt-BR": "Proporção na qual control net começa a ter efeito"
+			},
+			"required": false,
+			"min_value": 0,
+			"max_value": 1
+		},
+		{
+			"type": 10,
+			"name": "controlnet-guidance-end",
+			"description": "Ratio of generation where control net stops to have an effect",
+			"description_localizations": {
+				"pt-BR": "Proporção na qual control net para de ter efeito"
+			},
+			"required": false,
+			"min_value": 0,
+			"max_value": 1
+		},
+		{
+			"type": 10,
+			"name": "controlnet-mode",
+			"description": "Modifies what control net gives priority when generating a image",
+			"name_localizations": {
+				"pt-BR": "controlnet-modo"
+			},
+			"description_localizations": {
+				"pt-BR": "Muda oque control net dá prioridade durante a geração"
+			},
+			"required": false,
+			"choices": [
+				{ "name": "Balanced", "value": 0 },
+				{ "name": "Prompt is more important", "value": 1 },
+				{ "name": "ControlNet is more important", "value": 2 }
+			],
+			"choices_localizations": {
+				"pt-BR": [
+					{ "name": "Balanceado", "value": 0 },
+					{ "name": "A prompt é mais importante", "value": 1 },
+					{ "name": "O ControlNet é mais importante", "value": 2 }
+				]
+			}
 		}
 	]
 }
