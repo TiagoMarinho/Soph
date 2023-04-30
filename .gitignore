@@ -2,3 +2,4 @@
 /node_modules
 /src/artificial intelligence/serverlist.json
 src/database/database.sqlite
+.vscode
