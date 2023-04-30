@@ -91,7 +91,7 @@
 			},
 			"required": false,
 			"min_value": 1,
-			"max_value": 8
+			"max_value": 4
 		},
 		{
 			"type": 4,
