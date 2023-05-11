@@ -1,14 +1,9 @@
-import requestBatch from '../../../artificial intelligence/requestbatch.js'
-import novelAIPrefix from '../../../artificial intelligence/novelaiprefix.json' assert { type: 'json' }
-import { getLocalizedText } from '../../../locale/languages.js'
-import colors from '../../../colors.json' assert { type: 'json' }
-import config from '../../../../config.json' assert { type: 'json' }
-import { 
-	AttachmentBuilder, EmbedBuilder, 
-	ActionRowBuilder, ButtonBuilder, 
-	ComponentType, ButtonStyle,
-	ApplicationCommandOptionType
-} from 'discord.js'
+import requestBatch from '../artificial intelligence/requestbatch.js'
+import novelAIPrefix from '../artificial intelligence/novelaiprefix.json' assert { type: 'json' }
+import { getLocalizedText } from '../locale/languages.js'
+import colors from '../colors.json' assert { type: 'json' }
+import config from '../../config.json' assert { type: 'json' }
+import { AttachmentBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 import fetch from 'node-fetch'
 
 const MAX_PIXEL_COUNT = 1536 * 1024
@@ -207,16 +202,4 @@ export const generate = async (interaction, parameters) => {
 	}
 }
 
-const dream = async interaction => {
-
-	const parameters = {}
-	for (const option of interaction.options.data) {
-		parameters[option.name] = 
-			option.type === ApplicationCommandOptionType.Attachment ? 
-				option.attachment : option.value
-	}
-
-	await generate(interaction, parameters)
-}
-
-export default dream
+export default generate

@@ -1,5 +1,5 @@
 import { Events, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } from 'discord.js'
-import { generate } from '../commands/artificial intelligence/dream/execute.js'
+import generate from '../shared/generate.js'
 import { getLocalizedText } from '../locale/languages.js'
 import config from '../../config.json' assert { type: 'json' }
 
