@@ -19,7 +19,15 @@ const requestImage = async (
 	sampler = `DPM++ 2M Karras`,
 	hrScale = 1,
 	latentSpace = false,
-	clipSkip = 2
+	clipSkip = 2,
+	batchSize = 1,
+	controlNetImage = null,
+	controlNetModel = "None",
+	controlNetModule = "none",
+	controlNetWeight = 1,
+	controlNetGuidanceStart = 0,
+	controlNetGuidanceEnd = 1,
+	controlNetMode = 0,
 ) => {
 	const isImageToImage = initImage !== null
 
@@ -52,7 +60,7 @@ const requestImage = async (
 		"subseed_strength": subseedStrength,
 		"seed_resize_from_h": -1,
 		"seed_resize_from_w": -1,
-		"batch_size": 1,
+		"batch_size": batchSize,
 		"n_iter": 1,
 		"steps": steps,
 		"cfg_scale": cfg,
@@ -70,6 +78,26 @@ const requestImage = async (
 		"override_settings": {
 			"enable_pnginfo": true,
 			"CLIP_stop_at_last_layers": clipSkip
+		}
+	}
+
+	const isControlNet = controlNetImage !== null
+	if (isControlNet) {
+		
+		payload["alwayson_scripts"] = {
+			"controlnet": {
+				"args": [
+				  {
+					"input_image": controlNetImage,
+					"model": controlNetModel,
+					"module": controlNetModule,
+					"weight": controlNetWeight,
+					"guidance_start": controlNetGuidanceStart,
+					"guidance_end": controlNetGuidanceEnd,
+					"control_mode": controlNetMode
+				  }
+				]
+			}
 		}
 	}
 

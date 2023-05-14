@@ -1,14 +1,9 @@
-import requestBatch from '../../../artificial intelligence/requestbatch.js'
-import novelAIPrefix from '../../../artificial intelligence/novelaiprefix.json' assert { type: 'json' }
-import { getLocalizedText } from '../../../locale/languages.js'
-import colors from '../../../colors.json' assert { type: 'json' }
-import config from '../../../../config.json' assert { type: 'json' }
-import { 
-	AttachmentBuilder, EmbedBuilder, 
-	ActionRowBuilder, ButtonBuilder, 
-	ComponentType, ButtonStyle,
-	ApplicationCommandOptionType
-} from 'discord.js'
+import requestBatch from '../artificial intelligence/requestbatch.js'
+import novelAIPrefix from '../artificial intelligence/novelaiprefix.json' assert { type: 'json' }
+import { getLocalizedText } from '../locale/languages.js'
+import colors from '../colors.json' assert { type: 'json' }
+import config from '../../config.json' assert { type: 'json' }
+import { AttachmentBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 import fetch from 'node-fetch'
 
 const MAX_PIXEL_COUNT = 1536 * 1024
@@ -59,6 +54,15 @@ export const generate = async (interaction, parameters) => {
 		base64InputImage = `data:image/png;base64,${Buffer.from(inputImageBuffer).toString('base64')}`
 	}
 
+	// controlnet
+	const isControlNet = typeof parameters["controlnet-image"] !== `undefined`
+	let base64ControlNetImage = null
+	if (isControlNet) {
+		const inputImageUrlData = await fetch(parameters["controlnet-image"].url)
+		const inputImageBuffer = await inputImageUrlData.arrayBuffer()
+		base64ControlNetImage = `data:image/png;base64,${Buffer.from(inputImageBuffer).toString('base64')}`
+	}
+
 	// novelAI prefixing
 	const promptParts = [parameters.prompt]
 	const negativePromptParts = [parameters?.negative]
@@ -90,6 +94,13 @@ export const generate = async (interaction, parameters) => {
 			parameters["scale-latent"],
 			parameters["clip-skip"],
 			parameters.batch, 
+			base64ControlNetImage,
+			parameters["controlnet-model"],
+			parameters["controlnet-module"],
+			parameters["controlnet-weight"],
+			parameters["controlnet-guidance-start"],
+			parameters["controlnet-guidance-end"],
+			parameters["controlnet-mode"],
 		)
 
 	// handle responses
@@ -115,7 +126,8 @@ export const generate = async (interaction, parameters) => {
 		})
 
 		const cacheMessage = await cacheChannel.send({ files: attachments })
-		const url = [...cacheMessage.attachments.values()][0].url
+		const attachmentsUrls = [...cacheMessage.attachments.values()].map(attach => attach.url)
+		const imageUrls = (isControlNet ? attachmentsUrls : [attachmentsUrls[0]]).slice(0, 4)
 
 		const numberOfImages = requests.length
 		const isLastImage = index === requests.length - 1
@@ -123,25 +135,28 @@ export const generate = async (interaction, parameters) => {
 
 		const descLocale = getLocalizedText("dream response description", interaction.locale)
 
-		const embed = new EmbedBuilder()
-			.setURL(paramCacheMessage?.url ?? `https://github.com/TiagoMarinho/Soph`)
-			.setImage(url)
-			.setColor(color)
-			.setDescription(descLocale)
-			.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
-			.addFields({ name: `Seed`, value: `\`\`\`${data.parameters.seed}\`\`\``, inline: true })
-			//.addFields({ name: `Prompt`, value: `${data.parameters.prompt}`, inline: false })
-			.setFooter({ text: `${index + 1}/${numberOfImages}` })
+		for (const imageUrl of imageUrls) {
+			const embed = new EmbedBuilder()
+				.setURL(paramCacheMessage?.url ?? `https://github.com/TiagoMarinho/Soph`)
+				.setImage(imageUrl)
+				.setColor(color)
+				.setDescription(descLocale)
+				.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
+				.addFields({ name: `Seed`, value: `\`\`\`${data.parameters.seed}\`\`\``, inline: true })
+				//.addFields({ name: `Prompt`, value: `${data.parameters.prompt}`, inline: false })
+				.setFooter({ text: `${index + 1}/${numberOfImages}` })
 
-		if (isImg2Img)
-			embed
-				.setThumbnail(parameters.image.url)
+			if (isControlNet)
+				embed.setThumbnail(parameters["controlnet-image"].url)
+			else if (isImg2Img)
+				embed.setThumbnail(parameters.image.url)
 
-		//if (data.parameters.negative_prompt)
-		//	embed
-		//		.addFields({ name: `Negative prompt`, value: `${data.parameters.negative_prompt}`, inline: false })
+			//if (data.parameters.negative_prompt)
+			//	embed
+			//		.addFields({ name: `Negative prompt`, value: `${data.parameters.negative_prompt}`, inline: false })
 
-		embeds.push(embed)
+			embeds.push(embed)
+		}
 
 		if (isLastImage)
 			setJobDone(...embeds)
@@ -187,16 +202,4 @@ export const generate = async (interaction, parameters) => {
 	}
 }
 
-const dream = async interaction => {
-
-	const parameters = {}
-	for (const option of interaction.options.data) {
-		parameters[option.name] = 
-			option.type === ApplicationCommandOptionType.Attachment ? 
-				option.attachment : option.value
-	}
-
-	await generate(interaction, parameters)
-}
-
-export default dream
+export default generate
