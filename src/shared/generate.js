@@ -155,7 +155,7 @@ export const generate = async (interaction, parameters) => {
 			//	embed
 			//		.addFields({ name: `Negative prompt`, value: `${data.parameters.negative_prompt}`, inline: false })
 
-			embeds.push(embed)
+			embeds.unshift(embed)
 		}
 
 		if (isLastImage)
@@ -163,6 +163,12 @@ export const generate = async (interaction, parameters) => {
 		
 		// buttons
 		const rowData = []
+		
+		if (numberOfImages > 1)
+			rowData.push([
+				{ emoji: `1045215673690886224`, id: `previous`, style: ButtonStyle.Primary, disabled: !isLastImage },
+				{ emoji: `1045215671438540821`, id: `next`, style: ButtonStyle.Primary, disabled: !isLastImage },
+			])
 		
 		if (!isEphemeral && paramCacheMessage) {
 			const generationButtons = [
