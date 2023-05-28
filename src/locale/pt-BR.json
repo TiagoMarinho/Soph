@@ -5,5 +5,10 @@
 	"edit prompt modal title": "Editar prompt",
 	"prompt text field label": "Prompt",
 	"negative prompt text field label": "Prompt negativa",
-	"png info unknown file type": "Use apenas imagens PNG, por favor!"
+	"png info unknown file type": "Use apenas imagens PNG, por favor!",
+	"enhance image modal title": "Ampliar imagem",
+	"enhance image scale field label": "Escala (valor de 1 a 10)",
+	"enhance image denoise field label": "Denoise (valor de 0 a 1)",
+	"enhance image invalid scale": "Valor de escala deve ser um número de 1 a 10.",
+	"enhance image invalid denoise": "Valor do denoise deve ser um número de 0 a 1."
 }
