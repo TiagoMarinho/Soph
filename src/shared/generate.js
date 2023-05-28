@@ -164,18 +164,24 @@ export const generate = async (interaction, parameters) => {
 		// buttons
 		const rowData = []
 		
+		// add previous/next buttons (arrows)
 		if (numberOfImages > 1)
 			rowData.push([
 				{ emoji: `1045215673690886224`, id: `previous`, style: ButtonStyle.Primary, disabled: !isLastImage },
 				{ emoji: `1045215671438540821`, id: `next`, style: ButtonStyle.Primary, disabled: !isLastImage },
 			])
 		
+		// add repeat, edit and enhance button.
 		if (!isEphemeral && paramCacheMessage) {
 			const generationButtons = [
 				{ emoji: `1050058817360101498`, id: `repeat`, style: ButtonStyle.Success, disabled: !isLastImage },
-				//{ emoji: `1050092899083227166`, id: `highres`, style: ButtonStyle.Success, disabled: !isLastImage },
-				{ emoji: `1058978647043735582`, id: `edit`, style: ButtonStyle.Success, disabled: !isLastImage },
+				{ emoji: `1058978647043735582`, id: `edit`, style: ButtonStyle.Success, disabled: !isLastImage }
 			]
+
+			if (parameters['hr-scale'] == null) {
+				generationButtons.push({ emoji: '1050092899083227166', id: 'enhance', style: ButtonStyle.Success, disabled: !isLastImage })
+			}
+
 			if (rowData.length > 0) 
 				rowData[0].push(...generationButtons)
 			else 

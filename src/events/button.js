@@ -11,12 +11,10 @@ export default {
 			return
 		
 		try {
-			if (interaction.customId !== `edit`)
+			if (interaction.customId !== `edit` && interaction.customId !== 'enhance')
 				await interaction.deferUpdate()
 		} catch (error) {
-			console.error(error)
-
-			return
+			return console.error(error)
 		}
 
 		const message = await interaction.message.fetch()
@@ -44,11 +42,13 @@ export default {
 		}
 
 		if (interaction.customId === 'edit') {
-			const [title, promptLabel, negativePromptLabel] = 
+			const [title, promptLabel, negativePromptLabel, scaleLabel, denoiseLabel] = 
 				[
 					getLocalizedText(`edit prompt modal title`, interaction.locale),
 					getLocalizedText(`prompt text field label`, interaction.locale),
 					getLocalizedText(`negative prompt text field label`, interaction.locale),
+					getLocalizedText(`enhance image scale field label`, interaction.locale),
+					getLocalizedText(`enhance image denoise field label`, interaction.locale),
 				]
 
 			const modal = new ModalBuilder()
@@ -67,10 +67,61 @@ export default {
 				.setStyle(TextInputStyle.Paragraph)
 				.setValue(parameters.negative ?? ` `) // space is workaround for previous modal value being filled in
 				.setRequired(false)
-
+			
 			const firstActionRow = new ActionRowBuilder().addComponents(promptInput)
 			const secondActionRow = new ActionRowBuilder().addComponents(negativePromptInput)
 
+			modal.addComponents(firstActionRow, secondActionRow)
+
+			if ('hr-scale' in parameters) {
+				const scaleInput = new TextInputBuilder()
+					.setCustomId('scaleInput')
+					.setLabel(scaleLabel)
+					.setStyle(TextInputStyle.Short)
+					.setValue(parameters['hr-scale'].toString())
+
+				const denoiseInput = new TextInputBuilder()
+					.setCustomId('denoiseInput')
+					.setLabel(denoiseLabel)
+					.setStyle(TextInputStyle.Short)
+					.setValue('denoising' in parameters ? parameters.denoising.toString() : `0.75`)
+				
+				const thirdActionRow = new ActionRowBuilder().addComponents(scaleInput)
+				const fourthActionRow = new ActionRowBuilder().addComponents(denoiseInput)
+
+				modal.addComponents(thirdActionRow, fourthActionRow)
+				
+			}
+
+			return interaction.showModal(modal).catch(console.error)
+		}
+
+		if (interaction.customId === 'enhance') {
+			const [title, scaleLabel, denoiseLabel] = 
+				[
+					getLocalizedText(`enhance image modal title`, interaction.locale),
+					getLocalizedText(`enhance image scale field label`, interaction.locale),
+					getLocalizedText(`enhance image denoise field label`, interaction.locale),
+				]
+
+			const modal = new ModalBuilder()
+				.setCustomId('enhance-image')
+				.setTitle(title)
+
+			const scaleInput = new TextInputBuilder()
+				.setCustomId('scaleInput')
+				.setLabel(scaleLabel)
+				.setStyle(TextInputStyle.Short)
+				.setValue(parameters.hrScale ? parameters.hrScale.toString() : `2`)
+
+			const denoiseInput = new TextInputBuilder()
+				.setCustomId('denoiseInput')
+				.setLabel(denoiseLabel)
+				.setStyle(TextInputStyle.Short)
+				.setValue(parameters.denoising ? parameters.denoising.toString() : `0.55`)
+
+			const firstActionRow = new ActionRowBuilder().addComponents(scaleInput)
+			const secondActionRow = new ActionRowBuilder().addComponents(denoiseInput)
 			modal.addComponents(firstActionRow, secondActionRow)
 
 			return interaction.showModal(modal).catch(console.error)
