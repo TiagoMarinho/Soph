@@ -178,7 +178,7 @@ export const generate = async (interaction, parameters) => {
 				{ emoji: `1058978647043735582`, id: `edit`, style: ButtonStyle.Success, disabled: !isLastImage }
 			]
 
-			if (parameters['hr-scale'] == null) {
+			if (parameters['hr-scale'] == null && !isImg2Img && !isControlNet) {
 				generationButtons.push({ emoji: '1050092899083227166', id: 'enhance', style: ButtonStyle.Success, disabled: !isLastImage })
 			}
 

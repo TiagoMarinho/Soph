@@ -10,5 +10,6 @@
 	"enhance image scale field label": "Scale (value from 1 to 10)",
 	"enhance image denoise field label": "Denoise (value from 0 to 1)",
 	"enhance image invalid scale": "Scale value must be a number from 1 to 10.",
-	"enhance image invalid denoise": "Denoise value must be a number from 0 to 1."
+	"enhance image invalid denoise": "Denoise value must be a number from 0 to 1.",
+	"enhance temporarily disabled": "The enhance button is temporarily disabled for the img2img and controlnet generations, sorry!"
 }
