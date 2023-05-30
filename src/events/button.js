@@ -97,6 +97,15 @@ export default {
 		}
 
 		if (interaction.customId === 'enhance') {
+			if (parameters.hasOwnProperty('image') || parameters.hasOwnProperty('controlnet-image')) {
+				// enhance button is disabled for im2img and controlnet for now.
+				// for safety, let's respond with a message for previously added enhance buttons for these type of generations.
+				return interaction.reply({
+					content: getLocalizedText(`enhance temporarily disabled`, interaction.locale),
+					ephemeral: true
+				})
+			} 
+
 			const [title, scaleLabel, denoiseLabel] = 
 				[
 					getLocalizedText(`enhance image modal title`, interaction.locale),
