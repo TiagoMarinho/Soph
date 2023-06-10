@@ -28,7 +28,11 @@ export const generate = async (interaction, parameters) => {
 	)
 	if (requestedPixelCount > MAX_PIXEL_COUNT) {
 		const resTooHighText = getLocalizedText("dream fail resolution too high", interaction.locale)
-		return interaction.reply({ content: resTooHighText, ephemeral: true })
+
+		return interaction[interaction.deferred || interaction.replied ? 'followUp' : 'reply']({ 
+			content: resTooHighText, 
+			ephemeral: true 
+		})
 	}
 
 	const isEphemeral = parameters.private ?? false
