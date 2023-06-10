@@ -18,6 +18,33 @@ const setJobDone = (...embeds) => {
 			.setColor(color)
 }
 
+const adjustImageSize = (width = 512, height = 512, scale = 1) => {
+	const baseWidth = 512;
+	const baseHeight = 512;
+
+	if (width <= height) {
+		const ratio = baseWidth / width;
+		var newWidth = baseWidth;
+		var newHeight = height * ratio * scale;
+
+		if (newWidth * newHeight > MAX_PIXEL_COUNT) {
+			const reduction = MAX_PIXEL_COUNT / (newWidth * newHeight);
+			newHeight *= reduction;
+		}
+	} else {
+		const ratio = baseHeight / height;
+		var newHeight = baseHeight;
+		var newWidth = width * ratio * scale;
+
+		if (newWidth * newHeight > MAX_PIXEL_COUNT) {
+			const reduction = MAX_PIXEL_COUNT / (newWidth * newHeight);
+			newWidth *= reduction;
+		}
+	}
+
+	return { width: Math.floor(newWidth), height: Math.floor(newHeight) };
+}
+
 export const generate = async (interaction, parameters) => {
 
 	// resolution validation
@@ -56,6 +83,19 @@ export const generate = async (interaction, parameters) => {
 		const inputImageUrlData = await fetch(parameters.image.url)
 		const inputImageBuffer = await inputImageUrlData.arrayBuffer()
 		base64InputImage = `data:image/png;base64,${Buffer.from(inputImageBuffer).toString('base64')}`
+
+		if (!parameters.width && !parameters.height) {
+			const newSize = adjustImageSize(
+				parameters.image.width, 
+				parameters.image.height, 
+				parameters[`hr-scale`]
+			)
+
+			parameters.width = newSize.width
+			parameters.height = newSize.height
+
+			console.log(`img2img auto resize: ${parameters.image.width}x${parameters.image.height} -> ${newSize.width}x${newSize.height}`)
+		}
 	}
 
 	// controlnet
