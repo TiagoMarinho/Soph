@@ -18,31 +18,30 @@ const setJobDone = (...embeds) => {
 			.setColor(color)
 }
 
+const MIN_SIDE_LENGTH = 64
+const MAX_SIDE_LENGTH = MAX_PIXEL_COUNT / MIN_SIDE_LENGTH
 const adjustImageSize = (width = 512, height = 512, scale = 1) => {
-	const baseWidth = 512;
-	const baseHeight = 512;
+	const targetResolution = 768 * 512
+	const requestedResolution = getRequestedPixelCount(width, height, scale)
+	const resolutionDifference = targetResolution / requestedResolution
 
-	if (width <= height) {
-		const ratio = baseWidth / width;
-		var newWidth = baseWidth;
-		var newHeight = height * ratio * scale;
+	// calculate smallest dimensions possible with same aspect ratio
+	// (respecting MIN_SIDE_LENGTH)
+	// if a side exceeds MAX_SIDE_LENGTH, crop it and return result
+	const ratio = width / height
+	const largeSide = MIN_SIDE_LENGTH * ratio
+	const minUnboundedWidth = width > height ? largeSide : MIN_SIDE_LENGTH
+	const minUnboundedHeight = height > width ? largeSide : MIN_SIDE_LENGTH
 
-		if (newWidth * newHeight > MAX_PIXEL_COUNT) {
-			const reduction = MAX_PIXEL_COUNT / (newWidth * newHeight);
-			newHeight *= reduction;
-		}
-	} else {
-		const ratio = baseHeight / height;
-		var newHeight = baseHeight;
-		var newWidth = width * ratio * scale;
+	const boundedWidth = Math.min(minUnboundedWidth, MAX_SIDE_LENGTH)
+	const boundedHeight = Math.min(minUnboundedHeight, MAX_SIDE_LENGTH)
 
-		if (newWidth * newHeight > MAX_PIXEL_COUNT) {
-			const reduction = MAX_PIXEL_COUNT / (newWidth * newHeight);
-			newWidth *= reduction;
-		}
-	}
+	if (minUnboundedWidth > MAX_SIDE_LENGTH || minUnboundedHeight > MAX_SIDE_LENGTH)
+		return { width: Math.floor(boundedWidth), height: Math.floor(boundedHeight) }
 
-	return { width: Math.floor(newWidth), height: Math.floor(newHeight) };
+	// scale original dimensions to match target resolution
+	const sideDifference = Math.sqrt(resolutionDifference)
+	return { width: Math.floor(width * sideDifference), height: Math.floor(height * sideDifference) };
 }
 
 export const generate = async (interaction, parameters) => {
