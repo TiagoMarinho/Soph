@@ -18,6 +18,32 @@ const setJobDone = (...embeds) => {
 			.setColor(color)
 }
 
+const MIN_SIDE_LENGTH = 64
+const MAX_SIDE_LENGTH = MAX_PIXEL_COUNT / MIN_SIDE_LENGTH
+const adjustImageSize = (width = 512, height = 512, scale = 1) => {
+	const targetResolution = 768 * 512
+	const requestedResolution = getRequestedPixelCount(width, height, scale)
+	const resolutionDifference = targetResolution / requestedResolution
+
+	// calculate smallest dimensions possible with same aspect ratio
+	// (respecting MIN_SIDE_LENGTH)
+	// if a side exceeds MAX_SIDE_LENGTH, crop it and return result
+	const ratio = width / height
+	const largeSide = MIN_SIDE_LENGTH * ratio
+	const minUnboundedWidth = width > height ? largeSide : MIN_SIDE_LENGTH
+	const minUnboundedHeight = height > width ? largeSide : MIN_SIDE_LENGTH
+
+	const boundedWidth = Math.min(minUnboundedWidth, MAX_SIDE_LENGTH)
+	const boundedHeight = Math.min(minUnboundedHeight, MAX_SIDE_LENGTH)
+
+	if (minUnboundedWidth > MAX_SIDE_LENGTH || minUnboundedHeight > MAX_SIDE_LENGTH)
+		return { width: Math.floor(boundedWidth), height: Math.floor(boundedHeight) }
+
+	// scale original dimensions to match target resolution
+	const sideDifference = Math.sqrt(resolutionDifference)
+	return { width: Math.floor(width * sideDifference), height: Math.floor(height * sideDifference) };
+}
+
 export const generate = async (interaction, parameters) => {
 
 	// resolution validation
@@ -28,7 +54,11 @@ export const generate = async (interaction, parameters) => {
 	)
 	if (requestedPixelCount > MAX_PIXEL_COUNT) {
 		const resTooHighText = getLocalizedText("dream fail resolution too high", interaction.locale)
-		return interaction.reply({ content: resTooHighText, ephemeral: true })
+
+		return interaction[interaction.deferred || interaction.replied ? 'followUp' : 'reply']({ 
+			content: resTooHighText, 
+			ephemeral: true 
+		})
 	}
 
 	const isEphemeral = parameters.private ?? false
@@ -52,6 +82,19 @@ export const generate = async (interaction, parameters) => {
 		const inputImageUrlData = await fetch(parameters.image.url)
 		const inputImageBuffer = await inputImageUrlData.arrayBuffer()
 		base64InputImage = `data:image/png;base64,${Buffer.from(inputImageBuffer).toString('base64')}`
+
+		if (!parameters.width && !parameters.height) {
+			const newSize = adjustImageSize(
+				parameters.image.width, 
+				parameters.image.height, 
+				parameters[`hr-scale`]
+			)
+
+			parameters.width = newSize.width
+			parameters.height = newSize.height
+
+			console.log(`img2img auto resize: ${parameters.image.width}x${parameters.image.height} -> ${newSize.width}x${newSize.height}`)
+		}
 	}
 
 	// controlnet
