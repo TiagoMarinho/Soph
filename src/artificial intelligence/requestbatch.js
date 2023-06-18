@@ -38,22 +38,9 @@ const requestBatch = async (
 	latentSpace,
 	clipSkip,
 	batchCount = hrScale > 1 ? 1 : 4,
-	controlNetImage,
-	controlNetModel,
-	controlNetModule,
-	controlNetWeight,
-	controlNetGuidanceStart,
-	controlNetGuidanceEnd,
-	controlNetMode,
 ) => {
 
 	const randomSeed = getRandomInt(1_000_000_000, 9_999_999_999) // 10 digits
-
-	let batchSize = 1
-	if (controlNetImage !== null) {
-		batchSize = batchCount
-		batchCount = 1
-	}
 	
 	const dynamicParameters = new Array(batchCount).fill()
 		.map((_, i) => ({
@@ -79,15 +66,7 @@ const requestBatch = async (
 			sampler,
 			hrScale,
 			latentSpace,
-			clipSkip,
-			batchSize,
-			controlNetImage,
-			controlNetModel,
-			controlNetModule,
-			controlNetWeight,
-			controlNetGuidanceStart,
-			controlNetGuidanceEnd,
-			controlNetMode,
+			clipSkip
 		))
 
 	return requests
