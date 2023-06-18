@@ -20,11 +20,10 @@ const getPromptVariation = (prompt, position) => {
 	return promptVariation
 }
 
-const batchQueue = new Queue()
-
 const requestBatch = async (
 	prompt,
 	negativePrompt, 
+	model,
 	seed,
 	initImage,
 	denoising,
@@ -64,33 +63,32 @@ const requestBatch = async (
 		}))
 
 	const requests = dynamicParameters
-		.map(dynamicData => 
-			batchQueue.add(_ => requestImage(
-				dynamicData.prompt,
-				dynamicData.negativePrompt,
-				dynamicData.seed,
-				initImage,
-				denoising,
-				subseed,
-				subseedStrength,
-				steps,
-				cfg,
-				width,
-				height,
-				sampler,
-				hrScale,
-				latentSpace,
-				clipSkip,
-				batchSize,
-				controlNetImage,
-				controlNetModel,
-				controlNetModule,
-				controlNetWeight,
-				controlNetGuidanceStart,
-				controlNetGuidanceEnd,
-				controlNetMode,
-			))
-		)
+		.map(dynamicData => requestImage(
+			dynamicData.prompt,
+			dynamicData.negativePrompt,
+			model,
+			dynamicData.seed,
+			initImage,
+			denoising,
+			subseed,
+			subseedStrength,
+			steps,
+			cfg,
+			width,
+			height,
+			sampler,
+			hrScale,
+			latentSpace,
+			clipSkip,
+			batchSize,
+			controlNetImage,
+			controlNetModel,
+			controlNetModule,
+			controlNetWeight,
+			controlNetGuidanceStart,
+			controlNetGuidanceEnd,
+			controlNetMode,
+		))
 
 	return requests
 }

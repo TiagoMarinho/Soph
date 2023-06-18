@@ -1,4 +1,4 @@
-import servers from './serverlist.json' assert { type: 'json' }
+import servers from './servers.js'
 
 export const parseParameters = async imageBuffer => {
 	

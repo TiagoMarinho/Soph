@@ -2,11 +2,12 @@ import fetch from 'node-fetch'
 
 import { roundToClosestMultipleOf } from '../utils/math.js';
 
-import servers from './serverlist.json' assert { type: 'json' }
+import servers from './servers.js'
 
 const requestImage = async (
 	prompt = "",
 	negativePrompt = "", 
+	model = undefined,
 	seed = -1, 
 	initImage = null, 
 	denoising = 0.75, 
@@ -76,6 +77,7 @@ const requestImage = async (
 		"s_noise": 1,
 		"sampler_index": sampler,
 		"override_settings": {
+			"sd_model_checkpoint": model,
 			"enable_pnginfo": true,
 			"CLIP_stop_at_last_layers": clipSkip
 		}
@@ -87,15 +89,15 @@ const requestImage = async (
 		payload["alwayson_scripts"] = {
 			"controlnet": {
 				"args": [
-				  {
-					"input_image": controlNetImage,
-					"model": controlNetModel,
-					"module": controlNetModule,
-					"weight": controlNetWeight,
-					"guidance_start": controlNetGuidanceStart,
-					"guidance_end": controlNetGuidanceEnd,
-					"control_mode": controlNetMode
-				  }
+					{
+						"input_image": controlNetImage,
+						"model": controlNetModel,
+						"module": controlNetModule,
+						"weight": controlNetWeight,
+						"guidance_start": controlNetGuidanceStart,
+						"guidance_end": controlNetGuidanceEnd,
+						"control_mode": controlNetMode
+					}
 				]
 			}
 		}
@@ -106,14 +108,16 @@ const requestImage = async (
 
 	const mode = `${isImageToImage ? `img` : `txt`}2img`
 	const apiEndpoint = `${servers[0].address}/sdapi/v1/${mode}`
-	const request = fetch(apiEndpoint, {
-		method: 'post',
-		body: JSON.stringify(payload),
-		headers: {
-			'Content-Type': 'application/json',
-			'Authorization': `Basic ${base64Credentials}`
-		}
-	})
+	const request = servers[0].queue.add(_ =>
+		fetch(apiEndpoint, {
+			method: 'post',
+			body: JSON.stringify(payload),
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Basic ${base64Credentials}`
+			}
+		})
+	)
 	return request
 }
 

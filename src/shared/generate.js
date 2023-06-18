@@ -123,6 +123,7 @@ export const generate = async (interaction, parameters) => {
 		await requestBatch(
 			finalPrompt, 
 			finalNegativePrompt,
+			parameters.model,
 			parameters.seed,
 			base64InputImage,
 			parameters.denoising,
