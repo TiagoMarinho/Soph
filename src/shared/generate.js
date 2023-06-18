@@ -97,15 +97,6 @@ export const generate = async (interaction, parameters) => {
 		}
 	}
 
-	// controlnet
-	const isControlNet = typeof parameters["controlnet-image"] !== `undefined`
-	let base64ControlNetImage = null
-	if (isControlNet) {
-		const inputImageUrlData = await fetch(parameters["controlnet-image"].url)
-		const inputImageBuffer = await inputImageUrlData.arrayBuffer()
-		base64ControlNetImage = `data:image/png;base64,${Buffer.from(inputImageBuffer).toString('base64')}`
-	}
-
 	// novelAI prefixing
 	const promptParts = [parameters.prompt]
 	const negativePromptParts = [parameters?.negative]
@@ -137,14 +128,7 @@ export const generate = async (interaction, parameters) => {
 			parameters["hr-scale"],
 			parameters["scale-latent"],
 			parameters["clip-skip"],
-			parameters.batch, 
-			base64ControlNetImage,
-			parameters["controlnet-model"],
-			parameters["controlnet-module"],
-			parameters["controlnet-weight"],
-			parameters["controlnet-guidance-start"],
-			parameters["controlnet-guidance-end"],
-			parameters["controlnet-mode"],
+			parameters.batch
 		)
 
 	// handle responses
@@ -171,7 +155,7 @@ export const generate = async (interaction, parameters) => {
 
 		const cacheMessage = await cacheChannel.send({ files: attachments })
 		const attachmentsUrls = [...cacheMessage.attachments.values()].map(attach => attach.url)
-		const imageUrls = (isControlNet ? attachmentsUrls : [attachmentsUrls[0]]).slice(0, 4)
+		const imageUrls = [attachmentsUrls[0]].slice(0, 4)
 
 		const numberOfImages = requests.length
 		const isLastImage = index === requests.length - 1
@@ -187,17 +171,10 @@ export const generate = async (interaction, parameters) => {
 				.setDescription(descLocale)
 				.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
 				.addFields({ name: `Seed`, value: `\`\`\`${data.parameters.seed}\`\`\``, inline: true })
-				//.addFields({ name: `Prompt`, value: `${data.parameters.prompt}`, inline: false })
 				.setFooter({ text: `${index + 1}/${numberOfImages}` })
 
-			if (isControlNet)
-				embed.setThumbnail(parameters["controlnet-image"].url)
-			else if (isImg2Img)
+			if (isImg2Img)
 				embed.setThumbnail(parameters.image.url)
-
-			//if (data.parameters.negative_prompt)
-			//	embed
-			//		.addFields({ name: `Negative prompt`, value: `${data.parameters.negative_prompt}`, inline: false })
 
 			embeds.unshift(embed)
 		}
@@ -222,7 +199,7 @@ export const generate = async (interaction, parameters) => {
 				{ emoji: `1058978647043735582`, id: `edit`, style: ButtonStyle.Success, disabled: !isLastImage }
 			]
 
-			if (parameters['hr-scale'] == null && !isImg2Img && !isControlNet) {
+			if (parameters['hr-scale'] == null && !isImg2Img) {
 				generationButtons.push({ emoji: '1050092899083227166', id: 'enhance', style: ButtonStyle.Success, disabled: !isLastImage })
 			}
 
