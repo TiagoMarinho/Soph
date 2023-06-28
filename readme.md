@@ -1,4 +1,4 @@
-<h1 align="center"><img src="https://i.imgur.com/Rty8HhE.png" width="128"><br/>Soph</h1>
+<h1 align="center"><img src="https://i.imgur.com/5Fxwmfv.png" width="128"><br/>Soph</h1>
 <p align="center">A discord bot for generating art with artificial intelligence</p>
 
 ## Table of Contents
@@ -15,26 +15,26 @@
 
 `/dream prompt: 1girl, solo, blonde hair, twintails, blue eyes, blue dress`
 
-Will yield images such as:
+Here are some examples of possible images generated using the bot:
 
-![Four AI-generated anime drawings of a blonde girl with blue eyes wearing a blue dress](https://i.imgur.com/gqu5jHc.png)
-<sup>results will vary depending on the stable diffusion model being used</sup>
+![Four AI-generated images, each in a different style](https://i.imgur.com/ywBp1O0.jpg)
 
 ## Features
 
 - Slash commands and rich embeds
 - Immediate previews for completed images
 - Navigation buttons for mobile devices
-- Buttons for generating more images and modifying prompts from previous generations
+- Buttons for generating more images, modifying prompts from previous generations and enhancing images
 - Allows user to change most parameters available in WebUI
 	- Negative prompt
+	- Model
 	- Sampler
 	- Number of steps
 	- Classifier-free guidance scale
 	- Seed
 	- Width and height
 	- Variation seed and strength
-	- Highres-fix
+	- Highres-fix scale and method
 - Support for img2img
 - `{prompt1 | prompt2 | prompt3}` syntax allows to change parts of the prompt for each image in a batch
 - Upscaling with `/upscale` command
@@ -80,7 +80,7 @@ Individual images are sent as soon as they're ready rather than only sending the
 	```
 7. Add a channel ID in the above `config.json` file for a chat your application has access to, so that it can use as a cache for the images. Every image generated with the bot will be sent in this chat first.
 8. Install dependencies by running `npm install` inside Soph's root folder
-9. Run `node src/deploy-commands.js` inside Soph's root folder to register slash commands for the bot.
+9. Run `npm run deploy` inside Soph's root folder to register slash commands for the bot.
 
 ## Running
 
@@ -95,5 +95,4 @@ Here's a basic overview of the project structure for new contributors to get use
 
 * `src/main.js` is the entry point
 * Commands are folders in `src/commands/<category>/`
-* `src/commands/<category>/<command name>/data.json` stores the command name, description and arguments
-* `src/commands/<category>/<command name>/execute.js` contains the code that runs when the user executes said command
+* `src/commands/<category>/<command name>/main.js` contains the code that runs when the user executes said command
