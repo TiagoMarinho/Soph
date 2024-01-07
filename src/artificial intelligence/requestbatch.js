@@ -37,6 +37,7 @@ const requestBatch = async (
 	hrScale,
 	latentSpace,
 	clipSkip,
+	hypertile,
 	batchCount = hrScale > 1 ? 1 : 4,
 ) => {
 
@@ -66,7 +67,8 @@ const requestBatch = async (
 			sampler,
 			hrScale,
 			latentSpace,
-			clipSkip
+			clipSkip,
+			hypertile
 		))
 
 	return requests

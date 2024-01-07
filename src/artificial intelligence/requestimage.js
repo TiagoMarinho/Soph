@@ -21,6 +21,7 @@ const requestImage = async (
 	hrScale = 1,
 	latentSpace = false,
 	clipSkip = 2,
+	hypertile = true,
 	batchSize = 1
 ) => {
 	const isImageToImage = initImage !== null
@@ -48,6 +49,7 @@ const requestImage = async (
 		"denoising_strength": denoising,
 		"hr_scale": hrScale,
 		"hr_upscaler": highresFixUpscaler,
+		"hr_second_pass_steps": 16,
 		"prompt": prompt,
 		"seed": seed,
 		"subseed": subseed,
@@ -72,7 +74,9 @@ const requestImage = async (
 		"override_settings": {
 			"sd_model_checkpoint": model,
 			"enable_pnginfo": true,
-			"CLIP_stop_at_last_layers": clipSkip
+			"CLIP_stop_at_last_layers": clipSkip,
+			"hypertile_enable_unet": hypertile,
+			"hypertile_enable_unet_secondpass": hypertile,
 		}
 	}
 

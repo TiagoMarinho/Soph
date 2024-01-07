@@ -34,6 +34,9 @@ export const optionalOptions = [
 		type: ApplicationCommandOptionType.String,
 		name: "model",
 		description: "What model  to use to generate the image",
+		name_localizations: {
+			"pt-BR": "modelo"
+		},
 		description_localizations: {
 			"pt-BR": "Qual modelo deve ser usado para gerar a imagem"
 		},
@@ -61,6 +64,7 @@ export const optionalOptions = [
 			{ name: "DPM++ 2S a Karras", value: "DPM++ 2S a Karras" },
 			{ name: "DPM++ 2M", value: "DPM++ 2M" },
 			{ name: "DPM++ 2M Karras", value: "DPM++ 2M Karras" },
+			{ name: "DPM++ 2M SDE Karras", value: "DPM++ 2M SDE Karras" },
 			{ name: "DPM++ SDE", value: "DPM++ SDE" },
 			{ name: "DPM++ SDE Karras", value: "DPM++ SDE Karras" },
 			{ name: "LMS", value: "LMS" },
@@ -234,5 +238,14 @@ export const optionalOptions = [
 			"pt-BR": "Responder com uma mensagem que só você poderá ver"
 		},
 		required: false
-	}
+	},
+	{
+		type: ApplicationCommandOptionType.Boolean,
+		name: "hypertile",
+		description: "Apply hypertile optimization, faster but different results",
+		description_localizations: {
+			"pt-BR": "Aplicar otimização hypertile, gera mais rápido mas o resultado é diferente"
+		},
+		required: false
+	},
 ]
