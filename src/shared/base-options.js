@@ -239,13 +239,4 @@ export const optionalOptions = [
 		},
 		required: false
 	},
-	{
-		type: ApplicationCommandOptionType.Boolean,
-		name: "hypertile",
-		description: "Apply hypertile optimization, faster but different results",
-		description_localizations: {
-			"pt-BR": "Aplicar otimização hypertile, gera mais rápido mas o resultado é diferente"
-		},
-		required: false
-	},
 ]

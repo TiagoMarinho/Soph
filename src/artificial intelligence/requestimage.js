@@ -21,7 +21,6 @@ const requestImage = async (
 	hrScale = 1,
 	latentSpace = false,
 	clipSkip = 2,
-	hypertile = true,
 	batchSize = 1
 ) => {
 	const isImageToImage = initImage !== null
@@ -75,8 +74,6 @@ const requestImage = async (
 			"sd_model_checkpoint": model,
 			"enable_pnginfo": true,
 			"CLIP_stop_at_last_layers": clipSkip,
-			"hypertile_enable_unet": false, //hypertile,
-			"hypertile_enable_unet_secondpass": hypertile,
 		}
 	}
 
