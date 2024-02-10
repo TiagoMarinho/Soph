@@ -82,7 +82,7 @@ export const optionalOptions = [
 			"pt-BR": "Quantas etapas o sampler deve refinar a imagem"
 		},
 		required: false,
-		min_value: 10,
+		min_value: 3,
 		max_value: 100
 	},
 	{

@@ -39,6 +39,8 @@ const requestImage = async (
 		`Latent (nearest-exact)` : 
 		`R-ESRGAN 4x+ Anime6B` // workaround for webui defaulting to lanczos
 
+	const secondPassSteps = steps > 16 ? steps / 2 + 1 : steps
+
 	const payload = {
 		"init_images": [
 			initImage
@@ -48,7 +50,7 @@ const requestImage = async (
 		"denoising_strength": denoising,
 		"hr_scale": hrScale,
 		"hr_upscaler": highresFixUpscaler,
-		"hr_second_pass_steps": 16,
+		"hr_second_pass_steps": secondPassSteps,
 		"prompt": prompt,
 		"seed": seed,
 		"subseed": subseed,

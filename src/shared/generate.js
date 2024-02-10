@@ -6,7 +6,7 @@ import config from '../../config.json' assert { type: 'json' }
 import { AttachmentBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 import fetch from 'node-fetch'
 
-const MAX_PIXEL_COUNT = 1536 * 1024
+const MAX_PIXEL_COUNT = 1024 * 768 * 4
 const getRequestedPixelCount = (width = 512, height = 512, scale = 1) => {
 	return (width * scale) * (height * scale)
 }
