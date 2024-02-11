@@ -4,7 +4,7 @@ import { roundToClosestMultipleOf } from '../utils/math.js';
 
 import servers from './servers.js'
 
-const requestImage = async (
+const requestImage = (
 	prompt = "",
 	negativePrompt = "", 
 	model = undefined,

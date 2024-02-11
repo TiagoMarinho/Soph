@@ -67,8 +67,9 @@ export const generate = async (interaction, parameters) => {
 
 	const thinkingText = getLocalizedText("generating images", interaction.locale)
 	const method = interaction.isButton() || interaction.isModalSubmit() ? `followUp` : `reply`
+	const thinkingEmote = `<a:loading:1050454241266909249>`
 	const reply = await interaction[method]({ 
-		content: `<a:loading:1050454241266909249> ${thinkingText}`, 
+		content: `${thinkingEmote} ${thinkingText}`, 
 		fetchReply: true, 
 		ephemeral: isEphemeral 
 	})
@@ -110,8 +111,7 @@ export const generate = async (interaction, parameters) => {
 	const finalNegativePrompt = negativePromptParts.filter(s => s?.trim()).join(`, `)
 
 	// request images
-	const requests = 
-		await requestBatch(
+	const requests = requestBatch(
 			finalPrompt, 
 			finalNegativePrompt,
 			parameters.model,
@@ -131,6 +131,17 @@ export const generate = async (interaction, parameters) => {
 			parameters.batch
 		)
 
+	// update user about queue position
+	/*const { id, queue } = await requests[0]
+
+	const updateQueuePosition = _ => { // cannot be changed to arrow function
+		const position = queue.getPosition(id) + 1
+		if (position < 1)
+			return queue.eventEmitter.removeListener(`next`, updateQueuePosition)
+		interaction.editReply(`${thinkingEmote} ${thinkingText} \`#${position}\``)
+	}
+	queue.eventEmitter.on(`next`, updateQueuePosition)*/
+
 	// handle responses
 	const cacheChannelId = config.cacheChannelId
 	const cacheChannel = await interaction.client.channels.cache.get(cacheChannelId)
@@ -144,7 +155,7 @@ export const generate = async (interaction, parameters) => {
 			})
 
 	const embeds = []
-	for (const [index, request] of requests.entries()) {
+	for (const [index, { request }] of requests.entries()) {
 		const response = await request.catch(console.error)
 		const data = await response.json()
 		const buffers = data.images.map(i => Buffer.from(i, "base64"))

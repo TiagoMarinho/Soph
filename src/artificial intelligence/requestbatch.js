@@ -20,7 +20,7 @@ const getPromptVariation = (prompt, position) => {
 	return promptVariation
 }
 
-const requestBatch = async (
+const requestBatch = (
 	prompt,
 	negativePrompt, 
 	model,
