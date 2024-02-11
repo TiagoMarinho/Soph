@@ -12,9 +12,9 @@
 	"enhance image invalid scale": "Valor de escala deve ser um número de 1 a 10.",
 	"enhance image invalid denoise": "Valor do denoise deve ser um número de 0 a 1.",
 	"enhance temporarily disabled": "O botão de ampliação está temporariamente desativado para gerações img2img, desculpe!",
-	"lora path missing": "❌ É necessario que adicione o caminho para pasta de LoRA usando `config.loraFolderPath`!",
-	"lora invalid link": "❌ Link inválido!",
-	"lora generic error": "❌ Algo de errado aconteceu, desculpe!",
-	"lora already exist": "Essa LoRA já existe, desculpe.",
+	"lora path missing": "Ops! Parece que o caminho para baixar o LoRA não foi configurado! O moço ou moça me hosteando precisa adicionar um caminho para pasta de LoRA usando `config.loraFolderPath` primeiro!",
+	"lora invalid link": "Link inválido!",
+	"lora generic error": "Algo de errado aconteceu, desculpe!",
+	"lora already exist": "Um LoRA com esse nome já existe, desculpa.",
 	"lora add success": "LoRA **{0}** adicionada com sucesso!"
 }
