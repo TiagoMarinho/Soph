@@ -22,7 +22,7 @@ export default {
 }
 
 /** @param {ChatInputCommandInteraction} interaction */
-async function addLora(interaction) {
+const addLora = async interaction => {
 	const url = interaction.options.getString('url', true)
 	const destination = config.loraFolderPath
 	let customFileName = interaction.options.getString('filename') ?? ''
@@ -49,7 +49,7 @@ async function addLora(interaction) {
 		fs.mkdirSync(destination, { recursive: true })
 	}
 
-	// check if file already exist
+	// check if file already exists
 	const fileExist = (() => {
 		if (!customFileName) return false
 
@@ -89,7 +89,7 @@ async function addLora(interaction) {
 	})
 }
 
-async function downloadFile(url, destination, customFileName = '') {
+const downloadFile = async (url, destination, customFileName = '') => {
 	const response = await fetch(url)
 	if (!response.ok) {
 		throw new Error(`Failed to fetch ${url}: ${response.statusText}`)
