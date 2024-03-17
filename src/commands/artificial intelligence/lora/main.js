@@ -187,12 +187,3 @@ const downloadFileFromResponse = async (res, destination, filename) => {
 		})
 	})
 }
-
-const downloadFileFromUrl = async (url, destination, filename) => {
-	const res = await fetch(url)
-	if (!res.ok) {
-		throw new Error(`Failed to fetch ${url}: ${res.statusText}`)
-	}
-
-	return downloadFileFromResponse(res, destination, filename)
-}
