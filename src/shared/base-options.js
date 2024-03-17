@@ -64,6 +64,7 @@ export const optionalOptions = [
 			{ name: "DPM++ 2S a Karras", value: "DPM++ 2S a Karras" },
 			{ name: "DPM++ 2M", value: "DPM++ 2M" },
 			{ name: "DPM++ 2M Karras", value: "DPM++ 2M Karras" },
+			{ name: "DPM++ 2M Turbo", value: "DPM++ 2M Turbo" },
 			{ name: "DPM++ 2M SDE Karras", value: "DPM++ 2M SDE Karras" },
 			{ name: "DPM++ SDE", value: "DPM++ SDE" },
 			{ name: "DPM++ SDE Karras", value: "DPM++ SDE Karras" },
