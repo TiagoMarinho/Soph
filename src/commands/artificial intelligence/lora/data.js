@@ -36,6 +36,7 @@ export default {
 						'pt-BR': 'Nome personalizado para o arquivo',
 					},
 					required: false,
+					max_length: 30
 				},
 			],
 		},
