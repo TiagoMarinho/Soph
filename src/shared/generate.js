@@ -1,5 +1,5 @@
 import requestBatch from '../artificial intelligence/requestbatch.js'
-import novelAIPrefix from '../artificial intelligence/novelaiprefix.json' assert { type: 'json' }
+import prefixes from '../artificial intelligence/promptprefixes.json' assert { type: 'json' }
 import { getLocalizedText } from '../locale/languages.js'
 import colors from '../colors.json' assert { type: 'json' }
 import config from '../../config.json' assert { type: 'json' }
@@ -98,14 +98,18 @@ export const generate = async (interaction, parameters) => {
 		}
 	}
 
-	// novelAI prefixing
+	// prefixing
 	const promptParts = [parameters.prompt]
 	const negativePromptParts = [parameters?.negative]
 
-	if (parameters.prefix ?? true) {
-		promptParts.unshift(novelAIPrefix.promptPrefix)
-		negativePromptParts.unshift(novelAIPrefix.negativePrefix)
-	}
+	const promptPrefix = prefixes[parameters.prefix]?.promptPrefix
+	const negativePrefix = prefixes[parameters.prefix]?.negativePrefix
+
+	if (promptPrefix)
+		promptParts.unshift(promptPrefix)
+
+	if (negativePrefix)
+		negativePromptParts.unshift(negativePrefix)
 
 	const finalPrompt = promptParts.filter(s => s?.trim()).join(`, `)
 	const finalNegativePrompt = negativePromptParts.filter(s => s?.trim()).join(`, `)

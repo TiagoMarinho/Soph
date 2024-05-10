@@ -1,0 +1,9 @@
+{
+	"novelai": {
+		"promptPrefix": "masterpiece, best quality",
+		"negativePrefix": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, artist name"
+	},
+	"pony": {
+		"promptPrefix": "score_9, score_8_up, score_7_up, score_6_up, score_5_up, score_4_up"
+	}
+}

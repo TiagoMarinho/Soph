@@ -146,15 +146,16 @@ export const optionalOptions = [
 		required: false
 	},
 	{
-		type: ApplicationCommandOptionType.Boolean,
+		type: ApplicationCommandOptionType.String,
 		name: "prefix",
-		description: "Append the base NovelAI prefixes to prompt and negative prompt",
-		name_localizations: {
-			"pt-BR": "prefixo"
-		},
+		description: "Append premade templates to start and end of prompt and negative prompt",
 		description_localizations: {
-			"pt-BR": "Adicionar tags do NovelAI predefinidas no início do pedido"
+			"pt-BR": "Adicionar texto pré-feito ao início da prompt e prompt negativa"
 		},
+		choices: [
+			{ name: "NovelAI", value: "novelai" },
+			{ name: "Pony", value: "pony" },
+		],
 		required: false
 	},
 	{
