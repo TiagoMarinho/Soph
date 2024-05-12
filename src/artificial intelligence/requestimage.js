@@ -1,27 +1,25 @@
 import fetch from 'node-fetch'
-
-import { roundToClosestMultipleOf } from '../utils/math.js';
-
 import servers from './servers.js'
+import defaults from './defaults.json' assert { type: 'json' }
 
 const requestImage = (
-	prompt = "",
-	negativePrompt = "", 
-	model = undefined,
-	seed = -1, 
-	initImage = null, 
-	denoising = 0.75, 
-	subseed = -1, 
-	subseedStrength = 0.0, 
-	steps = 30, 
-	cfg = 9,
-	width = 512,
-	height = 512,
-	sampler = `DPM++ 2M Karras`,
-	hrScale = 1,
-	latentSpace = false,
-	clipSkip = 2,
-	batchSize = 1
+	prompt = defaults.generate.prompt,
+	negativePrompt = defaults.generate.negativePrompt, 
+	model = defaults.generate.model,
+	seed = defaults.generate.seed, 
+	initImage = defaults.generate.initImage, 
+	denoising = defaults.generate.denoising, 
+	subseed = defaults.generate.subseed, 
+	subseedStrength = defaults.generate.subseedStrength, 
+	steps = defaults.generate.steps, 
+	cfg = defaults.generate.cfg,
+	width = defaults.generate.width,
+	height = defaults.generate.height,
+	sampler = defaults.generate.sampler,
+	hrScale = defaults.generate.hrScale,
+	latentSpace = defaults.generate.latentSpace,
+	clipSkip = defaults.generate.clipSkip,
+	batchSize = defaults.generate.batchSize
 ) => {
 	const isImageToImage = initImage !== null
 

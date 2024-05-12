@@ -1,5 +1,6 @@
 import requestBatch from '../artificial intelligence/requestbatch.js'
 import prefixes from '../artificial intelligence/promptprefixes.json' assert { type: 'json' }
+import defaults from '../artificial intelligence/defaults.json' assert { type: 'json' }
 import { getLocalizedText } from '../locale/languages.js'
 import colors from '../colors.json' assert { type: 'json' }
 import config from '../../config.json' assert { type: 'json' }
@@ -7,7 +8,7 @@ import { AttachmentBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Butto
 import fetch from 'node-fetch'
 
 const MAX_PIXEL_COUNT = 1024 * 768 * 4
-const getRequestedPixelCount = (width = 512, height = 512, scale = 1) => {
+const getRequestedPixelCount = (width = defaults.generate.width, height = defaults.generate.height, scale = defaults.generate.hrScale) => {
 	return (width * scale) * (height * scale)
 }
 
@@ -20,7 +21,7 @@ const setJobDone = (...embeds) => {
 
 const MIN_SIDE_LENGTH = 64
 const MAX_SIDE_LENGTH = MAX_PIXEL_COUNT / MIN_SIDE_LENGTH
-const adjustImageSize = (width = 512, height = 512, scale = 1) => {
+const adjustImageSize = (width = defaults.generate.width, height = defaults.generate.height, scale = defaults.generate.hrScale) => {
 	const targetResolution = 768 * 512
 	const requestedResolution = getRequestedPixelCount(width, height, scale)
 	const resolutionDifference = targetResolution / requestedResolution
@@ -136,7 +137,7 @@ export const generate = async (interaction, parameters) => {
 		)
 
 	// update user about queue position
-	/*const { id, queue } = await requests[0]
+	const { id, queue } = await requests[0]
 
 	const updateQueuePosition = _ => { // cannot be changed to arrow function
 		const position = queue.getPosition(id) + 1
@@ -144,7 +145,7 @@ export const generate = async (interaction, parameters) => {
 			return queue.eventEmitter.removeListener(`next`, updateQueuePosition)
 		interaction.editReply(`${thinkingEmote} ${thinkingText} \`#${position}\``)
 	}
-	queue.eventEmitter.on(`next`, updateQueuePosition)*/
+	queue.eventEmitter.on(`next`, updateQueuePosition)
 
 	// handle responses
 	const cacheChannelId = config.cacheChannelId
