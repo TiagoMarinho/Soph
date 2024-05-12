@@ -4,7 +4,7 @@ import { ChatInputCommandInteraction } from 'discord.js'
 import fs from 'fs'
 import fetch from 'node-fetch'
 import path from 'path'
-import { getFormattedLocalizedText, getLocalizedText } from '../../../locale/languages.js'
+import { getLocalizedText } from '../../../locale/languages.js'
 
 export default {
 	data,
@@ -153,7 +153,7 @@ const addLora = async interaction => {
 
 	// done
 	interaction.editReply({
-		content: getFormattedLocalizedText('lora add success', interaction.locale, fileNameWithoutExt),
+		content: getLocalizedText('lora add success', interaction.locale, fileNameWithoutExt),
 	})
 }
 

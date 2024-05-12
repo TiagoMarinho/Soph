@@ -17,5 +17,9 @@
 	"lora already exist": "A LoRA by this name already exists, sorry.",
 	"lora wrong type": "The link you gave me is not a LoRA, sorry.",
 	"lora add success": "LoRA **{0}** added succesfully!",
-	"batch complete ping": "Hey **{0}**! Your dream has been brought to life!"
+	"batch complete ping": 
+		[
+			"Hey **{0}**! Your dream has been brought to life!",
+			"**{0}**, I tried the best I could!"
+		]
 }
