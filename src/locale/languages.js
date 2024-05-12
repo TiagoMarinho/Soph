@@ -12,9 +12,8 @@ export const getLocalizedText = (textName, locale) => locales[locale]?.[textName
 export const getFormattedLocalizedText = (textName, locale, ...params) => {
 	let text = locales[locale]?.[textName] ?? locales[`en-US`]?.[textName]
 
-	for (let i = 0; i < params.length; i++) {
-		const param = params[i]
-		text = text.replaceAll(`{${i}}`, param)
+	for (const [index, param] of params.entries()) {
+		text = text.replaceAll(`{${index}}`, param)
 	}
 
 	return text

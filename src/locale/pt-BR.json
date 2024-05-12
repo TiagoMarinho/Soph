@@ -16,5 +16,6 @@
 	"lora generic error": "Algo de errado aconteceu, desculpe!",
 	"lora already exist": "Um LoRA com esse nome já existe, desculpa.",
 	"lora wrong type": "O link que você me deu não é de um LoRA, desculpa.",
-	"lora add success": "LoRA **{0}** adicionada com sucesso!"
+	"lora add success": "LoRA **{0}** adicionada com sucesso!",
+	"batch complete ping": "Oi **{0}**! O seu sonho se tornou realidade!"
 }

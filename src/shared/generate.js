@@ -1,7 +1,7 @@
 import requestBatch from '../artificial intelligence/requestbatch.js'
 import prefixes from '../artificial intelligence/promptprefixes.json' assert { type: 'json' }
 import defaults from '../artificial intelligence/defaults.json' assert { type: 'json' }
-import { getLocalizedText } from '../locale/languages.js'
+import { getLocalizedText, getFormattedLocalizedText } from '../locale/languages.js'
 import colors from '../colors.json' assert { type: 'json' }
 import config from '../../config.json' assert { type: 'json' }
 import { AttachmentBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
@@ -195,8 +195,13 @@ export const generate = async (interaction, parameters) => {
 			embeds.unshift(embed)
 		}
 
-		if (isLastImage)
+		if (isLastImage) {
 			setJobDone(...embeds)
+			interaction.followUp({ 
+				content: getFormattedLocalizedText("batch complete ping", interaction.locale, `<@${interaction.user.id}>`), 
+				ephemeral: true 
+			})
+		}
 		
 		// buttons
 		const rowData = []
