@@ -137,15 +137,16 @@ export const generate = async (interaction, parameters) => {
 		)
 
 	// update user about queue position
-	const { id, queue } = await requests[0]
+	/*const { id, queue } = await requests[0]
 
+	// TODO: investigate why the following comment says that when referring to an arrow function
 	const updateQueuePosition = _ => { // cannot be changed to arrow function
 		const position = queue.getPosition(id) + 1
 		if (position < 1)
 			return queue.eventEmitter.removeListener(`next`, updateQueuePosition)
 		interaction.editReply(`${thinkingEmote} ${thinkingText} \`#${position}\``)
 	}
-	queue.eventEmitter.on(`next`, updateQueuePosition)
+	queue.eventEmitter.on(`next`, updateQueuePosition)*/
 
 	// handle responses
 	const cacheChannelId = config.cacheChannelId
