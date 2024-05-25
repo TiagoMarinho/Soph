@@ -1,5 +1,9 @@
 import { ApplicationCommandOptionType } from 'discord.js'
 import models from "../artificial intelligence/models.js"
+
+const MAX_MODEL_COUNT = 25 // discord only allows for up to 25 options in a command parameter
+models.length = Math.min(models.length, MAX_MODEL_COUNT)
+
 const modelChoices = models.map(m => ({
 	name: m.model_name.replace(/[_-]/g, " "),
 	value: m.title
@@ -148,6 +152,9 @@ export const optionalOptions = [
 	{
 		type: ApplicationCommandOptionType.String,
 		name: "prefix",
+		name_localizations: {
+			"pt-BR": "prefixo"
+		},
 		description: "Append premade templates to start and end of prompt and negative prompt",
 		description_localizations: {
 			"pt-BR": "Adicionar texto pré-feito ao início da prompt e prompt negativa"
