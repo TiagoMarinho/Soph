@@ -12,7 +12,7 @@
 		"cfg": 9,
 		"width": 512,
 		"height": 512,
-		"sampler": "DPM++ 2M Karras",
+		"sampler": "DPM++ 2M",
 		"hrScale": 1,
 		"latentSpace": false,
 		"clipSkip": 2,
