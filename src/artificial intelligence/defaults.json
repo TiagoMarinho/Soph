@@ -5,7 +5,7 @@
 		"model": null,
 		"seed": -1, 
 		"initImage": null, 
-		"denoising": 0.75, 
+		"denoising": 0.55, 
 		"subseed": -1, 
 		"subseedStrength": 0.0, 
 		"steps": 30, 
@@ -17,5 +17,9 @@
 		"latentSpace": false,
 		"clipSkip": 2,
 		"batchSize": 1
+	},
+	"hiresFixModal": {
+		"hrScale": "1.5",
+		"denoising": "0.55"
 	}
 }

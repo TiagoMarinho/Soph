@@ -2,138 +2,161 @@ import { Events, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, A
 import generate from '../shared/generate.js'
 import { getLocalizedText } from '../locale/languages.js'
 import config from '../../config.json' assert { type: 'json' }
+import defaults from '../artificial intelligence/defaults.json' assert { type: 'json' }
 
 export default {
 	name: Events.InteractionCreate,
 	async execute(interaction) {
+		if (!interaction.isButton()) return
 
-		if (!interaction.isButton())
-			return
-		
 		try {
-			if (interaction.customId !== `edit` && interaction.customId !== 'enhance')
-				await interaction.deferUpdate()
+			if (interaction.customId !== `edit` && interaction.customId !== 'enhance') await interaction.deferUpdate()
 		} catch (error) {
 			return console.error(error)
 		}
 
+		console.log(`${interaction.user.username} clicked the "${interaction.customId}" button`)
+
 		const message = await interaction.message.fetch()
 		const embeds = message.embeds.map(embed => EmbedBuilder.from(embed))
+
+		const buttonHandlerById = {
+			next: handleNextButton,
+			previous: handlePreviousButton,
+			repeat: handleRepeatButton,
+			edit: handleEditButton,
+			enhance: handleEnhanceButton
+		}
 		
-		switch (interaction.customId) {
-			case `next`:
-				embeds.push(embeds.shift())
-				return interaction.editReply({ embeds: embeds })
-			case `previous`:
-				embeds.unshift(embeds.pop())
-				return interaction.editReply({ embeds: embeds })
-		}
+		buttonHandlerById[interaction.customId](interaction, embeds)
+	}
+}
 
-		const cacheChannelId = config.cacheChannelId
-		const cacheChannel = await interaction.client.channels.cache.get(cacheChannelId)
+const handleNextButton = async (interaction, embeds) => {
+	embeds.push(embeds.shift())
+	return interaction.editReply({ embeds: embeds })
+}
 
-		const cacheMessageId = embeds[0].data.url.match(/\/(\d+)$/)[1]
-		const cacheMessage = await cacheChannel.messages.fetch(cacheMessageId)
+const handlePreviousButton = async (interaction, embeds) => {
+	embeds.unshift(embeds.pop())
+	return interaction.editReply({ embeds: embeds })
+}
 
-		const parameters = JSON.parse(cacheMessage.content.match(/^```json\n(.+)```$/)[1])
+const handleRepeatButton = async (interaction, embeds) => {
+	const cacheMessage = await getCacheMessage(interaction, embeds)
+	const parameters = JSON.parse(cacheMessage.content.match(/^```json\n(.+)```$/)[1])
+	return generate(interaction, parameters)
+}
 
-		if (interaction.customId === 'repeat') {
-			return generate(interaction, parameters)
-		}
+const handleEditButton = async (interaction, embeds) => {
+	const cacheMessage = await getCacheMessage(interaction, embeds)
+	const parameters = JSON.parse(cacheMessage.content.match(/^```json\n(.+)```$/)[1])
+	
+	const modal = createEditModal(interaction, parameters)
+	return interaction.showModal(modal).catch(console.error)
+}
 
-		if (interaction.customId === 'edit') {
-			const [title, promptLabel, negativePromptLabel, scaleLabel, denoiseLabel] = 
-				[
-					getLocalizedText(`edit prompt modal title`, interaction.locale),
-					getLocalizedText(`prompt text field label`, interaction.locale),
-					getLocalizedText(`negative prompt text field label`, interaction.locale),
-					getLocalizedText(`enhance image scale field label`, interaction.locale),
-					getLocalizedText(`enhance image denoise field label`, interaction.locale),
-				]
+const handleEnhanceButton = async (interaction, embeds) => {
+	const cacheMessage = await getCacheMessage(interaction, embeds)
+	const parameters = JSON.parse(cacheMessage.content.match(/^```json\n(.+)```$/)[1])
 
-			const modal = new ModalBuilder()
-				.setCustomId('modal-edit')
-				.setTitle(title)
+	if (parameters.hasOwnProperty('image')) {
+		return interaction.reply({
+			content: getLocalizedText(`enhance temporarily disabled`, interaction.locale),
+			ephemeral: true
+		})
+	}
 
-			const promptInput = new TextInputBuilder()
-				.setCustomId('promptInput')
-				.setLabel(promptLabel)
-				.setStyle(TextInputStyle.Paragraph)
-				.setValue(parameters.prompt ?? ` `) // space is workaround for previous modal value being filled in
+	const modal = createEnhanceModal(interaction, parameters)
+	return interaction.showModal(modal).catch(console.error)
+}
 
-			const negativePromptInput = new TextInputBuilder()
-				.setCustomId('negativePromptInput')
-				.setLabel(negativePromptLabel)
-				.setStyle(TextInputStyle.Paragraph)
-				.setValue(parameters.negative ?? ` `) // space is workaround for previous modal value being filled in
-				.setRequired(false)
-			
-			const firstActionRow = new ActionRowBuilder().addComponents(promptInput)
-			const secondActionRow = new ActionRowBuilder().addComponents(negativePromptInput)
+const getCacheMessage = async (interaction, embeds) => {
+	const cacheChannelId = config.cacheChannelId
+	const cacheChannel = await interaction.client.channels.cache.get(cacheChannelId)
+	const cacheMessageId = embeds[0].data.url.match(/\/(\d+)$/)[1]
+	return await cacheChannel.messages.fetch(cacheMessageId)
+}
 
-			modal.addComponents(firstActionRow, secondActionRow)
+const createEditModal = (interaction, parameters) => {
+	const [title, promptLabel, negativePromptLabel, scaleLabel, denoiseLabel] = [
+		getLocalizedText(`edit prompt modal title`, interaction.locale),
+		getLocalizedText(`prompt text field label`, interaction.locale),
+		getLocalizedText(`negative prompt text field label`, interaction.locale),
+		getLocalizedText(`enhance image scale field label`, interaction.locale),
+		getLocalizedText(`enhance image denoise field label`, interaction.locale)
+	]
 
-			if ('hr-scale' in parameters) {
-				const scaleInput = new TextInputBuilder()
-					.setCustomId('scaleInput')
-					.setLabel(scaleLabel)
-					.setStyle(TextInputStyle.Short)
-					.setValue(parameters['hr-scale'].toString())
+	const modal = new ModalBuilder()
+		.setCustomId('modal-edit')
+		.setTitle(title)
 
-				const denoiseInput = new TextInputBuilder()
-					.setCustomId('denoiseInput')
-					.setLabel(denoiseLabel)
-					.setStyle(TextInputStyle.Short)
-					.setValue('denoising' in parameters ? parameters.denoising.toString() : `0.75`)
-				
-				const thirdActionRow = new ActionRowBuilder().addComponents(scaleInput)
-				const fourthActionRow = new ActionRowBuilder().addComponents(denoiseInput)
+	const promptInput = new TextInputBuilder()
+		.setCustomId('promptInput')
+		.setLabel(promptLabel)
+		.setStyle(TextInputStyle.Paragraph)
+		.setValue(parameters.prompt ?? ` `) // space is workaround for previous modal value being filled in
 
-				modal.addComponents(thirdActionRow, fourthActionRow)
-				
-			}
+	const negativePromptInput = new TextInputBuilder()
+		.setCustomId('negativePromptInput')
+		.setLabel(negativePromptLabel)
+		.setStyle(TextInputStyle.Paragraph)
+		.setValue(parameters.negative ?? ` `) // space is workaround for previous modal value being filled in
+		.setRequired(false)
 
-			return interaction.showModal(modal).catch(console.error)
-		}
+	const firstActionRow = new ActionRowBuilder().addComponents(promptInput)
+	const secondActionRow = new ActionRowBuilder().addComponents(negativePromptInput)
 
-		if (interaction.customId === 'enhance') {
-			if (parameters.hasOwnProperty('image')) {
-				// enhance button is disabled for im2img.
-				// for safety, let's respond with a message for previously added enhance buttons for these type of generations.
-				return interaction.reply({
-					content: getLocalizedText(`enhance temporarily disabled`, interaction.locale),
-					ephemeral: true
-				})
-			} 
+	modal.addComponents(firstActionRow, secondActionRow)
 
-			const [title, scaleLabel, denoiseLabel] = 
-				[
-					getLocalizedText(`enhance image modal title`, interaction.locale),
-					getLocalizedText(`enhance image scale field label`, interaction.locale),
-					getLocalizedText(`enhance image denoise field label`, interaction.locale),
-				]
+	if ('hr-scale' in parameters) {
+		const scaleInput = new TextInputBuilder()
+			.setCustomId('scaleInput')
+			.setLabel(scaleLabel)
+			.setStyle(TextInputStyle.Short)
+			.setValue(parameters['hr-scale'].toString())
 
-			const modal = new ModalBuilder()
-				.setCustomId('enhance-image')
-				.setTitle(title)
+		const denoiseInput = new TextInputBuilder()
+			.setCustomId('denoiseInput')
+			.setLabel(denoiseLabel)
+			.setStyle(TextInputStyle.Short)
+			.setValue('denoising' in parameters ? parameters.denoising.toString() : defaults.hiresFixModal.denoising)
 
-			const scaleInput = new TextInputBuilder()
-				.setCustomId('scaleInput')
-				.setLabel(scaleLabel)
-				.setStyle(TextInputStyle.Short)
-				.setValue(parameters.hrScale ? parameters.hrScale.toString() : `2`)
+		const thirdActionRow = new ActionRowBuilder().addComponents(scaleInput)
+		const fourthActionRow = new ActionRowBuilder().addComponents(denoiseInput)
 
-			const denoiseInput = new TextInputBuilder()
-				.setCustomId('denoiseInput')
-				.setLabel(denoiseLabel)
-				.setStyle(TextInputStyle.Short)
-				.setValue(parameters.denoising ? parameters.denoising.toString() : `0.55`)
+		modal.addComponents(thirdActionRow, fourthActionRow)
+	}
 
-			const firstActionRow = new ActionRowBuilder().addComponents(scaleInput)
-			const secondActionRow = new ActionRowBuilder().addComponents(denoiseInput)
-			modal.addComponents(firstActionRow, secondActionRow)
+	return modal
+}
 
-			return interaction.showModal(modal).catch(console.error)
-		}
-	},
+const createEnhanceModal = (interaction, parameters) => {
+	const [title, scaleLabel, denoiseLabel] = [
+		getLocalizedText(`enhance image modal title`, interaction.locale),
+		getLocalizedText(`enhance image scale field label`, interaction.locale),
+		getLocalizedText(`enhance image denoise field label`, interaction.locale)
+	]
+
+	const modal = new ModalBuilder()
+		.setCustomId('enhance-image')
+		.setTitle(title)
+
+	const scaleInput = new TextInputBuilder()
+		.setCustomId('scaleInput')
+		.setLabel(scaleLabel)
+		.setStyle(TextInputStyle.Short)
+		.setValue(parameters.hrScale ? parameters.hrScale.toString() : defaults.hiresFixModal.hrScale)
+
+	const denoiseInput = new TextInputBuilder()
+		.setCustomId('denoiseInput')
+		.setLabel(denoiseLabel)
+		.setStyle(TextInputStyle.Short)
+		.setValue(parameters.denoising ? parameters.denoising.toString() : defaults.hiresFixModal.denoising)
+
+	const firstActionRow = new ActionRowBuilder().addComponents(scaleInput)
+	const secondActionRow = new ActionRowBuilder().addComponents(denoiseInput)
+	modal.addComponents(firstActionRow, secondActionRow)
+
+	return modal
 }
