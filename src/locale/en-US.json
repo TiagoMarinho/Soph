@@ -1,7 +1,20 @@
 {
-	"dream fail resolution too high": "Picture is too big for my little brain",
+	"dream fail resolution too high": [
+		"Picture is too big for my little brain",
+		"That's too much! Pick a lower resolution please"
+	],
 	"dream response description": "Click the picture to make it bigger",
-	"generating images": "Dreaming...",
+	"generating images": 
+		[
+			"Dreaming...",
+			"Imagining...", 
+			"Let me think...",
+			"Let's see...",
+			"Mmmm...",
+			"Wondering...",
+			"Picturing...",
+			"Thinking..."
+		],
 	"edit prompt modal title": "Edit prompt",
 	"prompt text field label": "Prompt",
 	"negative prompt text field label": "Negative prompt",
@@ -19,7 +32,14 @@
 	"lora add success": "LoRA **{0}** added succesfully!",
 	"batch complete ping": 
 		[
-			"Hey **{0}**! Your dream has been brought to life!",
-			"**{0}**, I tried the best I could!"
+			"Hey **{0}**, your dream has been brought to life!",
+			"Hello hello **{0}**, here's what you asked me to dream about!",
+			"**{0}**, I did my best", 
+			"I hope you like it **{0}**", 
+			"Ahem... **{0}** it's dooooooooone!", 
+			"Sorry it took so long **{0}**",
+			"Didn't mean to leave you waiting **{0}**, here it is",
+			"Sorry for the ping **{0}**, I hope that's what you were looking for",
+			"**{0}**, I just wanted you to know it's done"
 		]
 }

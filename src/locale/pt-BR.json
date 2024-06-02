@@ -1,7 +1,14 @@
 {
-	"dream fail resolution too high": "Essa imagem é grande demais pro meu pequeno cérebro",
+	"dream fail resolution too high": "Essa imagem é grande demais pro meu cerebrinho",
 	"dream response description": "Clique em uma imagem para ver ela de pertinho",
-	"generating images": "Sonhando...",
+	"generating images": [
+		"Sonhando...",
+		"Imaginando...", 
+		"Deixa eu pensar...",
+		"Deixa eu ver...",
+		"Hummm...",
+		"Pensando..."
+	],
 	"edit prompt modal title": "Editar prompt",
 	"prompt text field label": "Prompt",
 	"negative prompt text field label": "Prompt negativa",
@@ -17,5 +24,10 @@
 	"lora already exist": "Um LoRA com esse nome já existe, desculpa.",
 	"lora wrong type": "O link que você me deu não é de um LoRA, desculpa.",
 	"lora add success": "LoRA **{0}** adicionada com sucesso!",
-	"batch complete ping": "Oi **{0}**! O seu sonho se tornou realidade!"
+	"batch complete ping": [
+		"Oi **{0}**! O seu sonho se tornou realidade!",
+		"Prontinho **{0}**, espero que goste!",
+		"\\*cof cof\\* Ei **{0}**, aqui está o que você pediu!",
+		"**{0}**, eu fiz o melhor que pude"
+	]
 }
