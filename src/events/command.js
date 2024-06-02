@@ -11,8 +11,7 @@ export default {
 
 		if (!command) return
 
-		const fullUserTag = `${interaction.user.username}#${interaction.user.discriminator}`
-		console.log(`${fullUserTag} used ${interaction}`)
+		console.log(`${interaction.user.username} used ${interaction}`)
 
 		try {
 			await command.execute(interaction)

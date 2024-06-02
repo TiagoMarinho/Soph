@@ -17,6 +17,8 @@ export default {
 
 			return
 		}
+		
+		console.log(`${interaction.user.username} submitted the "${interaction.customId}" modal`)
 
 		const message = await interaction.message.fetch()
 		const embeds = message.embeds.map(embed => EmbedBuilder.from(embed))
