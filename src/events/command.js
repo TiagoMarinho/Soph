@@ -11,7 +11,7 @@ export default {
 
 		if (!command) return
 
-		console.log(`${interaction.user.username} used ${interaction}`)
+		console.log(`${interaction.user.username} used the \x1b[7m /${interaction.commandName} \x1b[0m command`)
 
 		try {
 			await command.execute(interaction)

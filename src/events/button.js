@@ -15,7 +15,7 @@ export default {
 			return console.error(error)
 		}
 
-		console.log(`${interaction.user.username} clicked the "${interaction.customId}" button`)
+		console.log(`${interaction.user.username} clicked the \x1b[7m ${interaction.customId} \x1b[0m button`)
 
 		const message = await interaction.message.fetch()
 		const embeds = message.embeds.map(embed => EmbedBuilder.from(embed))

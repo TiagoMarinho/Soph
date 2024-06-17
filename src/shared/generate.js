@@ -64,8 +64,6 @@ export const generate = async (interaction, parameters) => {
 
 	const isEphemeral = parameters.private ?? false
 
-	console.log(`Heartbeat ping: ${interaction.client.ws.ping}ms`)
-
 	const thinkingText = getLocalizedText("generating images", interaction.locale)
 	const method = interaction.isButton() || interaction.isModalSubmit() ? `followUp` : `reply`
 	const thinkingEmote = `<a:loading:1050454241266909249>`
@@ -74,8 +72,6 @@ export const generate = async (interaction, parameters) => {
 		fetchReply: true, 
 		ephemeral: isEphemeral 
 	})
-
-	console.log(`Roundtrip latency: ${reply.createdTimestamp - interaction.createdTimestamp}ms`)
 
 	// img2img
 	const isImg2Img = typeof parameters.image !== `undefined`
