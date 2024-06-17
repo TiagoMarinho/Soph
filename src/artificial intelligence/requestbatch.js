@@ -44,8 +44,8 @@ const requestBatch = (
 	
 	const dynamicParameters = new Array(batchCount).fill()
 		.map((_, i) => ({
-			prompt: getPromptVariation(prompt, i),
-			negativePrompt: getPromptVariation(negativePrompt, i),
+			prompt: getPromptVariation(prompt, i) || undefined,
+			negativePrompt: getPromptVariation(negativePrompt, i) || undefined,
 			seed: seed ?? randomSeed + i,
 		}))
 
