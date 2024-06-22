@@ -5,6 +5,7 @@ import { getLocalizedText } from '../locale/languages.js'
 import colors from '../colors.json' assert { type: 'json' }
 import config from '../../config.json' assert { type: 'json' }
 import { AttachmentBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
+import emojis from '../emojis.json' assert { type: 'json' }
 import fetch from 'node-fetch'
 
 const MAX_PIXEL_COUNT = 1024 * 768 * 4
@@ -65,11 +66,20 @@ export const generate = async (interaction, parameters) => {
 	const isEphemeral = parameters.private ?? false
 
 	const thinkingText = getLocalizedText("generating images", interaction.locale)
+	const row = new ActionRowBuilder()
+	const button = 
+		new ButtonBuilder()
+			.setCustomId("thinking")
+			.setEmoji(emojis.loading)
+			.setStyle(ButtonStyle.Secondary)
+			.setDisabled(true)
+
+	row.addComponents(button)
 	const method = interaction.isButton() || interaction.isModalSubmit() ? `followUp` : `reply`
-	const thinkingEmote = `<a:loading:1050454241266909249>`
 	const reply = await interaction[method]({ 
-		content: `${thinkingEmote} ${thinkingText}`, 
+		content: `${thinkingText}`, 
 		fetchReply: true, 
+		components: [row],
 		ephemeral: isEphemeral 
 	})
 
@@ -206,19 +216,19 @@ export const generate = async (interaction, parameters) => {
 		// add previous/next buttons (arrows)
 		if (numberOfImages > 1)
 			rowData.push([
-				{ emoji: `1045215673690886224`, id: `previous`, style: ButtonStyle.Primary, disabled: !isLastImage },
-				{ emoji: `1045215671438540821`, id: `next`, style: ButtonStyle.Primary, disabled: !isLastImage },
+				{ emoji: emojis.previous, id: `previous`, style: ButtonStyle.Primary, disabled: !isLastImage },
+				{ emoji: emojis.next, id: `next`, style: ButtonStyle.Primary, disabled: !isLastImage },
 			])
 		
 		// add repeat, edit and enhance button.
 		if (!isEphemeral && paramCacheMessage) {
 			const generationButtons = [
-				{ emoji: `1050058817360101498`, id: `repeat`, style: ButtonStyle.Success, disabled: !isLastImage },
-				{ emoji: `1058978647043735582`, id: `edit`, style: ButtonStyle.Success, disabled: !isLastImage }
+				{ emoji: emojis.repeat, id: `repeat`, style: ButtonStyle.Success, disabled: !isLastImage },
+				{ emoji: emojis.edit, id: `edit`, style: ButtonStyle.Success, disabled: !isLastImage }
 			]
 
 			if (parameters['hr-scale'] == null && !isImg2Img) {
-				generationButtons.push({ emoji: '1050092899083227166', id: 'enhance', style: ButtonStyle.Success, disabled: !isLastImage })
+				generationButtons.push({ emoji: emojis.enhance, id: 'enhance', style: ButtonStyle.Success, disabled: !isLastImage })
 			}
 
 			if (rowData.length > 0) 
