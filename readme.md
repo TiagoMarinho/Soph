@@ -65,11 +65,12 @@ Individual images are sent as soon as they're ready rather than only sending the
 ## Installation
 
 1. Install https://github.com/AUTOMATIC1111/stable-diffusion-webui and its dependencies
+	- You can also use https://github.com/lllyasviel/stable-diffusion-webui-forge/ instead
 2. Add `--api` to WebUI's [commandline arguments](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Command-Line-Arguments-and-Settings)
 3. Install NodeJS
 4. Run `git clone https://github.com/TiagoMarinho/Soph` to clone Soph's repo
 5. Create a new Discord application in the [Discord Developer Portal](https://discord.com/developers/applications)
-6. Copy the token and client id of your new discord application and put it in `Soph/config.json`, like this:
+6. Copy the token and client id of your new discord application and put it in a new file inside Soph's root folder, `Soph/config.json`, like this:
 
 	```json
 	{
@@ -96,3 +97,6 @@ Here's a basic overview of the project structure for new contributors to get use
 * `src/main.js` is the entry point
 * Commands are folders in `src/commands/<category>/`
 * `src/commands/<category>/<command name>/main.js` contains the code that runs when the user executes said command
+* `src/shared/generate.js` is where the relevant generation functions are called from, and where the response is built
+
+Unabled to run Stable Diffusion but still want to contribute? You can install [EdoanR's "a1111-fake-webui-api"](https://github.com/EdoanR/a111-fake-webui-api) to mimic the Stable Diffusion WebUI API to develop Soph without having to actually run the AI.
