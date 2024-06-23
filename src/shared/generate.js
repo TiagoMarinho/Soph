@@ -231,11 +231,10 @@ export const generate = async (interaction, parameters) => {
 				generationButtons.push({ emoji: emojis.enhance, id: 'enhance', style: ButtonStyle.Success, disabled: !isLastImage })
 			}
 
-			if (rowData.length > 0) 
-				rowData[0].push(...generationButtons)
-			else 
-				rowData.push(generationButtons)
+			rowData.push(generationButtons)
 		}
+
+		rowData[0].push({ emoji: emojis.delete, id: "delete", style: ButtonStyle.Danger })
 
 		const rows = rowData.map(buttonData => {
 			const row = new ActionRowBuilder()

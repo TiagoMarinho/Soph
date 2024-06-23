@@ -25,7 +25,8 @@ export default {
 			previous: handlePreviousButton,
 			repeat: handleRepeatButton,
 			edit: handleEditButton,
-			enhance: handleEnhanceButton
+			enhance: handleEnhanceButton,
+			delete: handleDeleteButton
 		}
 		
 		buttonHandlerById[interaction.customId](interaction, embeds)
@@ -69,6 +70,17 @@ const handleEnhanceButton = async (interaction, embeds) => {
 
 	const modal = createEnhanceModal(interaction, parameters)
 	return interaction.showModal(modal).catch(console.error)
+}
+
+const handleDeleteButton = async (interaction, _) => {
+	const originalMessage = await interaction.message.fetch()
+	const originalAuthor = originalMessage.interaction.user
+	if (interaction.user.id !== originalAuthor.id)
+		return interaction.followUp({ 
+			content: getLocalizedText(`delete forbidden not author`, interaction.locale), 
+			ephemeral: true 
+		})
+	return originalMessage.delete()
 }
 
 const getCacheMessage = async (interaction, embeds) => {

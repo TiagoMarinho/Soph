@@ -29,5 +29,6 @@
 		"Prontinho **{0}**, espero que goste!",
 		"\\*cof cof\\* Ei **{0}**, aqui está o que você pediu!",
 		"**{0}**, eu fiz o melhor que pude"
-	]
+	],
+	"delete forbidden not author": "Desculpa, só o autor que pediu pelas imagens pode deletar elas!"
 }

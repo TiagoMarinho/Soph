@@ -41,5 +41,6 @@
 			"Didn't mean to leave you waiting **{0}**, here it is",
 			"Sorry for the ping **{0}**, I hope that's what you were looking for",
 			"**{0}**, I just wanted you to know it's done"
-		]
+		],
+	"delete forbidden not author": "Sorry, only the user that requested the images can delete them!"
 }
