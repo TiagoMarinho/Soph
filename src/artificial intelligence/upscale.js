@@ -1,4 +1,4 @@
-import servers from './servers.js'
+import { servers } from './servers.js'
 
 const upscale = async (
 	imageBuffer,

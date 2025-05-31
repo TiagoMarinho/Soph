@@ -1,6 +1,6 @@
 import Queue from "../utils/queue.js"
 
-const servers = [
+export const servers = [
 	{
 		address: "http://127.0.0.1:7860",
 		credentials: "username:password"
@@ -10,4 +10,4 @@ const servers = [
 for (const server of servers)
 	server.queue = new Queue
 
-export default servers
+export const getLeastBusyServer = _ => servers.sort((a, b) => a.queue.size - b.queue.size)[0]

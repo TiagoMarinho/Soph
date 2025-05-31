@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import servers from './servers.js'
+import { servers, getLeastBusyServer } from './servers.js'
 import defaults from './defaults.json' assert { type: 'json' }
 
 const requestImage = (
@@ -34,7 +34,7 @@ const requestImage = (
 		resizeModeTypes.CROP_AND_RESIZE
 
 	const highresFixUpscaler = latentSpace ?
-		`Latent (nearest-exact)` : 
+		`Latent (bicubic)` : 
 		`R-ESRGAN 4x+ Anime6B` // workaround for webui defaulting to lanczos
 
 	const secondPassSteps = steps > 16 ? steps / 2 + 1 : steps
@@ -81,8 +81,11 @@ const requestImage = (
 	const base64Credentials = buff.toString('base64')
 
 	const mode = `${isImageToImage ? `img` : `txt`}2img`
-	const apiEndpoint = `${servers[0].address}/sdapi/v1/${mode}`
-	const request = servers[0].queue.add(_ =>
+
+	const server = getLeastBusyServer()
+
+	const apiEndpoint = `${server.address}/sdapi/v1/${mode}`
+	const request = server.queue.add(_ =>
 		fetch(apiEndpoint, {
 			method: 'post',
 			body: JSON.stringify(payload),
