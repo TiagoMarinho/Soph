@@ -19,17 +19,25 @@
 	"prompt text field label": "Prompt",
 	"negative prompt text field label": "Negative prompt",
 	"png info unknown file type": "Only use PNG files, please!",
+
 	"enhance image modal title": "Enhance image",
 	"enhance image scale field label": "Scale (value from 1 to 10)",
 	"enhance image denoise field label": "Denoise (value from 0 to 1)",
 	"enhance image invalid scale": "Scale value must be a number from 1 to 10.",
 	"enhance image invalid denoise": "Denoise value must be a number from 0 to 1.",
 	"enhance temporarily disabled": "The enhance button is temporarily disabled for img2img generations, sorry!",
+
+	"variation image modal title": "Create variations of image",
+	"variation image strength field label": "Strength (value from 0 to 1)",
+	"variation image invalid strength": "Strength value must be a number from 0 to 1.",
+	"variation temporarily disabled": "The variation button is temporarily disabled for img2img generations, sorry!",
+
 	"lora invalid link": "Invalid link!",
 	"lora generic error": "Something went wrong, sorry!",
 	"lora already exist": "A LoRA by this name already exists, sorry.",
 	"lora wrong type": "The link you gave me is not a LoRA, sorry.",
 	"lora add success": "LoRA **{0}** added succesfully!",
+	
 	"batch complete ping": 
 		[
 			"Hey **{0}**, your dream has been brought to life!",

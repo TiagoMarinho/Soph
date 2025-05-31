@@ -1,7 +1,8 @@
-import { Events, EmbedBuilder } from 'discord.js'
+import { Events, EmbedBuilder, Emoji } from 'discord.js'
 import generate from '../shared/generate.js'
 import config from '../../config.json' assert { type: 'json' }
 import { getLocalizedText } from '../locale/languages.js'
+import emojis from '../emojis.json' assert { type: 'json' }
 
 export default {
 	name: Events.InteractionCreate,
@@ -57,7 +58,7 @@ export default {
 				parameters['hr-scale'] = scaleValue
 			}
 
-			return generate(interaction, parameters)
+			return generate(interaction, parameters, emojis.edit)
 		}
 
 		if (interaction.customId === 'enhance-image') {
@@ -94,7 +95,37 @@ export default {
 			parameters['scale-latent'] = true
 			parameters.seed = selectedSeed
 
-			return generate(interaction, parameters)
+			return generate(interaction, parameters, emojis.enhance)
+		}
+
+		// VARIATIONS MODAL:
+
+		if (interaction.customId === 'variation-image') {
+			const strengthValue = parseFloat( interaction.fields.getTextInputValue('strengthInput').replace(',', '.') )
+
+			if (isNaN(strengthValue) || strengthValue < 0 || strengthValue > 1) {
+				return interaction.followUp({
+					content: getLocalizedText(`variation image invalid strength`, interaction.locale),
+					ephemeral: true
+				})
+			}
+
+			const cacheChannelId = config.cacheChannelId
+			const cacheChannel = await interaction.client.channels.cache.get(cacheChannelId)
+
+			const cacheMessageId = embeds[0].data.url.match(/\/(\d+)$/)[1]
+			const cacheMessage = await cacheChannel.messages.fetch(cacheMessageId)
+
+			const parameters = JSON.parse(cacheMessage.content.match(/^```json\n(.+)```$/)[1])
+
+			const seedMatch = embeds[0].data.fields[0].value.match(/\d+/)
+			const selectedSeed = parseInt(seedMatch[0])
+
+			parameters['variation-strength'] = strengthValue
+			parameters['variation-seed'] = -1
+			parameters.seed = selectedSeed
+
+			return generate(interaction, parameters, emojis.branch)
 		}
 	},
 }

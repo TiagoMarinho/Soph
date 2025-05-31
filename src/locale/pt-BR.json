@@ -13,17 +13,25 @@
 	"prompt text field label": "Prompt",
 	"negative prompt text field label": "Prompt negativa",
 	"png info unknown file type": "Use apenas imagens PNG, por favor!",
+
 	"enhance image modal title": "Ampliar imagem",
 	"enhance image scale field label": "Escala (valor de 1 a 10)",
 	"enhance image denoise field label": "Denoise (valor de 0 a 1)",
 	"enhance image invalid scale": "Valor de escala deve ser um número de 1 a 10.",
 	"enhance image invalid denoise": "Valor do denoise deve ser um número de 0 a 1.",
 	"enhance temporarily disabled": "O botão de ampliação está temporariamente desativado para gerações img2img, desculpe!",
+
+	"variation image modal title": "Criar variações de imagem",
+	"variation image strength field label": "Intensidade (valor de 0 a 1)",
+	"variation image invalid strength": "Intensidade deve ser um número de 0 a 1.",
+	"variation temporarily disabled": "O botão de variações está temporariamente desativado para gerações img2img, desculpe!",
+
 	"lora invalid link": "Link inválido!",
 	"lora generic error": "Algo de errado aconteceu, desculpe!",
 	"lora already exist": "Um LoRA com esse nome já existe, desculpa.",
 	"lora wrong type": "O link que você me deu não é de um LoRA, desculpa.",
 	"lora add success": "LoRA **{0}** adicionada com sucesso!",
+
 	"batch complete ping": [
 		"Oi **{0}**! O seu sonho se tornou realidade!",
 		"Prontinho **{0}**, espero que goste!",

@@ -46,7 +46,7 @@ const adjustImageSize = (width = defaults.generate.width, height = defaults.gene
 	return { width: Math.floor(width * sideDifference), height: Math.floor(height * sideDifference) };
 }
 
-export const generate = async (interaction, parameters) => {
+export const generate = async (interaction, parameters, thinkingEmote = emojis.loading) => {
 
 	// resolution validation
 	const requestedPixelCount = getRequestedPixelCount(
@@ -70,7 +70,7 @@ export const generate = async (interaction, parameters) => {
 	const button = 
 		new ButtonBuilder()
 			.setCustomId("thinking")
-			.setEmoji(emojis.loading)
+			.setEmoji(thinkingEmote)
 			.setStyle(ButtonStyle.Secondary)
 			.setDisabled(true)
 
@@ -167,9 +167,15 @@ export const generate = async (interaction, parameters) => {
 			})
 
 	const embeds = []
-	for (const [index, { request }] of requests.entries()) {
-		const response = await request.catch(console.error)
+
+
+	let imgId = -1
+	const respond = async (request, index) => {
+		++imgId
+		const response = await request
+		//console.log(response)
 		const data = await response.json()
+		//console.log(data)
 		const buffers = data.images.map(i => Buffer.from(i, "base64"))
 		const filename = `${data.parameters.seed}.png`
 		const attachments = buffers.map(buffer => {
@@ -181,7 +187,7 @@ export const generate = async (interaction, parameters) => {
 		const imageUrls = [attachmentsUrls[0]].slice(0, 4)
 
 		const numberOfImages = requests.length
-		const isLastImage = index === requests.length - 1
+		const isLastImage = imgId === requests.length - 1
 		const color = colors.incomplete
 
 		const descLocale = getLocalizedText("dream response description", interaction.locale)
@@ -194,7 +200,7 @@ export const generate = async (interaction, parameters) => {
 				.setDescription(descLocale)
 				.setAuthor({ name: interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
 				.addFields({ name: `Seed`, value: `\`\`\`${data.parameters.seed}\`\`\``, inline: true })
-				.setFooter({ text: `${index + 1}/${numberOfImages}` })
+				.setFooter({ text: `${imgId + 1}/${numberOfImages}` })
 
 			if (isImg2Img)
 				embed.setThumbnail(parameters.image.url)
@@ -224,7 +230,8 @@ export const generate = async (interaction, parameters) => {
 		if (!isEphemeral && paramCacheMessage) {
 			const generationButtons = [
 				{ emoji: emojis.repeat, id: `repeat`, style: ButtonStyle.Success, disabled: !isLastImage },
-				{ emoji: emojis.edit, id: `edit`, style: ButtonStyle.Success, disabled: !isLastImage }
+				{ emoji: emojis.edit, id: `edit`, style: ButtonStyle.Success, disabled: !isLastImage },
+				{ emoji: emojis.branch, id: `variation`, style: ButtonStyle.Success, disabled: !isLastImage }
 			]
 
 			if (parameters['hr-scale'] == null && !isImg2Img) {
@@ -259,6 +266,10 @@ export const generate = async (interaction, parameters) => {
 			.catch(err => {
 				console.error(err)
 			})
+	}
+
+	for (const [index, { request }] of requests.entries()) {
+		request.then(respond, index)
 	}
 }
 

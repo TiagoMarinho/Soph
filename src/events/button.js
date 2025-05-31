@@ -3,6 +3,7 @@ import generate from '../shared/generate.js'
 import { getLocalizedText } from '../locale/languages.js'
 import config from '../../config.json' assert { type: 'json' }
 import defaults from '../artificial intelligence/defaults.json' assert { type: 'json' }
+import emojis from '../emojis.json' assert { type: 'json' }
 
 export default {
 	name: Events.InteractionCreate,
@@ -10,7 +11,7 @@ export default {
 		if (!interaction.isButton()) return
 
 		try {
-			if (interaction.customId !== `edit` && interaction.customId !== 'enhance') await interaction.deferUpdate()
+			if (interaction.customId !== `edit` && interaction.customId !== 'enhance' && interaction.customId !== 'variation') await interaction.deferUpdate()
 		} catch (error) {
 			return console.error(error)
 		}
@@ -26,7 +27,8 @@ export default {
 			repeat: handleRepeatButton,
 			edit: handleEditButton,
 			enhance: handleEnhanceButton,
-			delete: handleDeleteButton
+			delete: handleDeleteButton,
+			variation: handleVariationButton
 		}
 		
 		buttonHandlerById[interaction.customId](interaction, embeds)
@@ -46,7 +48,7 @@ const handlePreviousButton = async (interaction, embeds) => {
 const handleRepeatButton = async (interaction, embeds) => {
 	const cacheMessage = await getCacheMessage(interaction, embeds)
 	const parameters = JSON.parse(cacheMessage.content.match(/^```json\n(.+)```$/)[1])
-	return generate(interaction, parameters)
+	return generate(interaction, parameters, emojis.repeat)
 }
 
 const handleEditButton = async (interaction, embeds) => {
@@ -69,6 +71,21 @@ const handleEnhanceButton = async (interaction, embeds) => {
 	}
 
 	const modal = createEnhanceModal(interaction, parameters)
+	return interaction.showModal(modal).catch(console.error)
+}
+
+const handleVariationButton = async (interaction, embeds) => {
+	const cacheMessage = await getCacheMessage(interaction, embeds)
+	const parameters = JSON.parse(cacheMessage.content.match(/^```json\n(.+)```$/)[1])
+
+	if (parameters.hasOwnProperty('image')) {
+		return interaction.reply({
+			content: getLocalizedText(`variation temporarily disabled`, interaction.locale),
+			ephemeral: true
+		})
+	}
+
+	const modal = createVariationModal(interaction, parameters)
 	return interaction.showModal(modal).catch(console.error)
 }
 
@@ -169,6 +186,28 @@ const createEnhanceModal = (interaction, parameters) => {
 	const firstActionRow = new ActionRowBuilder().addComponents(scaleInput)
 	const secondActionRow = new ActionRowBuilder().addComponents(denoiseInput)
 	modal.addComponents(firstActionRow, secondActionRow)
+
+	return modal
+}
+
+const createVariationModal = (interaction, parameters) => {
+	const [title, strengthLabel] = [
+		getLocalizedText(`variation image modal title`, interaction.locale),
+		getLocalizedText(`variation image strength field label`, interaction.locale),
+	]
+
+	const modal = new ModalBuilder()
+		.setCustomId('variation-image')
+		.setTitle(title)
+
+	const strengthInput = new TextInputBuilder()
+		.setCustomId('strengthInput')
+		.setLabel(strengthLabel)
+		.setStyle(TextInputStyle.Short)
+		.setValue(defaults.variationModal.subseedStrength)
+
+	const firstActionRow = new ActionRowBuilder().addComponents(strengthInput)
+	modal.addComponents(firstActionRow)
 
 	return modal
 }
