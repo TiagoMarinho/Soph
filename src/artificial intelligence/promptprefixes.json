@@ -5,5 +5,13 @@
 	},
 	"pony": {
 		"promptPrefix": "score_9, score_8_up, score_7_up, score_6_up, score_5_up, score_4_up"
+	},
+	"noobaixl_safe": {
+		"promptPrefix": "masterpiece, best quality, newest, absurdres, highres",
+		"negativePrefix": "worst quality, old, early, low quality, lowres, signature, username, logo, bad hands, mutated hands, mammal, anthro, furry, ambiguous form, feral, semi-anthro"
+	},
+	"noobaixl_nsfw": {
+		"promptPrefix": "masterpiece, best quality, newest, absurdres, highres, safe",
+		"negativePrefix": "nsfw, worst quality, old, early, low quality, lowres, signature, username, logo, bad hands, mutated hands, mammal, anthro, furry, ambiguous form, feral, semi-anthro"
 	}
 }

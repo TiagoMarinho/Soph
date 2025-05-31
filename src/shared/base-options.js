@@ -162,6 +162,8 @@ export const optionalOptions = [
 		choices: [
 			{ name: "NovelAI", value: "novelai" },
 			{ name: "Pony", value: "pony" },
+			{ name: "NoobAI XL", value: "noobaixl_safe" },
+			{ name: "NoobAI XL NSFW", value: "noobaixl_nsfw" },
 		],
 		required: false
 	},
