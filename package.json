@@ -1,0 +1,16 @@
+{
+	"name": "soph",
+	"version": "2.0.0",
+	"description": "",
+	"main": "src/main.mjs",
+	"scripts": {
+		"register": "node src/register-commands.mjs",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"discord.js": "^14.19.3"
+	}
+}
