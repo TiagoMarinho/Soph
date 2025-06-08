@@ -3,6 +3,22 @@ import { getImages } from "../../../artificial intelligence/backends/comfyui/com
 import { AttachmentBuilder, ContainerBuilder, MediaGalleryBuilder, MessageFlags, TextDisplayBuilder } from "discord.js"
 import createFluxGraph from "../../../artificial intelligence/backends/comfyui/workflows/comfyui-flux-workflow.mjs"
 import createSDXLGraph from "../../../artificial intelligence/backends/comfyui/workflows/comfyui-sdxl-workflow.mjs"
+import promptPrefixes from "../../../artificial intelligence/prompt-prefixes.json" assert { type: 'json' }
+
+const formatPrompt = (promptPrefixName, prompt, negativePrompt) => {
+	if (!promptPrefixName) return { prompt, negativePrompt }
+	const { promptPrefix, negativePromptPrefix } = promptPrefixes[promptPrefixName]
+	return {
+		prompt: [
+			promptPrefix, 
+			prompt
+		].join(`, `),
+		negativePrompt: [
+			negativePromptPrefix, 
+			negativePrompt
+		].join(`, `)
+	}
+}
 
 export default async interaction => {
 	await interaction.deferReply()
@@ -13,7 +29,15 @@ export default async interaction => {
 	}
 	console.log(imageGenerationParameters)
 
-	const SEED = imageGenerationParameters.seed
+	const formattedPrompt = formatPrompt(
+		imageGenerationParameters.prompt_prefix,
+		imageGenerationParameters.prompt, 
+		imageGenerationParameters.negative_prompt
+	)
+	imageGenerationParameters.prompt = formattedPrompt.prompt,
+	imageGenerationParameters.negative_prompt = formattedPrompt.negativePrompt
+
+	const SEED = imageGenerationParameters.seed // FIXME: this is potentially a getter so it gets a random one here, then a new one later
 
 	// move this to a json with definition for models
 	const graphs = { 

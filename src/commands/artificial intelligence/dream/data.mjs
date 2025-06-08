@@ -103,6 +103,15 @@ export default {
 			required: false
 		},
 		{
+			type: 3,
+			name: "prompt_prefix",
+			description: "Which prompt prefix to add",
+			choices: [
+				{ name: "wai IllustriousWAI NSFW illustrious SDXL", value: "waiNSFWIllustrious_v140.safetensors" },
+			],
+			required: false
+		},
+		{
 			type: 4,
 			name: "batch",
 			description: "Number of images to generate",

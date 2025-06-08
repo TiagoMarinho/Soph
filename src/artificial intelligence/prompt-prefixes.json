@@ -1,0 +1,6 @@
+{
+	"waiNSFWIllustrious_v140.safetensors": {
+		"prompt": "masterpiece,best quality,amazing quality,",
+		"negative_prompt": "bad quality,worst quality,worst detail,sketch,censor,"
+	}
+}
