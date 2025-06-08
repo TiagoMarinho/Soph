@@ -5,7 +5,8 @@
 	"main": "src/main.mjs",
 	"scripts": {
 		"register": "node src/register-commands.mjs",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"start": "node src/main.mjs",
+		"postinstall": "node setup.mjs"
 	},
 	"keywords": [],
 	"author": "",
