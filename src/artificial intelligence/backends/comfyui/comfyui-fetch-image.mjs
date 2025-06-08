@@ -1,8 +1,9 @@
 // comfyui-fetch-images.js
 import { WebSocket } from 'ws';
 import { randomBytes } from 'crypto';
+import config from '../../../../config.json' assert { type: 'json' }
 
-const SERVER = 'http://127.0.0.1:8188';
+const SERVER = config.comfyuiServer || 'http://127.0.0.1:8188';
 
 /**
  * Queues a node graph prompt (set to produce 4 outputs), waits for completion,
@@ -16,7 +17,8 @@ export const getImages = async graph => {
 	const clientId = randomBytes(16).toString('hex');
 
 	// 2. Queue the prompt (include client_id so WebSocket notifications match)
-	const queueRes = await fetch(`${SERVER}/prompt`, {
+	// Use `new Url` to avoid any problem with the address ending with a slash or not.
+	const queueRes = await fetch(new URL('/prompt', SERVER).toString(), {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ prompt: graph, client_id: clientId })
@@ -28,7 +30,9 @@ export const getImages = async graph => {
 
 	// 3. Open a WebSocket with the same clientId, wait for "node === null"
 	await new Promise((resolve, reject) => {
-		const ws = new WebSocket(`ws://127.0.0.1:8188/ws?clientId=${clientId}`);
+		// Convert http:// (or https) to ws:// to use as websocket server.
+		const wsUrl = SERVER.replace(/^https?/, 'ws');
+		const ws = new WebSocket(new URL('/ws', wsUrl).toString() + `?clientId=${clientId}`);
 
 		ws.on('message', msg => {
 			let parsed;

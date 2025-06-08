@@ -12,9 +12,11 @@ if (fs.existsSync(configPath)) {
   process.exit(0)
 }
 
+// template for the config file.
 const config = {
   token: 'ADD_YOUR_TOKEN_HERE',
   clientId: 'ADD_YOUR_CLIENT_ID_HERE',
+  comfyuiServer: 'OPTIONAL_COMFYUI_SERVER_ADDRESS_HERE' 
 }
 
 fs.writeFileSync(configPath, JSON.stringify(config, null, 2))
