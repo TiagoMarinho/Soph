@@ -18,7 +18,7 @@ const nodes = {
 const createComfyUIGraph = imageGenerationParameters => {
 	const MAX_UPSCALING_STEPS = 16
 	const upscalingSeed = getRandomInt(0, 9_999_999_999)
-	const upscalingSteps = Math.max(imageGenerationParameters.steps, MAX_UPSCALING_STEPS)
+	const upscalingSteps = Math.min(imageGenerationParameters.steps, MAX_UPSCALING_STEPS)
 	const useUpscaling = imageGenerationParameters.latent_upscale > 1.0
 	const isFlux = imageGenerationParameters.model.startsWith("flux")
 
