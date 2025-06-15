@@ -4,9 +4,11 @@ import { AttachmentBuilder, ContainerBuilder, MediaGalleryBuilder, MessageFlags,
 import createFluxGraph from "../../../artificial intelligence/backends/comfyui/workflows/comfyui-flux-workflow.mjs"
 import createSDXLGraph from "../../../artificial intelligence/backends/comfyui/workflows/comfyui-sdxl-workflow.mjs"
 import promptPrefixes from "../../../artificial intelligence/prompt-prefixes.json" assert { type: 'json' }
+import createComfyUIGraph from "../../../artificial intelligence/backends/comfyui/workflows/comfyui-graph.mjs"
 
 const formatPrompt = (promptPrefixName, prompt, negativePrompt) => {
 	if (!promptPrefixName) return { prompt, negativePrompt }
+	console.log("prompt prefix was enabled: " + promptPrefixName)
 	const { promptPrefix, negativePromptPrefix } = promptPrefixes[promptPrefixName]
 	return {
 		prompt: [
@@ -27,7 +29,6 @@ export default async interaction => {
 		...defaultImageGenerationParameters, 
 		...Object.fromEntries(interaction.options.data.map(({ name, value }) => [name, value]))
 	}
-	console.log(imageGenerationParameters)
 
 	const formattedPrompt = formatPrompt(
 		imageGenerationParameters.prompt_prefix,
@@ -45,7 +46,7 @@ export default async interaction => {
 		"flux_schnell.safetensors": createFluxGraph,
 		"flux_dev.safetensors": createFluxGraph
 	}
-	const GRAPH = graphs[imageGenerationParameters.model](imageGenerationParameters)
+	const GRAPH = createComfyUIGraph(imageGenerationParameters)
 
 	const startTime = performance.now()
 	// TODO: better error handling
@@ -58,7 +59,6 @@ export default async interaction => {
 	const attachments = imageBuffers.map((imageBuffer, i) => new AttachmentBuilder(imageBuffer, { name: `Soph_${i}.png` }))
 
 	const formattedTimeTaken = Math.floor( timeTaken / 100 ) / 10
-	const stepsPerMillisecond = imageGenerationParameters.steps / timeTaken * imageGenerationParameters.batch
 	const stepsPerSecond = Math.floor((imageGenerationParameters.steps * imageGenerationParameters.batch) / (timeTaken / 1000) * 10) / 10
 	const footer = new TextDisplayBuilder({
 		content: `-# seed: \`${SEED}\` time elapsed: \`${formattedTimeTaken}s\` it/s: \`${stepsPerSecond}\``
