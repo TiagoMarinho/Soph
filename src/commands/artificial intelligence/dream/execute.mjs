@@ -1,14 +1,11 @@
 import defaultImageGenerationParameters from "../../../artificial intelligence/default-sd-params.mjs"
 import { getImages } from "../../../artificial intelligence/backends/comfyui/comfyui-fetch-image.mjs"
 import { AttachmentBuilder, ContainerBuilder, MediaGalleryBuilder, MessageFlags, TextDisplayBuilder } from "discord.js"
-import createFluxGraph from "../../../artificial intelligence/backends/comfyui/workflows/comfyui-flux-workflow.mjs"
-import createSDXLGraph from "../../../artificial intelligence/backends/comfyui/workflows/comfyui-sdxl-workflow.mjs"
 import promptPrefixes from "../../../artificial intelligence/prompt-prefixes.json" assert { type: 'json' }
 import createComfyUIGraph from "../../../artificial intelligence/backends/comfyui/workflows/comfyui-graph.mjs"
 
 const formatPrompt = (promptPrefixName, prompt, negativePrompt) => {
 	if (!promptPrefixName) return { prompt, negativePrompt }
-	console.log("prompt prefix was enabled: " + promptPrefixName)
 	const { promptPrefix, negativePromptPrefix } = promptPrefixes[promptPrefixName]
 	return {
 		prompt: [
@@ -40,12 +37,6 @@ export default async interaction => {
 
 	const SEED = imageGenerationParameters.seed // FIXME: this is potentially a getter so it gets a random one here, then a new one later
 
-	// move this to a json with definition for models
-	const graphs = { 
-		"waiNSFWIllustrious_v140.safetensors": createSDXLGraph,
-		"flux_schnell.safetensors": createFluxGraph,
-		"flux_dev.safetensors": createFluxGraph
-	}
 	const GRAPH = createComfyUIGraph(imageGenerationParameters)
 
 	const startTime = performance.now()
