@@ -3,6 +3,7 @@ import { getImages } from "../../../artificial intelligence/backends/comfyui/com
 import { AttachmentBuilder, ContainerBuilder, MediaGalleryBuilder, MessageFlags, TextDisplayBuilder } from "discord.js"
 import promptPrefixes from "../../../artificial intelligence/prompt-prefixes.json" with { type: 'json' }
 import createComfyUIGraph from "../../../artificial intelligence/backends/comfyui/workflows/comfyui-graph.mjs"
+import { getRandomInt } from "../../../utils/math.mjs"
 
 const formatPrompt = (promptPrefixName, prompt, negativePrompt) => {
 	if (!promptPrefixName) return { prompt, negativePrompt }
@@ -34,8 +35,8 @@ export default async interaction => {
 	)
 	imageGenerationParameters.prompt = formattedPrompt.prompt,
 	imageGenerationParameters.negative_prompt = formattedPrompt.negativePrompt
-
-	const SEED = imageGenerationParameters.seed // FIXME: this is potentially a getter so it gets a random one here, then a new one later
+	imageGenerationParameters.seed ??= getRandomInt(0, 9_999_999_999);
+	const SEED = imageGenerationParameters.seed 
 
 	const GRAPH = createComfyUIGraph(imageGenerationParameters)
 

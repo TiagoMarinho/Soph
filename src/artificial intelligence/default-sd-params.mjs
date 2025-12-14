@@ -3,9 +3,7 @@ import { getRandomInt } from "../utils/math.mjs"
 export default {
 	prompt: "", 
 	negative_prompt: "",
-	get seed () {
-		return getRandomInt(0, 9_999_999_999)
-	},
+	seed: null,
 	image: null,
 	denoise: 0.6,
 	variation_seed: -1,
