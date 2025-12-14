@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits, Collection } from 'discord.js'
-import config from '../config.json' assert { type: 'json' }
+import config from '../config.json' with { type: 'json' }
 import fs from 'node:fs'
 
 import getCommandsByCategory from './get-commands.mjs'

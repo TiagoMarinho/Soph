@@ -1,7 +1,4 @@
-// comfyui-fetch-images.js
-import { WebSocket } from 'ws';
-import { randomBytes } from 'crypto';
-import config from '../../../../config.json' assert { type: 'json' }
+import config from "../../../../config.json" with { type: "json" };
 
 const SERVER = config.comfyuiServer || 'http://127.0.0.1:8188';
 

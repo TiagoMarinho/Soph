@@ -1,7 +1,7 @@
 import defaultImageGenerationParameters from "../../../artificial intelligence/default-sd-params.mjs"
 import { getImages } from "../../../artificial intelligence/backends/comfyui/comfyui-fetch-image.mjs"
 import { AttachmentBuilder, ContainerBuilder, MediaGalleryBuilder, MessageFlags, TextDisplayBuilder } from "discord.js"
-import promptPrefixes from "../../../artificial intelligence/prompt-prefixes.json" assert { type: 'json' }
+import promptPrefixes from "../../../artificial intelligence/prompt-prefixes.json" with { type: 'json' }
 import createComfyUIGraph from "../../../artificial intelligence/backends/comfyui/workflows/comfyui-graph.mjs"
 
 const formatPrompt = (promptPrefixName, prompt, negativePrompt) => {

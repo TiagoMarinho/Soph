@@ -1,4 +1,4 @@
-import nodeDefinitions from "./node-definitions.json" assert { type: 'json' }
+import nodeDefinitions from "./node-definitions.json" with { type: 'json' }
 import Node from "./node.mjs"
 
 export default class NodeGraph {
