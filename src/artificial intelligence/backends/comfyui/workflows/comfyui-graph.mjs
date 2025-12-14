@@ -13,6 +13,8 @@ const nodes = {
 	kSamplerUpscale: 	NodeFactory.KSampler,
 	decode: 			NodeFactory.VAEDecode,
 	save: 				NodeFactory.SaveImage,
+	previewDecode: 		NodeFactory.VAEDecode,
+	previewSave: 		NodeFactory.SaveImage,
 }
 
 const createComfyUIGraph = imageGenerationParameters => {
@@ -93,10 +95,20 @@ const createComfyUIGraph = imageGenerationParameters => {
 		.setValue(nodes.kSamplerUpscale.inputs.get("denoise"), imageGenerationParameters.denoise)
 
 	// toggle upscaling nodes
-	if (useUpscaling)
+	if (useUpscaling) {
 		nodeGraph
 			.connect(nodes.upscaleLatent.outputs.get("latent"), nodes.kSamplerUpscale.inputs.get("latent_image"))
 			.connect(nodes.kSamplerUpscale.outputs.get("latent"), nodes.decode.inputs.get("samples"))
+
+		// Insert Preview (First Pass) Logic
+		nodeGraph.add(nodes.previewDecode, nodes.previewSave)
+		
+		nodeGraph
+			.connect(nodes.kSampler.outputs.get("latent"), nodes.previewDecode.inputs.get("samples"))
+			.connect(nodes.ckpt.outputs.get("vae"), nodes.previewDecode.inputs.get("vae"))
+			.connect(nodes.previewDecode.outputs.get("image"), nodes.previewSave.inputs.get("images"))
+			.setValue(nodes.previewSave.inputs.get("filename_prefix"), "Soph_Preview")
+	}
 
 	if (isFlux)
 		nodeGraph

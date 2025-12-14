@@ -38,27 +38,60 @@ export default async interaction => {
 	imageGenerationParameters.seed ??= getRandomInt(0, 9_999_999_999);
 	const SEED = imageGenerationParameters.seed 
 
+	// Calculate total steps including upscaling logic (Must match comfyui-graph.mjs logic)
+	const useUpscaling = imageGenerationParameters.latent_upscale > 1.0
+	const MAX_UPSCALING_STEPS = 16
+	const upscalingSteps = useUpscaling 
+		? Math.min(imageGenerationParameters.steps, MAX_UPSCALING_STEPS) 
+		: 0
+
 	const GRAPH = createComfyUIGraph(imageGenerationParameters)
-
 	const startTime = performance.now()
+
+	const updateReply = async (buffers, isFinal = false) => {
+		const timeNow = performance.now()
+		const timeTaken = timeNow - startTime
+		
+		const attachments = buffers.map((imageBuffer, i) => new AttachmentBuilder(imageBuffer, { name: `Soph_${i}.png` }))
+
+		const formattedTimeTaken = Math.floor( timeTaken / 100 ) / 10
+
+		const stepsPerImage = isFinal 
+			? imageGenerationParameters.steps + upscalingSteps 
+			: imageGenerationParameters.steps
+
+		const totalStepsDone = stepsPerImage * imageGenerationParameters.batch
+		
+		const stepsPerSecond = Math.floor(totalStepsDone / (timeTaken / 1000) * 10) / 10
+		const statusText = isFinal ? "time elapsed" : "preview"
+		const text = `-# seed: \`${SEED}\`\n-# ${statusText}: \`${formattedTimeTaken}s\`\n-# it/s: \`${stepsPerSecond}\``
+		
+		const footer = new TextDisplayBuilder({
+			content: text
+		})
+
+		const media = attachments.map((_, i) => ({media:{url:`attachment://Soph_${i}.png`}}))
+		const gallery = new MediaGalleryBuilder({ items: media })
+		const container = new ContainerBuilder({ components: [footer, gallery] })
+
+		await interaction.editReply({ files: attachments, components: [ container ], flags: MessageFlags.IsComponentsV2 })
+	}
+
 	// TODO: better error handling
-	const imageBuffers = await getImages(GRAPH).catch(e => console.error(e))
-	const timeTaken = performance.now() - startTime
+	const allImages = await getImages(GRAPH, (intermediateBuffers, imageMetas) => {
+		const isPreview = imageMetas.some(img => img.filename.startsWith("Soph_Preview"))
+		
+		if (isPreview) {
+			updateReply(intermediateBuffers, false).catch(console.error)
+		}
+	}).catch(e => console.error(e))
 
-	// TODO: add metadata and proper filename
-	// TODO: create the embed in another file and call it here
-	const filename = `Soph_${SEED}.png`
-	const attachments = imageBuffers.map((imageBuffer, i) => new AttachmentBuilder(imageBuffer, { name: `Soph_${i}.png` }))
+	const finalBuffers = allImages
+		.filter(({ meta }) => !meta.filename.startsWith("Soph_Preview"))
+		.map(({ buffer }) => buffer)
 
-	const formattedTimeTaken = Math.floor( timeTaken / 100 ) / 10
-	const stepsPerSecond = Math.floor((imageGenerationParameters.steps * imageGenerationParameters.batch) / (timeTaken / 1000) * 10) / 10
-	const footer = new TextDisplayBuilder({
-		content: `-# seed: \`${SEED}\` time elapsed: \`${formattedTimeTaken}s\` it/s: \`${stepsPerSecond}\``
-	})
+	const batchSize = imageGenerationParameters.batch || 1
+	const actualFinalBuffers = finalBuffers.slice(-batchSize)
 
-	const media = attachments.map((_, i) => ({media:{url:`attachment://Soph_${i}.png`}}))
-	const gallery = new MediaGalleryBuilder({ items: media })
-	const container = new ContainerBuilder({ components: [gallery, footer] })
-
-	await interaction.editReply({ files: attachments, components: [ container ], flags: MessageFlags.IsComponentsV2 })
+	await updateReply(actualFinalBuffers, true)
 }

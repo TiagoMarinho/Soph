@@ -1,89 +1,137 @@
+import { WebSocket } from "ws";
+import { randomUUID } from "crypto";
 import config from "../../../../config.json" with { type: "json" };
 
-const SERVER = config.comfyuiServer || 'http://127.0.0.1:8188';
+const BASE_URL = new URL(config.comfyuiServer || "http://127.0.0.1:8188");
+const WS_URL = new URL("/ws", BASE_URL);
+WS_URL.protocol = WS_URL.protocol.replace("http", "ws");
 
-/**
- * Queues a node graph prompt (set to produce 4 outputs), waits for completion,
- * and returns an array of 4 Buffers—one per generated image.
- *
- * @param {Object} graph - ComfyUI node graph JSON (with batch_size=4).
- * @returns {Promise<Buffer[]>} - Resolves to an array of 4 image Buffers.
- */
-export const getImages = async graph => {
-	// 1. Generate a cryptographically random clientId for this request
-	const clientId = randomBytes(16).toString('hex');
+const HEADERS = { "Content-Type": "application/json" };
 
-	// 2. Queue the prompt (include client_id so WebSocket notifications match)
-	// Use `new Url` to avoid any problem with the address ending with a slash or not.
-	const queueRes = await fetch(new URL('/prompt', SERVER).toString(), {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ prompt: graph, client_id: clientId })
-	});
-	if (!queueRes.ok) {
-		throw new Error(`Failed to queue prompt: ${queueRes.statusText}`);
+const safeJsonParse = (str) => {
+	try {
+		return JSON.parse(str);
+	} catch {
+		return null;
 	}
-	const { prompt_id: promptId } = await queueRes.json();
+};
 
-	// 3. Open a WebSocket with the same clientId, wait for "node === null"
-	await new Promise((resolve, reject) => {
-		// Convert http:// (or https) to ws:// to use as websocket server.
-		const wsUrl = SERVER.replace(/^https?/, 'ws');
-		const ws = new WebSocket(new URL('/ws', wsUrl).toString() + `?clientId=${clientId}`);
+const createApiUrl = (path, params = {}) => {
+	const url = new URL(path, BASE_URL);
+	Object.entries(params).forEach(([key, value]) =>
+		url.searchParams.append(key, value)
+	);
+	return url;
+};
 
-		ws.on('message', msg => {
-			let parsed;
-			try {
-				parsed = JSON.parse(msg);
-			} catch {
-				return; // ignore anything that's not JSON
+const fetchJson = async (path, options = {}) => {
+	const response = await fetch(createApiUrl(path), options);
+	if (!response.ok)
+		throw new Error(`API Request Failed: ${path} (${response.statusText})`);
+	return response.json();
+};
+
+const downloadBuffer = async (metadata) => {
+	const { filename, subfolder, type } = metadata;
+	const url = createApiUrl("/view", { filename, subfolder, type });
+	const response = await fetch(url);
+	if (!response.ok) throw new Error(`Image Download Failed: ${filename}`);
+	const arrayBuffer = await response.arrayBuffer();
+	return Buffer.from(arrayBuffer);
+};
+
+const extractImageMetadata = (history, promptId) => {
+	const promptHistory = history[promptId];
+	if (!promptHistory?.outputs) return [];
+
+	return Object.values(promptHistory.outputs).flatMap(
+		(node) => node.images || []
+	);
+};
+
+const handleIntermediateResult = async (data, callback) => {
+	const images = data?.output?.images;
+	if (!images?.length) return;
+
+	const promises = images.map(downloadBuffer);
+	const buffers = await Promise.all(promises);
+
+	callback(buffers, images);
+};
+
+const monitorExecution = (clientId, promptId, onIntermediate) => {
+	return new Promise((resolve, reject) => {
+		const socket = new WebSocket(`${WS_URL}?clientId=${clientId}`);
+
+		const close = () => {
+			socket.removeAllListeners();
+			socket.close();
+		};
+
+		socket.on("error", (err) => {
+			close();
+			reject(err);
+		});
+
+		socket.on("message", (raw) => {
+			const message = safeJsonParse(raw);
+			if (!message) return;
+
+			const { type, data } = message;
+
+			const isExecuted =
+				type === "executed" && data.prompt_id === promptId;
+			if (isExecuted && onIntermediate) {
+				handleIntermediateResult(data, onIntermediate).catch(
+					console.error
+				);
 			}
-			const { type, data } = parsed;
-			// ComfyUI sends {type: "executing", data: { prompt_id, node }}
-			// When data.node === null, that prompt is fully done.
-			if (type === 'executing' && data.prompt_id === promptId && data.node === null) {
-				ws.close();
+
+			const isExecutionComplete =
+				type === "executing" &&
+				data.prompt_id === promptId &&
+				data.node === null;
+
+			if (isExecutionComplete) {
+				close();
 				resolve();
 			}
 		});
-
-		ws.on('error', err => {
-			reject(new Error(`WebSocket error: ${err.message}`));
-		});
 	});
+};
 
-	// 4. Fetch history, collect all image metadata for that prompt
-	const historyRes = await fetch(`${SERVER}/history/${promptId}`);
-	if (!historyRes.ok) {
-		throw new Error(`Failed to fetch history: ${historyRes.statusText}`);
-	}
-	const history = await historyRes.json();
-	const outputs = history[promptId]?.outputs || {};
+const queuePrompt = async (graph, clientId) => {
+	const payload = { prompt: graph, client_id: clientId };
+	const response = await fetchJson("/prompt", {
+		method: "POST",
+		headers: HEADERS,
+		body: JSON.stringify(payload),
+	});
+	return response.prompt_id;
+};
 
-	// Gather every image meta (should be 4 items if your graph outputs 4)
-	const allImageMetas = [];
-	for (const node of Object.values(outputs)) {
-		if (node.images && node.images.length > 0) {
-			node.images.forEach(meta => allImageMetas.push(meta));
-		}
-	}
+const getHistory = async (promptId) => {
+	return fetchJson(`/history/${promptId}`);
+};
 
-	if (allImageMetas.length === 0) {
-		throw new Error('No images found in prompt outputs');
-	}
+export const getImages = async (graph, onIntermediateImage) => {
+	const clientId = randomUUID();
 
-	// 5. Download each image and return as Buffer[]
-	const buffers = await Promise.all(
-		allImageMetas.map(async ({ filename, subfolder, type }) => {
-			const url = `${SERVER}/view?filename=${filename}&subfolder=${subfolder}&type=${type}`;
-			const imgRes = await fetch(url);
-			if (!imgRes.ok) {
-				throw new Error(`Failed to download ${filename}: ${imgRes.statusText}`);
-			}
-			const arrayBuffer = await imgRes.arrayBuffer();
-			return Buffer.from(arrayBuffer);
-		})
+	const promptId = await queuePrompt(graph, clientId);
+
+	await monitorExecution(clientId, promptId, onIntermediateImage);
+
+	const history = await getHistory(promptId);
+	const metadata = extractImageMetadata(history, promptId);
+
+	if (metadata.length === 0)
+		throw new Error("No output images found in prompt history");
+
+	// Return both buffer and metadata so the caller can filter results
+	return Promise.all(
+		metadata.map(async (meta) => ({
+			buffer: await downloadBuffer(meta),
+			meta,
+		}))
 	);
-
-	return buffers;
 };
