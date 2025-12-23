@@ -1,124 +1,175 @@
-import { getRandomInt } from "../../../../utils/math.mjs"
-import NodeGraph, { NodeFactory } from "./nodegraph.mjs"
+import { getRandomInt } from "../../../../utils/math.mjs";
+import Nodes from "../nodes.mjs";
+import { serialize } from "../serializer.mjs";
 
-const nodes = {
-	ckpt: 				NodeFactory.CheckpointLoaderSimple,
-	prompt: 			NodeFactory.CLIPTextEncode,
-	negativePrompt: 	NodeFactory.CLIPTextEncode,
-	fluxGuidance: 		NodeFactory.FluxGuidance,
-	emptyLatent: 		NodeFactory.EmptyLatentImage,
-	emptySD3Latent: 	NodeFactory.EmptySD3LatentImage,
-	kSampler: 			NodeFactory.KSampler,
-	upscaleLatent: 		NodeFactory.LatentUpscaleBy,
-	kSamplerUpscale: 	NodeFactory.KSampler,
-	decode: 			NodeFactory.VAEDecode,
-	save: 				NodeFactory.SaveImage,
-	previewDecode: 		NodeFactory.VAEDecode,
-	previewSave: 		NodeFactory.SaveImage,
-}
+const createComfyUIGraph = (params) => {
+	// 1. Common Resources
+	const ckpt = Nodes.CheckpointLoaderSimple({
+		ckpt_name: params.model,
+	});
 
-const createComfyUIGraph = imageGenerationParameters => {
-	const MAX_UPSCALING_STEPS = 16
-	const upscalingSeed = getRandomInt(0, 9_999_999_999)
-	const upscalingSteps = Math.min(imageGenerationParameters.steps, MAX_UPSCALING_STEPS)
-	const useUpscaling = imageGenerationParameters.latent_upscale > 1.0
-	const isFlux = imageGenerationParameters.model.startsWith("flux")
+	const positive = Nodes.CLIPTextEncode({
+		text: params.prompt,
+		clip: ckpt.clip,
+	});
 
-	const nodeGraph = new NodeGraph
+	const negative = Nodes.CLIPTextEncode({
+		text: params.negative_prompt,
+		clip: ckpt.clip,
+	});
 
-	nodeGraph
-		.add(
-			nodes.ckpt,
-			nodes.prompt,
-			nodes.negativePrompt,
-			nodes.fluxGuidance,
-			nodes.emptyLatent,
-			nodes.emptySD3Latent,
-			nodes.kSampler,
-			nodes.upscaleLatent,
-			nodes.kSamplerUpscale,
-			nodes.decode,
-			nodes.save
-		)
-		// connect static nodes
-		.connect(nodes.ckpt.outputs.get("clip"), nodes.prompt.inputs.get("clip"))
-		.connect(nodes.ckpt.outputs.get("clip"), nodes.negativePrompt.inputs.get("clip"))
-		.connect(nodes.ckpt.outputs.get("model"), nodes.kSampler.inputs.get("model"))
-		.connect(nodes.prompt.outputs.get("conditioning"), nodes.kSampler.inputs.get("positive"))
-		.connect(nodes.negativePrompt.outputs.get("conditioning"), nodes.kSampler.inputs.get("negative"))
-		.connect(nodes.emptyLatent.outputs.get("latent"), nodes.kSampler.inputs.get("latent_image"))
-		.connect(nodes.kSampler.outputs.get("latent"), nodes.upscaleLatent.inputs.get("samples"))
-		.connect(nodes.kSampler.outputs.get("latent"), nodes.decode.inputs.get("samples"))
-		// upscale stuff
-		.connect(nodes.ckpt.outputs.get("model"), nodes.kSamplerUpscale.inputs.get("model"))
-		.connect(nodes.prompt.outputs.get("conditioning"), nodes.kSamplerUpscale.inputs.get("positive"))
-		.connect(nodes.negativePrompt.outputs.get("conditioning"), nodes.kSamplerUpscale.inputs.get("negative"))
+	// 2. Flux Logic
+	const isFlux = params.model.startsWith("flux");
 
-		.connect(nodes.ckpt.outputs.get("vae"), nodes.decode.inputs.get("vae"))
-		.connect(nodes.decode.outputs.get("image"), nodes.save.inputs.get("images"))
-		// set static values
-		.setValue(nodes.upscaleLatent.inputs.get("upscale_method"), "bislerp")
-		.setValue(nodes.kSampler.inputs.get("denoise"), 1.0)
-		.setValue(nodes.save.inputs.get("filename_prefix"), "Soph")
+	const effectivePositive = isFlux
+		? Nodes.FluxGuidance({
+				conditioning: positive.conditioning,
+				guidance: params.cfg,
+		  }).conditioning
+		: positive.conditioning;
 
-	// now set dynamic stuff
+	const samplerCfg = isFlux ? 1.0 : params.cfg;
 
-	nodeGraph
-		// set model
-		.setValue(nodes.ckpt.inputs.get("ckpt_name"), imageGenerationParameters.model)
-		// set empty latent
-		.setValue(nodes.emptyLatent.inputs.get("width"), imageGenerationParameters.width)
-		.setValue(nodes.emptyLatent.inputs.get("height"), imageGenerationParameters.height)
-		.setValue(nodes.emptyLatent.inputs.get("batch_size"), imageGenerationParameters.batch)
-		// set prompt
-		.setValue(nodes.prompt.inputs.get("text"), imageGenerationParameters.prompt)
-		.setValue(nodes.negativePrompt.inputs.get("text"), imageGenerationParameters.negative_prompt)
-		// set sampling parameters
-		.setValue(nodes.kSampler.inputs.get("seed"), imageGenerationParameters.seed)
-		.setValue(nodes.kSampler.inputs.get("steps"), imageGenerationParameters.steps)
-		.setValue(nodes.kSampler.inputs.get("cfg"), imageGenerationParameters.cfg)
-		.setValue(nodes.kSampler.inputs.get("sampler_name"), imageGenerationParameters.sampler)
-		.setValue(nodes.kSampler.inputs.get("scheduler"), imageGenerationParameters.scheduler)
-		// set upscaling
-		.setValue(nodes.upscaleLatent.inputs.get("scale_by"), imageGenerationParameters.latent_upscale)
-		// flux
-		.setValue(nodes.emptySD3Latent.inputs.get("width"), imageGenerationParameters.width)
-		.setValue(nodes.emptySD3Latent.inputs.get("height"), imageGenerationParameters.height)
-		.setValue(nodes.emptySD3Latent.inputs.get("batch_size"), imageGenerationParameters.batch)
-		.setValue(nodes.fluxGuidance.inputs.get("guidance"), imageGenerationParameters.cfg)
-		
-		.setValue(nodes.kSamplerUpscale.inputs.get("seed"), upscalingSeed)
-		.setValue(nodes.kSamplerUpscale.inputs.get("steps"), upscalingSteps)
-		.setValue(nodes.kSamplerUpscale.inputs.get("cfg"), imageGenerationParameters.cfg)
-		.setValue(nodes.kSamplerUpscale.inputs.get("sampler_name"), imageGenerationParameters.sampler)
-		.setValue(nodes.kSamplerUpscale.inputs.get("scheduler"), imageGenerationParameters.scheduler)
-		.setValue(nodes.kSamplerUpscale.inputs.get("denoise"), imageGenerationParameters.denoise)
+	// 3. Base Generation
+	const emptyLatent = Nodes.EmptySD3LatentImage({
+		width: params.width,
+		height: params.height,
+		batch_size: params.batch,
+	});
 
-	// toggle upscaling nodes
-	if (useUpscaling) {
-		nodeGraph
-			.connect(nodes.upscaleLatent.outputs.get("latent"), nodes.kSamplerUpscale.inputs.get("latent_image"))
-			.connect(nodes.kSamplerUpscale.outputs.get("latent"), nodes.decode.inputs.get("samples"))
+	const baseSampler = Nodes.KSampler({
+		seed: params.seed,
+		steps: params.steps,
+		cfg: samplerCfg,
+		sampler_name: params.sampler,
+		scheduler: params.scheduler,
+		denoise: 1.0,
+		model: ckpt.model,
+		positive: effectivePositive,
+		negative: negative.conditioning,
+		latent_image: emptyLatent.latent,
+	});
 
-		// Insert Preview (First Pass) Logic
-		nodeGraph.add(nodes.previewDecode, nodes.previewSave)
-		
-		nodeGraph
-			.connect(nodes.kSampler.outputs.get("latent"), nodes.previewDecode.inputs.get("samples"))
-			.connect(nodes.ckpt.outputs.get("vae"), nodes.previewDecode.inputs.get("vae"))
-			.connect(nodes.previewDecode.outputs.get("image"), nodes.previewSave.inputs.get("images"))
-			.setValue(nodes.previewSave.inputs.get("filename_prefix"), "Soph_Preview")
-	}
+	// 4. Upscaling Branch
+	const upscaleBranch = (() => {
+		if (params.latent_upscale <= 1.0) {
+			return { result: baseSampler.latent, previews: [] };
+		}
 
-	if (isFlux)
-		nodeGraph
-			.connect(nodes.prompt.outputs.get("conditioning"), nodes.fluxGuidance.inputs.get("conditioning"))
-			.connect(nodes.fluxGuidance.outputs.get("conditioning"), nodes.kSampler.inputs.get("positive"))
-			.connect(nodes.emptySD3Latent.outputs.get("latent"), nodes.kSampler.inputs.get("latent_image"))
-			.setValue(nodes.kSampler.inputs.get("cfg"), 1.0)
+		const pDecode = Nodes.VAEDecode({
+			samples: baseSampler.latent,
+			vae: ckpt.vae,
+		});
 
-	const json = nodeGraph.toJSON()
-	return json
-}
+		const pSave = Nodes.SaveImage({
+			filename_prefix: "Soph_Preview",
+			images: pDecode.image,
+		});
 
-export default createComfyUIGraph
+		const upLatent = Nodes.LatentUpscaleBy({
+			upscale_method: "bislerp",
+			scale_by: params.latent_upscale,
+			samples: baseSampler.latent,
+		});
+
+		const upSampler = Nodes.KSampler({
+			seed: getRandomInt(0, 99999999),
+			steps: Math.min(params.steps, 16),
+			cfg: params.cfg,
+			sampler_name: params.sampler,
+			scheduler: params.scheduler,
+			denoise: params.denoise,
+			model: ckpt.model,
+			positive: effectivePositive,
+			negative: negative.conditioning,
+			latent_image: upLatent.latent,
+		});
+
+		return { result: upSampler.latent, previews: [pSave] };
+	})();
+
+	// 5. Decode
+	const decodedImage = Nodes.VAEDecode({
+		samples: upscaleBranch.result,
+		vae: ckpt.vae,
+	});
+
+	// 6. Face Detailer
+	const detailerBranch = (() => {
+		if (!params.face_detailer) {
+			return { result: decodedImage.image, previews: [] };
+		}
+
+		const pSave = Nodes.SaveImage({
+			filename_prefix: "Soph_Preview",
+			images: decodedImage.image,
+		});
+
+		const bbox = Nodes.UltralyticsDetectorProvider({
+			model_name: "bbox/face_yolov8m.pt",
+		});
+
+		const sam = Nodes.SAMLoader({
+			model_name: "sam_vit_b_01ec64.pth",
+			device_mode: "AUTO",
+		});
+
+		const detailed = Nodes.FaceDetailer({
+			image: decodedImage.image,
+			model: ckpt.model,
+			clip: ckpt.clip,
+			vae: ckpt.vae,
+			positive: effectivePositive,
+			negative: negative.conditioning,
+			bbox_detector: bbox.BBOX_DETECTOR,
+			sam_model_opt: sam.SAM_MODEL,
+
+			// Core Settings
+			guide_size: 512,
+			guide_size_for: true,
+			max_size: 1536,
+			seed: params.seed,
+			steps: params.steps,
+			cfg: params.cfg,
+			sampler_name: params.sampler,
+			scheduler: params.scheduler,
+			denoise: 0.5,
+
+			// BBox Settings
+			cycle: 1,
+			bbox_threshold: 0.5,
+			bbox_dilation: 10,
+			bbox_crop_factor: 3.0,
+
+			// SAM Settings
+			sam_detection_hint: "center-1",
+			sam_dilation: 0,
+			sam_threshold: 0.93,
+			sam_bbox_expansion: 0,
+			sam_mask_hint_threshold: 0.7,
+			sam_mask_hint_use_negative: "False",
+
+			// Inpaint Settings
+			drop_size: 10,
+			wildcard: "",
+			feather: 5,
+			noise_mask: true,
+			force_inpaint: false,
+		});
+
+		return { result: detailed.image, previews: [pSave] };
+	})();
+
+	const finalSave = Nodes.SaveImage({
+		filename_prefix: "Soph",
+		images: detailerBranch.result,
+	});
+
+	return serialize([
+		finalSave,
+		...upscaleBranch.previews,
+		...detailerBranch.previews,
+	]);
+};
+
+export default createComfyUIGraph;

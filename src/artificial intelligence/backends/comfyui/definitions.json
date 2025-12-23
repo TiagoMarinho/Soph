@@ -1,0 +1,101 @@
+{
+	"CheckpointLoaderSimple": {
+		"inputs": ["ckpt_name"],
+		"outputs": ["model", "clip", "vae"]
+	},
+	"CLIPTextEncode": {
+		"inputs": ["text", "clip"],
+		"outputs": ["conditioning"]
+	},
+	"FluxGuidance": {
+		"inputs": ["conditioning", "guidance"],
+		"outputs": ["conditioning"],
+		"bypass": "conditioning"
+	},
+	"EmptyLatentImage": {
+		"inputs": ["width", "height", "batch_size"],
+		"outputs": ["latent"]
+	},
+	"EmptySD3LatentImage": {
+		"inputs": ["width", "height", "batch_size"],
+		"outputs": ["latent"]
+	},
+	"KSampler": {
+		"inputs": [
+			"seed",
+			"steps",
+			"cfg",
+			"sampler_name",
+			"scheduler",
+			"denoise",
+			"model",
+			"positive",
+			"negative",
+			"latent_image"
+		],
+		"outputs": ["latent"],
+		"bypass": "latent_image"
+	},
+	"LatentUpscaleBy": {
+		"inputs": ["upscale_method", "scale_by", "samples"],
+		"outputs": ["latent"],
+		"bypass": "samples"
+	},
+	"VAEDecode": {
+		"inputs": ["samples", "vae"],
+		"outputs": ["image"],
+		"bypass": "samples"
+	},
+	"SaveImage": {
+		"inputs": ["filename_prefix", "images"],
+		"outputs": []
+	},
+	"UltralyticsDetectorProvider": {
+		"inputs": ["model_name"],
+		"outputs": ["BBOX_DETECTOR", "SEGM_DETECTOR"]
+	},
+	"SAMLoader": {
+		"inputs": ["model_name", "device_mode"],
+		"outputs": ["SAM_MODEL"]
+	},
+	"FaceDetailer": {
+		"inputs": [
+			"image",
+			"model",
+			"clip",
+			"vae",
+			"positive",
+			"negative",
+			"bbox_detector",
+			"sam_model_opt",
+			"segm_detector_opt",
+			"detailer_hook",
+			"guide_size",
+			"guide_size_for",
+			"max_size",
+			"seed",
+			"steps",
+			"cfg",
+			"sampler_name",
+			"scheduler",
+			"denoise",
+			"cycle",
+			"bbox_threshold",
+			"bbox_dilation",
+			"bbox_crop_factor",
+			"sam_detection_hint",
+			"sam_dilation",
+			"sam_threshold",
+			"sam_bbox_expansion",
+			"sam_mask_hint_threshold",
+			"sam_mask_hint_use_negative",
+			"drop_size",
+			"wildcard",
+			"feather",
+			"noise_mask",
+			"force_inpaint"
+		],
+		"outputs": ["image", "cropped_refined", "cnet_images"],
+		"bypass": "image"
+	}
+}
