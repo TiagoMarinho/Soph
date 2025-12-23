@@ -15,7 +15,7 @@ export default {
 	height: 1024,
 	sampler: "dpmpp_2m_sde_gpu",
 	scheduler: "karras",
-	model: "waiNSFWIllustrious_v140.safetensors",
+	model: "waiIllustriousSDXL_v150.safetensors",
 	latent_upscale: 1.0,
 	face_detailer: false, 
 	clip_skip: 2,

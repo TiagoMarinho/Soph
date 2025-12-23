@@ -1,5 +1,5 @@
 {
-	"waiNSFWIllustrious_v140.safetensors": {
+	"waiIllustriousSDXL_v150.safetensors": {
 		"promptPrefix": "masterpiece,best quality,amazing quality",
 		"negativePromptPrefix": "bad quality,worst quality,worst detail,sketch,censor"
 	}
