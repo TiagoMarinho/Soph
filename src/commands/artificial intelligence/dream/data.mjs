@@ -40,6 +40,12 @@ export default {
 			max_value: 2.0
 		},
 		{
+			type: 5,
+			name: "face_detailer",
+			description: "Detect and upscale faces",
+			required: false,
+		},
+		{
 			type: 10,
 			name: "denoise",
 			description: "How noise to add to the upscaled latent image",
@@ -96,9 +102,9 @@ export default {
 			name: "model",
 			description: "Which model to use when generating the image",
 			choices: [
-				{ name: "Flux Dev", value: "flux_dev.safetensors" },
-				{ name: "Flux Schnell", value: "flux_schnell.safetensors" },
-				{ name: "wai IllustriousWAI NSFW illustrious SDXL", value: "waiNSFWIllustrious_v140.safetensors" },
+				//{ name: "Flux Dev", value: "flux_dev.safetensors" },
+				//{ name: "Flux Schnell", value: "flux_schnell.safetensors" },
+				{ name: "wai Illustrious SDXL v15", value: "waiIllustriousSDXL_v150.safetensors" },
 			],
 			required: false
 		},
@@ -107,7 +113,7 @@ export default {
 			name: "prompt_prefix",
 			description: "Which prompt prefix to add",
 			choices: [
-				{ name: "wai IllustriousWAI NSFW illustrious SDXL", value: "waiNSFWIllustrious_v140.safetensors" },
+				{ name: "wai Illustrious SDXL v15", value: "waiIllustriousSDXL_v150.safetensors" },
 			],
 			required: false
 		},
